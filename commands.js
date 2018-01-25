@@ -6,6 +6,7 @@ exports.commands = {
         if (!this.can("say")) return false;
         return this.send(removeCommand(target));
     },
+
     //settings
     addchar: function(target, room, user) {
         if (!this.can("set") || !room) return false;

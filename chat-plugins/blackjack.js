@@ -25,7 +25,7 @@ class BlackjackGame extends Rooms.botGame {
         this.dealer = new BlackjackGamePlayer({name: "Blackjack Game Dealer", userid: "blackjackgamedealer"});
         
         this.playerObject = BlackjackGamePlayer;
-        this.sendRoom("A new game of Blackjack is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
+        this.sendRoom("Harmgame! A new game of Blackjack is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
     }
     
     shuffleDeck () {

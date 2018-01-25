@@ -205,10 +205,10 @@ require("./data-downloader")().then(() => {
     tools.Movedex = require("./data/moves.js").BattleMovedex;
     tools.Abilities = require("./data/abilities.js").BattleAbilities;
     tools.Items = require("./data/items.js").BattleItems;
-    tools.Locations = require("./data/locations.js").locations;
+   // tools.Locations = require("./data/locations.js").locations;
     
     tools.Words = Object.assign({}, 
-        tools.Locations, 
+      //  tools.Locations, 
         arrayToObject(Object.keys(tools.Pokedex).map(p => tools.Pokedex[p].species), "Pokémon"),
         arrayToObject(Object.keys(tools.Movedex).map(p => tools.Movedex[p].name), "Pokémon Move"),
         arrayToObject(Object.keys(tools.Abilities).map(p => tools.Abilities[p].name), "Pokémon Ability"),

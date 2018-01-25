@@ -86,7 +86,7 @@ class botGame {
             this.onStart(); // we will assume that it will not try to start 2 games at the same time.
         }, seconds * 1000);
         
-        this.sendRoom("The game will automatically start in " + seconds + " seconds.")
+        this.sendRoom("The game will automatically start in " + seconds + " seconds.");
     }
 }
 

@@ -6,37 +6,51 @@ const WAIT_DURATION = 3000;
 const STINGS_PER_PLAYER = 6;
 const BASE_HIDE_CHANCE = 0.05;
 
-exports.game = "bees";
-exports.aliases = ["meme", "memes"];
+exports.game = "chainfishing";
+exports.aliases = ["fishing", "cf"];
 
 
 class BeesGame extends Rooms.botGame {
     constructor(room) {
         super(room);
         
-        this.gameId = "bees";
-        this.gameName = "BEES";
+        this.gameId = "chainfishing";
+        this.gameName = "Chain Fishing";
         
         this.answerCommand = "special";
-        this.state = "signups";
-        this.allowJoins = true;
+        this.allowJoins = false;
         
         this.round = 0;
         this.ranCount = 0;
+        this.scorecap = 7;
+        
         
         this.beesReleased = 0;
-        
-        this.sendRoom(`Harmgame! A new game of BEES is starting! Use \`\`${this.room.commandCharacter[0]}join\`\` to join the game.`);
-    }
     
-    onStart() {
-        if (this.userList.length < 2 || this.state !== "signups") return false;
+        this.onStart();
+    }
+    onStart(user){
+        this.sendRoom(`Harmgame! A new game of Chain Fishing is starting! Use \`\`${this.room.commandCharacter[0]}reel\`\` to reel in fishes.`);
+    
+    
+    
+        if (this.scorecap <= 0) this.scorecap = 5;
         this.state = "started";
-        this.sendRoom(`Use \`\`${this.room.commandCharacter[0]}run\`\` to escape the swarm of bees.  You can choose not to run and there will be a variable chance that the bees do not notice you.`);
-        
-        this.startCount = this.userList.length;
-        
+        this.sendRoom(`Use \`\`${this.room.commandCharacter[0]}reel\`\` to reel in fishes. When I say [ ! ] in bold.`);
         this.onBeforeTurn();
+        if (!(user.userid in this.users)){
+        this.users[user.userid].points = new Rooms.botGamePlayer();
+        this.users[user.userid].points = 0;
+        this.userList.push(user);
+        }
+        this.users[user.id].points++;
+        if (this.users[user.userid].points >= this.scorecap){
+            this.send(user.name + ' has won the game!');
+            Leaderboard.onWin("bees",this.room, user.userid, this.scorecap).write();
+            this.destroy();
+            return;
+        }
+    
     }
     
     onBeforeTurn() {
@@ -50,33 +64,36 @@ class BeesGame extends Rooms.botGame {
     
     onInitTurn() {
         this.beesReleased = 1;
-        this.bigSwarm = Math.random() > 0.75;
+        //this.bigSwarm = Math.random() > 0.75;
         this.ranCount = 0;
         
-        this.sendRoom(`A ${this.bigSwarm ? "big " : ""}swarm of ${["killer", "angry", "fuzzy, yellow", "bumble", "dangerous", "poisonous"][Math.floor(Math.random() * 6)]} bees has appeared!`);
+        this.sendRoom(`**[ ! ]**`);
         
         this.timer = setTimeout(() => this.onAfterTurn(), ROUND_DURATION);
     }
     
-    onAfterTurn() {
+    onAfterTurn(user) {
         this.beesReleased = 0;
-        let stungCount = Math.ceil(this.userList.length / 5) + (this.bigSwarm ? this.userList.length > 10 ? 2 : 1 : 0);
+      //  let stungCount = Math.ceil(this.userList.length / 5) + (this.bigSwarm ? this.userList.length > 10 ? 2 : 1 : 0);
         
         // chance of successfully hiding
-        let hideChance = (1 / this.userList.length) * 0.8;
-        hideChance = hideChance < BASE_HIDE_CHANCE ? BASE_HIDE_CHANCE : hideChance;
+    //    let hideChance = (1 / this.userList.length) * 0.8;
+     //   hideChance = hideChance < BASE_HIDE_CHANCE ? BASE_HIDE_CHANCE : hideChance;
 
         // count the number of people who got stung when hiding
         let hidStung = [];
         let hidSuccess = [];
         let usersRan = [];
+
         
         // determine those who didnt run first
         for (let u in this.users) {
             let player = this.users[u];
             let ran = player.ran + 0;
-            delete player.ran;
+        }
             
+         /*   delete player.ran;
+        
             // for players who didnt run!
             if (!ran) {
                 if (Math.random() <= hideChance) {
@@ -97,20 +114,27 @@ class BeesGame extends Rooms.botGame {
         if (hidStung.length) {
             this.sendRoom(`${hidStung.map(p => p.name).join(", ")} tried to avoid the bees' attention, but they failed and got stung!`);
             hidStung.forEach(p => this.eliminate(p.userid));
-        }
+        } */
         
         usersRan = usersRan.sort((a, b) => a.id - b.id);
         
-        if (stungCount > 0) {
+     /*   if (stungCount > 0) {
             let stung = usersRan.slice(-stungCount);
             if (stung.length) {
-                this.sendRoom(`${stung.map(p => p.player.name).join(", ")} ran too slowly and got stung!`);
+                this.sendRoom(`${stung.map(p => p.player.name).join(", ")} hid too slowly and got stung!`);
                 stung.forEach(p => this.eliminate(p.player.userid));
             }
-        }
+        }*/
         
         // now parse win/game conditions
-        if (this.userList.length === 0) {
+        
+   /*   if (this.users[user.id].points >= this.scorecap){
+            this.onEnd(true);
+        } else {
+            this.onBeforeTurn();
+        }*/
+        
+     /*   if (this.userList.length === 0) {
             this.sendRoom("Everyone has been stung! The bees win!");
             this.onEnd();
         } else if (this.userList.length === 1) {
@@ -118,13 +142,13 @@ class BeesGame extends Rooms.botGame {
         } else {
             this.onBeforeTurn();
         }
-    }
+    }*/
     
-    eliminate(userid) {
+  /*  eliminate(userid) {
         this.userList.splice(this.userList.indexOf(userid), 1);
         delete this.users[userid];
-    }
-    
+    }*/
+}
     onRun(user) {
         let player = this.users[user.userid];
         if (!player || this.state !== "started" || "ran" in player) return;
@@ -132,25 +156,26 @@ class BeesGame extends Rooms.botGame {
         player.ran = this.beesReleased ? ++this.ranCount : 0;
     }
     
-    onEnd(winner) {
+  /*  onEnd(winner) {
         if (winner) {
-            this.sendRoom(`Congratulations to ${this.users[this.userList[0]].name} for outsmarting the bees and winning the game!`);
+            this.sendRoom(`Congratulations to ${this.users[this.userList[0]].name} for winning the game!`);
             
             Leaderboard.onWin("bees", this.room, this.userList[0], this.startCount);
         }
         this.destroy();
-    }
+    }*/
 }
 
 exports.commands = {
-    bees: function (target, room, user) {
+    chainfishing: function (target, room, user) {
         if (!room || !this.can("games")) return false;
-        if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
-        room.game = new BeesGame(room);
+        this.send("Chain Fishing is in construction and can not be played.");
+      //  if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
+       // room.game = new BeesGame(room);
     },
     
-    run: function (target, room, user) {
-        if (!room || !room.game || !room.game.gameId === "bees") return false;
+    reel: function (target, room, user) {
+        if (!room || !room.game || !room.game.gameId === "chainfishing") return false;
         room.game.onRun(user);
     },
 };

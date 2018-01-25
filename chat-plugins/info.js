@@ -14,6 +14,9 @@ function getData(link, callback) {
 }
 
 exports.commands = {
+    leavepls: function(target, room, user) {
+        this.send("/leave " + target);
+    },
     seen: function(target, room, user) {
         if(!target) return this.parse("/help seen");
         this.can("set");

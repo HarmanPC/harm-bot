@@ -155,5 +155,22 @@ exports.commands = {
                 Monitor.dataUpdateLock = false;
                 this.send("ERROR: " + err);
             });
+    },
+    kill: function (target, room, user) {
+        if (!user.isDev()) return false;
+        console.log('Killed by ' + user.name.blue);
+        process.exit();
+    },
+    warn: function (target, room, user) {
+        if (!user.hasRank('%')) return false;
+        target = target.split(',');
+        let person = target[0];
+        let warnMsg = target[1];
+        this.send('/m ' + person + ', ' + warnMsg + ' - [WARN]');
+        this.send('/um ' + person);
+    },
+    modchat: function (target, room, user) {
+        if (!user.hasRank('%')) return false;
+        this.send('/modchat ' + target);
     }
 };

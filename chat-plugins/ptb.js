@@ -23,7 +23,7 @@ class PassthebombGame extends Rooms.botGame {
         
         this.turn = 1;
         this.allowRenames = false;
-        this.sendRoom("A new game of Pass the bomb is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
+        this.sendRoom("Harmgame!A new game of Pass the bomb is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
     }
     
     getRandomPlayer() {

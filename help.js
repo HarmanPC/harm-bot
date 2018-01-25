@@ -18,7 +18,7 @@ exports.help = {
     "join": ["/join - joins the current game."],
     "leave": ["/leave - leaves the current game."],
     "players": ["/players - view the list of players in the current game."],
-    
+    "harman":["Sorry, I can't help him by coding myself. (Note: memes"],
     "dd": ["/dt [figure], [optional move] - shows the data on the entire figure or more detailed description of the move."],
     "dt": ["/dt [figure], [optional move] - shows the data on the entire figure or more detailed description of the move."],
 };

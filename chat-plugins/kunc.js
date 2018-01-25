@@ -19,7 +19,7 @@ class KuncGame extends Rooms.botGame {
     init() {
         this.state = "started";
         if (this.scorecap <= 0) this.scorecap = 5;
-        this.sendRoom("A new game of Kunc is starting.  Use ``" + this.room.commandCharacter[0] + "g`` to guess the Pokémon that the moveset belongs to. First to " + this.scorecap + " points wins.");
+        this.sendRoom("Harmgame! A new game of Kunc is starting.  Use ``" + this.room.commandCharacter[0] + "g`` to guess the Pokémon that the moveset belongs to. First to " + this.scorecap + " points wins.");
         this.initRound();
     }
     

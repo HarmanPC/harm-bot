@@ -19,7 +19,7 @@ class AmbushGame extends Rooms.botGame {
         this.state = "signups";
         
         this.playerObject = AmbushGamePlayer;
-        this.sendRoom("A new game of Ambush is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
+        this.sendRoom("Harmgame! A new game of Ambush is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
     }
     
     onStart() {

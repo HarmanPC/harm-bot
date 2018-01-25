@@ -133,7 +133,7 @@ class ResourceMonitor {
             }
         }
         //general
-        if (Object.values(this.users[user.userid]).sum() >= this.settings.user) {
+      /*  if (Object.values(this.users[user.userid]).sum() >= this.settings.user) {
             log("monitor", "[USER: " + user.userid + "] spamming commands in" + (!pm ? " room - " + room.id : " pms") + ".");
             this.warnings[user.userid]++;
             this.settings.moderate(user.userid, this.warnings[user.userid]);
@@ -143,7 +143,7 @@ class ResourceMonitor {
                     this.setPattern(cmd);
                 }
             }
-        }
+        }*/
     }
 
     transferRecords(oldId, newId) {

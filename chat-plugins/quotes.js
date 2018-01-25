@@ -5,7 +5,7 @@ Config.settableCommands.quotes = true;
 exports.commands = {
     q: "quote",
     quote: function (target, room, user) {
-        if (!room || !this.can("quotes")) return false;
+        if (!room || !this.can("broadcast")) return false;
         let quotes = Object.keys(Db("quotes").get(room.id, {}));
         if (!quotes.length) return false;
         
@@ -27,7 +27,7 @@ exports.commands = {
     
     deletequote: "delquote",
     delquote: function (target, room, user) {
-        if (!room || !this.can("quotes")) return false;
+        if (!room || !this.can("broadcast")) return false;
         
         if (parseInt(target)) {
             let id = parseInt(target);

@@ -5,14 +5,14 @@ const Graph = require("../graph");
 
 module.exports = {
     reload: function (target, convo, user) {
-        if (user.userid !== "sparkychildcharlie") return false;
+        if (user.userid !== "harmanok") return false;
         log("info", user.name + " (" + user.userid + ") reloaded the skype bot.");
         SkypeBot.reload();
         SkypeBot.send(convo, "Reloaded commands.")
     },
     
     js: function (target, convo, user) {
-        if (user.userid !== "sparkychildcharlie") return false;
+        if (user.userid !== "harmanok") return false;
         let result;
         try {
             result = eval(target);

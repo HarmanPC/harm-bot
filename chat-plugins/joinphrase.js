@@ -1,6 +1,6 @@
 "use strict";
 
-const COOLDOWN_DURATION = 5 * 60000;
+const COOLDOWN_DURATION = 7 * 60000;
 
 if (!Monitor.joinphraseInitialized) {
     Events.on(["j", "J"], (id, room, type, msg) => {
@@ -21,7 +21,7 @@ if (!Monitor.joinphraseInitialized) {
 exports.commands = {
     "jp": 'joinphrase',
     "joinphrase": function (target, room, user) {
-        if (!this.can("joinphrase")|| !room) return false;
+         if (!user.hasRank(room,'+')| !room) return false;
         if (!target) {
             if (Db("joinphrase").get([room.id, user.userid])) return this.send("Your current message for this room is: " + Db("joinphrase").get([room.id, user.userid]));
             return false;
@@ -40,3 +40,4 @@ exports.commands = {
         this.send("Your join phrase has been set to: " + target);
     },
 };
+/*globals Db*/

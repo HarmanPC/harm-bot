@@ -18,7 +18,7 @@ function getUserInfo(userid) {
 }
 
 exports.commands = {
-    regdate: function(target, room, user) {
+   /* regdate: function(target, room, user) {
         this.can("broadcast");
         
         target = toId(target) || user.userid;
@@ -58,5 +58,5 @@ exports.commands = {
             if (!buffer.length) return this.send(`The user '${target}' has not played any ladder games yet.`);
             this.send(`Ladder ratings for '${target}': ` + buffer.join(" | "));
         });
-    },
+    },*/
 };

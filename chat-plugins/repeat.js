@@ -32,6 +32,12 @@ exports.commands = {
                 delete room.repeat;
                 this.send("The repeat was stopped.");
                 break;
+            case "end":
+                 if (!room.repeat) return this.send("There is no repeat going on.");
+                clearInterval(room.repeat);
+                delete room.repeat;
+                this.send("The repeat was ended.");
+                break;
             default:
                 return this.parse("/help repeat");
                 break;

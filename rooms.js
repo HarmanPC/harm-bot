@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 let Rooms = {};
 let rooms = Rooms.rooms = new Map();
 
@@ -134,8 +134,8 @@ class Room {
 
         function getModCommand(value) {
             value = value - 1;
-            let choices = ["warn", "warn", "mute", "mute", "mute", "mute", "hourmute", "hourmute", "hourmute", "roomban"];
-            if (value > 9) value = 9;
+            let choices = [ "mute", "mute", "mute", "hourmute", "hourmute", "hourmute", "roomban"];
+            if (value > 7) value = 7;
             let modCommand = choices[value];
             if (botsRank === "%" && modCommand === "roomban") return "hourmute";
             return modCommand;
@@ -154,6 +154,7 @@ class Room {
         let moderateAll = false;
         Object.keys(Config.modSettings).forEach(aspect => {
             minModRank = Db("settings").get([this.id, "moderation", aspect], "+");
+           // if (room.game == true) return false;
             if (shouldModerate(userRank, minModRank) || moderateAll) {
                 switch (aspect) {
                     case "caps":

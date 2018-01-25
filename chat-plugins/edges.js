@@ -1,17 +1,17 @@
 "use strict";
 
-exports.game = "anagrams";
-exports.aliases = ["anag", "anags"];
+exports.game = "edges";
+exports.aliases = ["edge"];
 
-class AnagramGame extends Rooms.botGame {
+class EdgeGame extends Rooms.botGame {
     constructor (room, scorecap) {
         super(room);
         
         this.targetPokemon = null;
         this.anagram = null;
         this.allowJoins = false;
-        this.gameId = "anagrams";
-        this.gameName = "Anagrams";
+        this.gameId = "edges";
+        this.gameName = "Edges";
         this.roundNumber = 0;
         this.scorecap = Math.abs(parseInt(scorecap) || 5);
         this.init();
@@ -20,7 +20,7 @@ class AnagramGame extends Rooms.botGame {
     init () {
         this.state = "started";
         if (this.scorecap <= 0) this.scorecap = 5;
-        this.sendRoom("Harmgame! A new game of Anagrams is starting. Use ``" + this.room.commandCharacter[0] + "g`` to guess the Pokémon. First to " + this.scorecap + " points wins.");
+        this.sendRoom("Harmgame! A new game of Edges is starting. Use ``" + this.room.commandCharacter[0] + "g`` to guess the Pokémon. First to " + this.scorecap + " points wins.");
         this.initRound();
     }
     
@@ -34,7 +34,7 @@ class AnagramGame extends Rooms.botGame {
         this.users[user.userid].points++;
         if (this.users[user.userid].points >= this.scorecap) {
             this.sendRoom(user.name + " has won the game!");
-            Leaderboard.onWin("anagrams", this.room, user.userid, this.scorecap).write();
+            Leaderboard.onWin("edges", this.room, user.userid, this.scorecap).write();
             this.destroy();
             return;
         }
@@ -45,39 +45,39 @@ class AnagramGame extends Rooms.botGame {
     initRound () {
         this.roundNumber++;
         this.determineQuestion();
-        this.sendRoom("Round " + this.roundNumber + " | " + this.anagram + ".");
+        this.sendRoom("Round " + this.roundNumber + " | " + this.edge + ".");
     }
     
     determineQuestion () {
         this.targetPokemon = Tools.shuffle(Object.keys(Tools.Words))[0];
-        this.anagram = Tools.shuffle(this.targetPokemon.replace(/\W/g, "").toLowerCase().split("")).join(", ") + " [" + Tools.Words[this.targetPokemon] + (this.targetPokemon.match(/\W/g) ? ", " + (this.targetPokemon.match(/\W/g).length + 1) + " words" : "") + "]";
+        this.edge = this.targetPokemon.slice(0,1) + ' - ' + this.targetPokemon.slice(this.targetPokemon.length - 1, this.targetPokemon.length).toUpperCase() + ' [' + Tools.Words[this.targetPokemon] + ']';
     }
     
     getScoreBoard () {
         let self = this;
-        return "Points: " + Object.keys(this.users).sort().map((u) => {
-            return self.users[u].name + " (" + self.users[u].points + ")";
+        return "/wall Points: __" + Object.keys(this.users).sort().map((u) => {
+            return self.users[u].name + "__ (" + self.users[u].points + ")";
         }).join(", ");
     }
 }
 
 exports.commands = {
-    anagrams: function (target, room, user) {
+    edges: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if(room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
-        room.game = new AnagramGame(room, target);
+        room.game = new EdgeGame(room, target);
     },
-    anagramsscore: function (target, room, user) {
-        if (!room || !this.can("games") || !room.game || room.game.gameId !== "anagrams") return false;
+    edgesscore: function (target, room, user) {
+        if (!room || !this.can("games") || !room.game || room.game.gameId !== "edges") return false;
         this.send(room.game.getScoreBoard());
     },
-    anagramsskip: function (target, room, user) {
-        if (!room || !this.can("games") || !room.game || room.game.gameId !== "anagrams") return false;
+    edgesskip: function (target, room, user) {
+        if (!room || !this.can("games") || !room.game || room.game.gameId !== "edges") return false;
         this.send("The correct answer was: " + room.game.targetPokemon);
         room.game.initRound();        
     },
-    anagramsrepost: function (target, room, user) {
-        if (!room || !this.can("games") || !room.game || room.game.gameId !== "anagrams") return false;
-        this.send("Repost - Round " + room.game.roundNumber + " | " + room.game.anagram + ".");
+    edgesrepost: function (target, room, user) {
+        if (!room || !this.can("games") || !room.game || room.game.gameId !== "edges") return false;
+        this.send("/wall ``Repost`` - Round " + room.game.roundNumber + " | " + room.game.edge + ".");
     },
 };

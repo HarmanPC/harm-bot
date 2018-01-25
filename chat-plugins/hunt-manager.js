@@ -7,7 +7,7 @@ function logLine (ln) {
 
 exports.commands = {
     addhunt: function (target, room, user) {
-        if (!Rooms.rooms.has("scavengers") || !user.hasRank(Rooms.get("scavengers"), "+")) return this.send("The bot must be in the scavengers room for this to work. You must also have at least + in the scavengers room.");
+        if (!user.hasRank("+")) return this.send("The bot must be in the scavengers room for this to work. You must also have at least + in the scavengers room.");
         
         let [id, link] = target.split(", ");
         id = toId(id, true);
@@ -29,16 +29,16 @@ exports.commands = {
     
     deletehunt: "removehunt",
     removehunt: function (target, room, user) {
-        if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
-        let scav = Rooms.get("scavengers");
-        if (!user.hasRank(scav, "+")) return this.send("You must be in the scavengers room, and have at least + in the scavengers room.");
+       // if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
+        //let scav = Rooms.get("scavengers");
+        if (!user.hasRank("+")) return false; // this.send("You must be in the scavengers room, and have at least + in the scavengers room.");
         let id = toId(target, true);
         
         let targetHunt = Db("hunts").get(id, null);
         
         if (!targetHunt) return this.send("Invalid hunt.");
         
-        if (!user.hasRank(scav, "%") && targetHunt.addedBy !== user.userid) return this.send("You are not permitted to remove this hunt.");
+        if (!user.hasRank("%") && targetHunt.addedBy !== user.userid) return this.send("You are not permitted to remove this hunt.");
         
         Db("hunts").delete(id);
         
@@ -47,16 +47,16 @@ exports.commands = {
     },
     
     viewhunt: function (target, room, user) {
-        if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
-        let scav = Rooms.get("scavengers");
-        if (!user.hasRank(scav, "+")) return this.send("You must be in the scavengers room, and have at least + in the scavengers room.");
+       // if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
+      //  let scav = Rooms.get("scavengers");
+        if (!user.hasRank("+")) return false; //this.send("You must be in the scavengers room, and have at least + in the scavengers room.");
         let id = toId(target, true);
         
         let targetHunt = Db("hunts").get(id, null);
         
         if (!targetHunt) return this.send("Invalid hunt.");
         
-        if (!user.hasRank(scav, "%") && targetHunt.addedBy !== user.userid) return this.send("You are not permitted to remove this hunt.");
+        if (!user.hasRank("%") && targetHunt.addedBy !== user.userid) return this.send("You are not permitted to remove this hunt.");
         
         if (!targetHunt.views.includes(user.userid)) {
             targetHunt.views.push(user.userid);
@@ -68,9 +68,9 @@ exports.commands = {
     },
     
     qchunt: function (target, room, user) {
-        if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
-        let scav = Rooms.get("scavengers");
-        if (!user.hasRank(scav, "%")) return this.send("You must be in the scavengers room, and have at least % in the scavengers room.");
+      //  if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
+      //  let scav = Rooms.get("scavengers");
+        if (!user.hasRank("%")) return false; //this.send("You must be in the scavengers room, and have at least % in the scavengers room.");
         let id = toId(target, true);
         
         let targetHunt = Db("hunts").get(id, null);
@@ -79,7 +79,7 @@ exports.commands = {
         
         if (!targetHunt.views.includes(user.userid)) return this.send("You cannot QC a hunt you have not seen yet.");
         if (targetHunt.qc.includes(user.userid)) return this.send("You have already QC'd this hunt");
-        if (targetHunt.addedBy === user.userid) return this.send("You cannot QC your own hunts.");
+      //  if (targetHunt.addedBy === user.userid) return this.send("You cannot QC your own hunts.");
         
         targetHunt.qc.push(user.userid);
         
@@ -91,10 +91,10 @@ exports.commands = {
     },
     
     userhunts: function (target, room, user) {
-        if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
-        let scav = Rooms.get("scavengers");
+       // if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
+       // let scav = Rooms.get("scavengers");
         target = toId(target);
-        if (!user.hasRank(scav, "%") && user.userid !== target) return this.send("The user must be in the scavengers, and have at least % in the scavengers room.");
+        if (!user.hasRank("%") && user.userid !== target) return false; //this.send("The user must be in the scavengers, and have at least % in the scavengers room.");
         
         let data = Db("hunts").object();
         
@@ -104,10 +104,10 @@ exports.commands = {
     },
     
     pendinghunts: function (target, room, user) {
-        if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
-        let scav = Rooms.get("scavengers");
+       // if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
+       // let scav = Rooms.get("scavengers");
         target = toId(target);
-        if (!user.hasRank(scav, "%") && user.userid !== target) return this.send("The user must be in the scavengers, and have at least % in the scavengers room.");
+        if (!user.hasRank("%") && user.userid !== target) return false; //this.send("The user must be in the scavengers, and have at least % in the scavengers room.");
         
         let data = Db("hunts").object();
         
@@ -117,10 +117,10 @@ exports.commands = {
     },
     
     readyhunts: function (target, room, user) {
-        if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
-        let scav = Rooms.get("scavengers");
+       // if (!Rooms.rooms.has("scavengers")) return this.send("The bot must be in the scavengers room for this to work.")
+       // let scav = Rooms.get("scavengers");
         target = toId(target);
-        if (!user.hasRank(scav, "%") && user.userid !== target) return this.send("The user must be in the scavengers, and have at least % in the scavengers room.");
+        if (!user.hasRank("%") && user.userid !== target) return false; //this.send("The user must be in the scavengers, and have at least % in the scavengers room.");
         
         let data = Db("hunts").object();
         

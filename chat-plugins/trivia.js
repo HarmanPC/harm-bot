@@ -1,6 +1,6 @@
 "use strict";
 
-const ROUND_DURATION = 10000;
+const ROUND_DURATION = 30000;
 const WAIT_DURATION = 2000;
 
 const TRIVIA_FILE = "data/trivia.json";
@@ -30,11 +30,16 @@ class TriviaGame extends Rooms.botGame {
     }
     
     onInit() {
+        
+        if (this.scorecap > 25) {
+            this.sendRoom("That's a too long scorecap.");
+            this.destroy();
+        }
         if (Trivia.isEmpty()) {
             this.sendRoom("There are no trivia questions loaded. Game automatically ended.");
             return this.onEnd();
         }
-        this.sendRoom(`A new game of Trivia is starting! Use \`\`${this.room.commandCharacter[0]}join\`\` to join the game.  First to ${this.scorecap} points win!`);
+        this.sendRoom(`Harmgame! A new game of Trivia is starting! (Free Join) First to ${this.scorecap} points win!`);
         this.onInitRound();
     }
     
@@ -88,8 +93,8 @@ class TriviaGame extends Rooms.botGame {
     }
     
     getScoreBoard() {
-        return "Points: " + Object.keys(this.users).sort().map((u) => {
-            return this.users[u].name + " (" + this.users[u].points + ")";
+        return "/wall Points: __" + Object.keys(this.users).sort().map((u) => {
+            return this.users[u].name + "__ (" + this.users[u].points + ")";
         }).join(", ");
     }
 }
