@@ -37,6 +37,13 @@ exports.commands = {
             this.send(`/uno start`);
         }
     },
+    game: function (target, room, user){
+        this.can("broadcast");
+        if (!room.game) return this.send(`No game is going on right now.`);
+        else 
+        this.send(`A Game of ${room.game.gameName} is going on.`);
+        
+    },
     autostart: function (target, room, user) {
         if (!room || !user.can('broadcast') || !room.game) return false;
         if (room.game.runAutoStart) room.game.runAutoStart(target);
