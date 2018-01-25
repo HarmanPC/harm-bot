@@ -50,7 +50,7 @@ exports.commands = {
     },
     git: function(target, room, user) {
         this.can("set");
-        this.send(Monitor.username + "'s github repository: https://github.com/sparkychildcharlie/FoxieBot-kit");
+        this.send(Monitor.username + "'s github repository: https://github.com/HarmanPC/harm-bot");
     },
     usage: function(target, room, user) {
         let baseLink = "http://www.smogon.com/stats/2017-01/";
