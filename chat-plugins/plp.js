@@ -57,7 +57,8 @@ class plpGame extends Rooms.botGame {
          comb.push(combine);
         }
         let smth = comb[Math.floor(Math.random() * comb.length)];
-        let rand = ('This ' + Tools.Words[this.targetPokemon] + ' contains the letters **' + smth.replace(' ','').replace('-','').toUpperCase() + '**');
+        let word = toId(smth).toUpperCase();
+        let rand = ('This ' + Tools.Words[this.targetPokemon] + ' contains the letters **' + word + '**');
         this.plp = rand;
     }
     
