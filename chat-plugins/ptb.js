@@ -23,7 +23,9 @@ class PassthebombGame extends Rooms.botGame {
         
         this.turn = 1;
         this.allowRenames = false;
-        this.sendRoom("Harmgame!A new game of Pass the bomb is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
+      //  this.parse(`/set mod, flooding,off`);
+     //   this.parse(`/set mod, spam, off`);
+        this.sendRoom("Harmgame! A new game of Pass the bomb is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
     }
     
     getRandomPlayer() {
@@ -89,6 +91,8 @@ class PassthebombGame extends Rooms.botGame {
             this.sendRoom(`Congratulations to ${winner.name} for winning the game!`);
         }
         this.destroy()
+       // this.parse(`/set mod,spam, on`);
+       // this.parse('/set mod ,flooding,on');
     }
     
     eliminate(player) {

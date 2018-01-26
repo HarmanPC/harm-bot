@@ -1,4 +1,4 @@
-/*"use strict";
+"use strict";
 
 class GtaManager {
     constructor(file) {
@@ -55,4 +55,4 @@ class GtaManager {
     }
 }
 
-module.exports = GtaManager;*/
+module.exports = GtaManager;

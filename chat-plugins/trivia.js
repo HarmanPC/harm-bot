@@ -33,7 +33,7 @@ class TriviaGame extends Rooms.botGame {
         
         if (this.scorecap > 25) {
             this.sendRoom("That's a too long scorecap.");
-            this.destroy();
+            return this.onEnd();
         }
         if (Trivia.isEmpty()) {
             this.sendRoom("There are no trivia questions loaded. Game automatically ended.");
@@ -94,7 +94,7 @@ class TriviaGame extends Rooms.botGame {
     
     getScoreBoard() {
         return "/wall Points: __" + Object.keys(this.users).sort().map((u) => {
-            return this.users[u].name + "__ (" + this.users[u].points + ")";
+            return "__" + this.users[u].name + "__ (" + this.users[u].points + ")";
         }).join(", ");
     }
 }

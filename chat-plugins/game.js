@@ -65,7 +65,7 @@ exports.commands = {
     },
     signups: function(target, room, user) {
         if (!room || !user.can('broadcast')) return false;
-        if (!target) this.parse("/help signups");
+       // if (!target) this.parse("/help signups");
         if (target == 'passthebomb' || target=='ptb' || target=='chainfishing' || target=='cf' || target=='fishing') return false;
         let arg;
         [target, arg] = target.split(",").map(p => p.trim());
