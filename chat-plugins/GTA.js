@@ -51,8 +51,7 @@ class GtaGame extends Rooms.botGame {
         this.answered = false;
         
         clearTimeout(this.timer);
-        
-        this.sendRoom(`Round ${this.round} | ${this.question}`);
+        this.sendRoom('Round ' + this.round + ' | Global: ' + this.question[0] + ' | Room: ' + this.question[1] + '.');
         this.timer = setTimeout(() => {
             this.sendRoom(`Time's up! The correct answer${(this.answers.length > 1 ? "s are" : " is")}: ${this.answers.join(", ")}`);
             this.timer = setTimeout(() => this.onInitRound(), WAIT_DURATION);
@@ -93,7 +92,7 @@ class GtaGame extends Rooms.botGame {
     }
     
     getScoreBoard() {
-        return "/wall Points: __" + Object.keys(this.users).sort().map((u) => {
+        return "/wall Points: " + Object.keys(this.users).sort().map((u) => {
             return "__" + this.users[u].name + "__ (" + this.users[u].points + ")";
         }).join(", ");
     }
@@ -118,11 +117,11 @@ exports.commands = {
     },
     
     addgta: function (target, room, user) {
-        if (!user.hasBotRank("+")) return false;
+        if (!user.hasBotRank("%")) return false;
         
         let [question, answers] = target.split("/").map(p => p.trim());
         if (!question || !answers) return this.send("Invalid question/answer pair.");
-
+        question = question.split(",").map(p => p.trim());
         answers = answers.split(",").map(p => p.trim());
         if (answers.some(a => !toId(a))) return this.send("All answers must have alphanumeric characters.");
         
@@ -143,10 +142,10 @@ exports.commands = {
     },
     
     gtalist: function (target, room, user) {
-        if (!user.hasBotRank("~")) return false;
+        if (!user.hasBotRank("+")) return false;
         let questions = GTA.allQuestions();
         
-        Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}\nAnswer(s): ${q.answers.join(", ")}`).join("\n\n"), 
+        Tools.uploadToHastebin(questions.map(q => `Global: ${q.question[0]} Room: ${q.question[1]} \nAnswer(s): ${q.answers.join(", ")}`).join("\n\n"), 
             link => user.sendTo(`${questions.length} questions - ${link}`));
     },
 };

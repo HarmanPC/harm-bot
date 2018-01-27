@@ -93,7 +93,7 @@ class TriviaGame extends Rooms.botGame {
     }
     
     getScoreBoard() {
-        return "/wall Points: __" + Object.keys(this.users).sort().map((u) => {
+        return "/wall Points: " + Object.keys(this.users).sort().map((u) => {
             return "__" + this.users[u].name + "__ (" + this.users[u].points + ")";
         }).join(", ");
     }

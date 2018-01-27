@@ -101,9 +101,9 @@ exports.commands = {
         this.send(`/uno create ${target} `);
         this.send(`/uno timer 69`);
         this.send(`/wall Harmgame! A new game of UNO is starting in 1:30 minutes. Do \`\`/uno join\`\` to join.`);
-        room.start = setInterval(() => {
-                    this.send('/uno start');
-                },  1.5 * 60 * 1000);
+        /*room.start = setInterval(() => {
+                    this.send('/me tests');
+                },  1 * 1000 * 90);*/
         
     },
     unostart:  function(target,room,user) {
