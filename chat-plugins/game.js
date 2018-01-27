@@ -33,9 +33,7 @@ exports.commands = {
     start: function(target, room, user) {
         if (!room || !user.can('broadcast') || !room.game) return false;
         if (room.game.onStart) room.game.onStart();
-        else {
-            this.send(`/uno start`);
-        }
+    
     },
     game: function (target, room, user){
         this.can("broadcast");
@@ -66,7 +64,7 @@ exports.commands = {
     signups: function(target, room, user) {
         if (!room || !user.can('broadcast')) return false;
        // if (!target) this.parse("/help signups");
-        if (target == 'passthebomb' || target=='ptb' || target=='chainfishing' || target=='cf' || target=='fishing') return false;
+        if (target=="passthebomb" || target=="ptb") return false;
         let arg;
         [target, arg] = target.split(",").map(p => p.trim());
         

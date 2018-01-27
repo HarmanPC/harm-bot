@@ -107,7 +107,7 @@ exports.commands = {
     },
     
     triviarepost: function (target, room, user) {
-        if (!room || !this.can("games") || !room.game || room.game.gameId !== "statspread") return false;
+        if (!room || !this.can("games") || !room.game || room.game.gameId !== "trivia") return false;
         this.send(`Round ${room.game.round} | ${room.game.question}`);
     },
     
