@@ -35,8 +35,6 @@ class hostGame extends Rooms.botGame {
      onEnd(winner) {
         this.state = "ended";
         if (winner) {
-         //   let winner = this.users[this.userList[0]];
-        //    this.sendRoom(`Congratulations to ${winner.name} for winning the game of ambush!`);
             Leaderboard.onWin("host", this.room, winner, this.startingPlayers).write();
         }
         
@@ -52,7 +50,6 @@ exports.commands = {
     },
     win: function (target, room, user) {
     if (!user.hasBotRank('%') || !user.id == room.game.userHost) return false;
-    //target = target.split(',');
     let winner = toId(target);
     this.send('The winner is ' + target + '! Thanks for hosting.');
     room.game.onEnd(winner);
