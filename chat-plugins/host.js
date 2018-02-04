@@ -18,7 +18,7 @@ class hostGame extends Rooms.botGame {
         
     }
     onStart(user) {
-        if (!user.hasBotRank('+') || (!user.id == this.userHost)) return false;
+       // if (!user.hasBotRank('+') || (!user.id == this.userHost)) return false;
         if (this.userList.length < 2 || this.state !== "signups") return false;
         this.state === 'started';
         this.sendRoom(`Signups are now closed.`);
@@ -28,6 +28,9 @@ class hostGame extends Rooms.botGame {
         let pl = this.userList.sort().map(u => this.users[u].name);
         
         this.sendRoom(`Players (${this.userList.length}): ${pl.join(", ")}`);
+    }
+    hosting(ok) {
+        this.userHost = ok;
     }
      onEnd(winner) {
         this.state = "ended";
@@ -45,7 +48,7 @@ exports.commands = {
         if (!room || !target|| !this.can("games")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new hostGame(room);
-        room.game.userHost = toId(target);
+        room.game.hosting(toId(target));
     },
     win: function (target, room, user) {
     if (!user.hasBotRank('%') || !user.id == room.game.userHost) return false;
@@ -53,7 +56,6 @@ exports.commands = {
     let winner = toId(target);
     this.send('The winner is ' + target + '! Thanks for hosting.');
     room.game.onEnd(winner);
-    room.game.userHost = {};
     },
     scorecap: function (target, room, user) {
         let score=[];
