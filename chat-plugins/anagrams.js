@@ -55,8 +55,8 @@ class AnagramGame extends Rooms.botGame {
     
     getScoreBoard () {
         let self = this;
-        return "Points: " + Object.keys(this.users).sort().map((u) => {
-            return self.users[u].name + " (" + self.users[u].points + ")";
+        return "/wall Points: " + Object.keys(this.users).sort().map((u) => {
+            return "__" + self.users[u].name + "__ (" + self.users[u].points + ")";
         }).join(", ");
     }
 }
@@ -78,6 +78,6 @@ exports.commands = {
     },
     anagramsrepost: function (target, room, user) {
         if (!room || !this.can("games") || !room.game || room.game.gameId !== "anagrams") return false;
-        this.send("Repost - Round " + room.game.roundNumber + " | " + room.game.anagram + ".");
+        this.send("/wall Repost - Round " + room.game.roundNumber + " | " + room.game.anagram + ".");
     },
 };

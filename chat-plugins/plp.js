@@ -1,4 +1,6 @@
 "use strict";
+const ROUND_DURATION = 60000;
+const WAIT_DURATION = 2000;
 
 exports.game = "piplups letter placement";
 exports.aliases = ["plp"];
@@ -46,6 +48,17 @@ class plpGame extends Rooms.botGame {
         this.roundNumber++;
         this.determineQuestion();
         this.sendRoom("Round " + this.roundNumber + " | " + this.plp + "");
+        this.onInitRound();
+    }
+     onInitRound() {
+        
+        clearTimeout(this.timer);
+        
+        this.timer = setTimeout(() => {
+            this.sendRoom(`Time's up! The correct answer is: ${this.targetPokemon}`);
+            this.initRound();
+            this.timer = setTimeout(() => this.onInitRound(), WAIT_DURATION);
+        }, ROUND_DURATION);
     }
     
     determineQuestion () {

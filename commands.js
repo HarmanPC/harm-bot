@@ -1,6 +1,7 @@
 'use strict';
 // use return false to show that the command didnt go through to prevent triggering false monitor moderations
-
+/*globals removeCommand*/
+/*globals toId*/
 exports.commands = {
     say: function(target, room, user) {
         if (!this.can("say")) return false;
@@ -11,7 +12,7 @@ exports.commands = {
     addchar: function(target, room, user) {
         if (!this.can("set") || !room) return false;
         if (target.length !== 1 || toId(target) || target === " ") return this.send("The command character has to be 1 character long, and cannot be an alphanumeric character.");
-        if(room.commandCharacter.includes(target)) return this.send("This is already a command character in this room.")
+        if(room.commandCharacter.includes(target)) return this.send("This is already a command character in this room.");
         room.addCommandCharacter(target);
         this.send(target + " has been added to this room's command characters.");
     },

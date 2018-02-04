@@ -2,7 +2,7 @@
 
 const cache_db = require("./cache-db.js");
 
-const developers = ["harmanpc","jennisa","hiimafk"];
+const developers = ["harmanpc","amice","sniper"];
 let Users = {};
 let users = Users.users = new Map();
 Users.seen = new cache_db();

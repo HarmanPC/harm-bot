@@ -21,7 +21,7 @@ if (!Monitor.joinphraseInitialized) {
 exports.commands = {
     "jp": 'joinphrase',
     "joinphrase": function (target, room, user) {
-         if (!user.hasRank(room,'+')| !room) return false;
+         if (/*!user.hasRank(room,'+')| */!room) return false;
         if (!target) {
             if (Db("joinphrase").get([room.id, user.userid])) return this.send("Your current message for this room is: " + Db("joinphrase").get([room.id, user.userid]));
             return false;

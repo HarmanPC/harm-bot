@@ -32,6 +32,11 @@ exports.commands = {
         let success = Tools.reload();
         this.send(success ? "Reloaded commands." : "Failed to reload commands.");
     },
+   /* reloaddata: function(target, room, user) {
+        if (!user.isDev()) return false;
+        let success = Tools.reloadIt();
+        this.send(success ? "Reloaded Data." : "Failed to reload commands.");
+    },*/
     rename: "login",
     login: function(target, room, user) {
         if (!user.isDev()) return false;
