@@ -3,13 +3,14 @@ exports.game = 'host';
 exports.aliases = ['host'];
 
 class hostGame extends Rooms.botGame {
-    constructor(room) {
+    constructor(room, target) {
         super(room);
         
         this.gameId = "host";
         this.gameName = 'Host';
         
-        this.userHost = [];
+        this.scorecap = [];
+        this.userHost = target;
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
@@ -18,9 +19,9 @@ class hostGame extends Rooms.botGame {
         
     }
     onStart(user) {
-       // if (!user.hasBotRank('+') || (!user.id == this.userHost)) return false;
-        if (this.userList.length < 2 || this.state !== "signups") return false;
-        this.state === 'started';
+    //    if (!user.hasBotRank('+') || (!user.id == this.userHost)) return false;
+        if (this.state !== "signups") return false;
+        this.state = 'started';
         this.sendRoom(`Signups are now closed.`);
         this.startingPlayers = this.userList.length;
     }
@@ -28,9 +29,6 @@ class hostGame extends Rooms.botGame {
         let pl = this.userList.sort().map(u => this.users[u].name);
         
         this.sendRoom(`Players (${this.userList.length}): ${pl.join(", ")}`);
-    }
-    hosting(ok) {
-        this.userHost = ok;
     }
      onEnd(winner) {
         this.state = "ended";
@@ -45,26 +43,25 @@ exports.commands = {
     host: function (target, room, user) {
         if (!room || !target|| !this.can("games")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
-        room.game = new hostGame(room);
-        room.game.hosting(toId(target));
+        room.game = new hostGame(room, target);
     },
     win: function (target, room, user) {
-    if (!user.hasBotRank('%') || !user.id == room.game.userHost) return false;
+    if (!room || !room.game || !user.hasBotRank('%') || user.userid != toId(room.game.userHost)) return false;
     let winner = toId(target);
     this.send('The winner is ' + target + '! Thanks for hosting.');
     room.game.onEnd(winner);
     },
     scorecap: function (target, room, user) {
-        let score=[];
-        if (target)
-        this.send(`Scorecap has been set to: ${target}`);
-        score = target;
-        
-        if (!target) 
-            this.send(`Scorecap: ${score}`);
-        
-    }
-};
+        if ( !room || !room.game || !user.hasRank('+') || user.userid != toId(room.game.userHost)) return false;
+        if (!target){
+            this.send(`**Scorecap:** ${room.game.scorecap}`);
+        }
+        else {
+            this.send(`**Scorecap has been set to:** ${target}`);
+            room.game.scorecap = target;
+        }
+    },
+};  
 
 /* globals Leaderboard*/
 /* globals Tools*/ 

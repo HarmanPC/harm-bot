@@ -12,11 +12,12 @@ exports.commands = {
     g: function(target, room, user) {
         if (!room || !room.game || room.game.answerCommand !== "standard") return false;
         if (room.game.onGuess) room.game.onGuess(user, target);
-    },
-    rpl: function(target, room, user) {
+    }, 
+    apl: "addplayer",
+    addplayer: function(target, room, user) {
         if (!room || !room.game || !user.hasBotRank('%')) return false;
-        if (room.game.onLeave) room.game.onLeave(target);
-        this.send(`${target} is kicked from game.`);
+        if (room.game.onLeave) room.game.onJoin(Users.get(target));
+        this.send(`${target} is added in game.`);
     },
     leave: function(target, room, user) {
         if (!room || !room.game) return false;
