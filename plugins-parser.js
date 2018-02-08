@@ -69,7 +69,7 @@ const plugins = exports.Plugins = {
                 return this.parse(cmd);
             }
             
-            this.send(removeCommand(reply));
+            this.send(reply);
         });
     },
 };

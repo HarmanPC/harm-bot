@@ -98,47 +98,6 @@ const tools = exports.Tools = {
         }
         return true;
     },
-   /* reloadIt: function() {
-        this.uncacheTree("./tools.js");
-        try {
-            Commands = require("./tools.js").commands;
-            log("ok", "Reloaded tools.js")
-        }
-        catch (e) {
-            log("error", "Unable to load commands.js");
-            return false;
-        }
-        let loaded = [];
-        let failed = [];
-        
-        Monitor.games = {};
-        fs.readdirSync('./data/').forEach(f => {
-            try {
-                this.uncacheTree("./data/" + f);
-                
-                let plugin = require("./data/" + f);
-                if (plugin.commands) Object.assign(Commands, plugin.commands);
-                if (plugin.game) {
-                    Monitor.games[plugin.game] = plugin.game;
-                    if (plugin.aliases) plugin.aliases.forEach(alias => Monitor.games[alias] = plugin.game);
-                }
-                
-                loaded.push(f);
-            }
-            catch (e) {
-                failed.push(f);
-                console.log(e.stack);
-            }
-        });
-        if (loaded.length) {
-            log("info", "Loaded command files: " + loaded.join(", "));
-        }
-        if (failed.length) {
-            log("error", "Failed to load: " + failed.join(", "));
-            return false;
-        }
-        return true;
-    },*/
     matchText: function(str1, str2) {
         function matchStrings(first, second) {
             // Calculates the similarity between two strings  
@@ -241,15 +200,21 @@ function arrayToObject (array, value) {
 
 // load the data modules
 require("./data-downloader")().then(() => {
+tools.Types = Object.assign({}, 
+        arrayToObject(Object.keys(tools.Pokedex).map(p => tools.Pokedex[p].types), "Types"),
+        );
+});
+require("./data-downloader")().then(() => {
     tools.Formats = require("./data/formats-data.js").BattleFormatsData;
     tools.Pokedex = require("./data/pokedex.js").BattlePokedex;
     tools.Movedex = require("./data/moves.js").BattleMovedex;
     tools.Abilities = require("./data/abilities.js").BattleAbilities;
     tools.Items = require("./data/items.js").BattleItems;
+    tools.PSrooms = require("./data/psrooms.js").PSrooms;
    // tools.Locations = require("./data/locations.js").locations;
     
-    tools.Words = Object.assign({}, 
-      //  tools.Locations, 
+    
+    tools.Words = Object.assign({},
         arrayToObject(Object.keys(tools.Pokedex).map(p => tools.Pokedex[p].species), "Pokémon"),
         arrayToObject(Object.keys(tools.Movedex).map(p => tools.Movedex[p].name), "Pokémon Move"),
         arrayToObject(Object.keys(tools.Abilities).map(p => tools.Abilities[p].name), "Pokémon Ability"),

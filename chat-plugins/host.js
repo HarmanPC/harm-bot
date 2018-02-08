@@ -45,6 +45,10 @@ exports.commands = {
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new hostGame(room, target);
     },
+    subhost: function (target, room, user) {
+        this.send(target + ' has been subhosted.');
+        room.game.userHost = toId(target);
+    },
     win: function (target, room, user) {
     if (!room || !room.game || !user.hasBotRank('%') || user.userid != toId(room.game.userHost)) return false;
     let winner = toId(target);
