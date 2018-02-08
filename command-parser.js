@@ -128,4 +128,14 @@ exports.commandParser = function(message, user, room, bypassMonitor, levelsDeep)
 		Monitor.run(user, room, "customcommand", !room);
 		return;
 	}
-}
+};
+/*globals toId*/
+/*globals log*/
+/*global Plugins*/
+/*globals Monitor*/
+/*globals commandParser*/
+/*globals Commands*/
+/*globals Config*/
+/*globals Users*/
+/*globals Db*/
+/*globals getEST*/

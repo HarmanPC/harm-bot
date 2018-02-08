@@ -1,6 +1,10 @@
 // this is where all the standard game commands are put
 'use strict';
-
+this.unotimer = setInterval(() => {
+                    this.send('!uno players');
+                    this.send('/uno start');
+                    clearTimeout(this.timer);
+                },  1 * 1000 * 120);
 exports.commands = {
     'j': 'join',
     'y': 'join',
@@ -75,6 +79,24 @@ exports.commands = {
         
         this.parse("/" + gameId + (arg ? " " + arg : ""));
     },
+    roll: function(target,room, user){
+        let num=Math.floor(Math.random() * target) + 1;
+        let msg=`Random Roll (1 -  ${target}): `;
+        if (!room.game){
+        if (!user.hasBotRank('+')) return false;
+        this.send(`${msg} ${num}`);
+        }
+        if (room.game) {
+            if (user.userid != toId(room.game.userHost)) return false;
+            this.send(`${msg} ${num}`);
+        }
+    },
+    rhangman: function (target, room, user) {
+        if (!user.can('games')) return false;
+        let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
+        this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
+        this.send('/wall Use ``/guess`` to guess.');
+    },
     type: function(target, room, user) {
         if (!user.can('games')) return false;
         let types=["Water","Fire","Grass","Electric","Ground","Flying","Psychic","Dark","Fighitng","Rock","Dragon","Fairy","Poison","Steel","Bug","Ice","Ghost"];
@@ -93,7 +115,21 @@ exports.commands = {
         }
         let random = Tools.shuffle(Object.keys(Tools.Pokedex))[0];
         this.send(`**Types:** ${objectValues(Tools.Pokedex[random].types)}`);
-    }
+    },
+     // UNO
+    uno: function (target, room, user){
+        this.can("broadcast");
+        this.send(`/uno create ${target} `);
+        this.send(`/uno timer 69`);
+        this.send(`/wall Harmgame! A new game of UNO is starting in 2 minutes. Do \`\`/uno join\`\` to join.`);
+        this.unotimer;
+    },
+    unostart:  function(target,room,user) {
+        this.can("broadcast");
+        this.send(`/uno start`);
+        this.send("/wall Good luck to everyone who joined the game of UNO!");
+        clearTimeout(this.unotimer);
+    },
     /*globals Tools*/
     /*globals Monitor*/
     /*globals toId*/

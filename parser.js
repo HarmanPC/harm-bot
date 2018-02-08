@@ -1,5 +1,4 @@
 'use strict';
-let https = require("https");
 let http = require("http");
 let url = require("url");
 
@@ -110,7 +109,7 @@ exports.parse = {
             case "noinit":
             case "deinit":
                 if (room.name === "global") {
-                    log("monitor", "Banned from server (left room global).")
+                    log("monitor", "Banned from server (left room global).");
                     this.connectionDetails.globallyBanned = true;
                 }
                 if(this.connectionDetails.globallyBanned) break;
@@ -200,3 +199,13 @@ exports.parse = {
         req.end();
     },
 };
+/*globals toId*/
+/*globals log*/
+/*global send*/
+/*globals Monitor*/
+/*globals commandParser*/
+/*globals Rooms*/
+/*globals Config*/
+/*globals Users*/
+/*globals Db*/
+/*globals Events*/

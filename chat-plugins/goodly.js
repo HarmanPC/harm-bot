@@ -1,7 +1,6 @@
 'use strict';
 this.timer = {};
 exports.commands = {
- // to invite all users when chat die 
     inviteall: function(target, room, user) {
         if (!user.can('games') || !room) return false;
         var text = '/invite ';
@@ -70,51 +69,16 @@ exports.commands = {
         this.send(text + 'winter unisparkle');
         this.send(text + 'tsardragon');
         this.send(text + 'sonic the impaler');
-        this.send(text + 'cr1mson fuqer');
+        this.send(text + 'cr1msonfuqer'); // 65
+        this.send(text + '');
         this.send('Invitation sent to 65 doc users!');
     },
-    // host
-    roll: function(target,room, user){
-        if (!user.hasBotRank('+')) return false;
-        if (user.userid != toId(room.game.userHost)) return false;
-        let num=Math.floor(Math.random() * target) + 1;
-        // took 2 vars because it adds target and msg
-        let msg=`Random Roll (1 -  ${target}): `;
-        this.send(`${msg} ${num}`);
-    },
-    // UNO
-    uno: function (target, room, user){
-        this.can("broadcast");
-        this.send(`/uno create ${target} `);
-        this.send(`/uno timer 69`);
-        this.send(`/wall Harmgame! A new game of UNO is starting in 2 minutes. Do \`\`/uno join\`\` to join.`);
-        this.timer = setInterval(() => {
-                    this.send('!uno players');
-                    this.send('/uno start');
-                    clearTimeout(this.timer);
-                },  1 * 1000 * 120);
-        
-    },
-    unostart:  function(target,room,user) {
-        this.can("broadcast");
-        this.send(`/uno start`);
-        this.send("/wall Good luck to everyone who joined the game of UNO!");
-        clearTimeout(this.timer);
-    },
-    rhangman: function (target, room, user) {
-        if (!user.can('games')) return false;
-        let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
-        this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
-        this.send('/wall Use ``/guess`` to guess.');
-    },
-    // test section for Harman
     count: function(target, room, user) {
         if (user.userid != 'harmanpc') return false;
         var i;
         for (i=1;i<=toId(target);i++){
-            this.send(i);
+            this.send(`!code {i}\n`);
         }
     },
 };
 /*globals toId*/
-/*globals Tools*/
