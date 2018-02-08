@@ -1,7 +1,7 @@
 'use strict';
 this.timer = {};
 exports.commands = {
-    inviteall: function(target, room, user) {
+    invite: function(target, room, user) {
         if (!user.can('games') || !room) return false;
         var text = '/invite ';
         this.send('Preparing to invite...');

@@ -53,7 +53,9 @@ const plugins = exports.Plugins = {
                     let subparts = m.match(/\[(?:(?!\]\}).)+\]/)[0].slice(1, -1).split(",").map(p => p.trim());
                     return plugins.random(...subparts);
                 })
-                
+                .replace(/{test}/g, m => {
+                    return 'Harman';
+                })
                 // preset randoms
                 .replace(/{pick}/g, m => {
                     return parts[Math.floor(Math.random() * parts.length)];

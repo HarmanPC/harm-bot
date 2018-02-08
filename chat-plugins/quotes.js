@@ -55,4 +55,9 @@ exports.commands = {
         
         Tools.uploadToHastebin(quotes.join("\n\n"), link => this.send("Quotes for " + room.name + ": " + link));
     }
-}
+};
+/*globals toId*/
+/*globals Rooms*/
+/*globals Config*/
+/*globals Db*/
+/*globals Tools*/

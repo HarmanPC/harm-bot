@@ -12,7 +12,7 @@ exports.commands = {
             this.send("<< " + JSON.stringify(result));
         }
         catch (e) {
-            this.send("<< " + e.name + ": " + e.message)
+            this.send("<< " + e.name + ": " + e.message);
         }
     },
     c: "custom",
@@ -32,11 +32,6 @@ exports.commands = {
         let success = Tools.reload();
         this.send(success ? "Reloaded commands." : "Failed to reload commands.");
     },
-   /* reloaddata: function(target, room, user) {
-        if (!user.isDev()) return false;
-        let success = Tools.reloadIt();
-        this.send(success ? "Reloaded Data." : "Failed to reload commands.");
-    },*/
     rename: "login",
     login: function(target, room, user) {
         if (!user.isDev()) return false;
@@ -79,7 +74,7 @@ exports.commands = {
             "%": "Driver",
             "@": "Moderator",
             "~": "Administrator",
-        }
+        };
         if (target.split(",")[1].trim().replace("deauth", " ") === " ") {
             delete Db("ranks").object()[this.targetUser.userid || this.targetUser];
             if(this.targetUser.userid) this.targetUser.botRank = " ";
@@ -103,7 +98,7 @@ exports.commands = {
             "%": "%Drivers",
             "@": "@Moderators",
             "~": "~Adminstrators",
-        }
+        };
         let buffer = Object.keys(auth).sort((a, b) => {
             if (Config.ranks[a] > Config.ranks[b]) return -1;
             return 1;
@@ -179,3 +174,11 @@ exports.commands = {
         this.send('/modchat ' + target);
     }
 };
+/*globals toId*/
+/*globals log*/
+/*globals Monitor*/
+/*globals Rooms*/
+/*globals Config*/
+/*globals Parse*/
+/*globals Db*/
+/*globals Tools*/
