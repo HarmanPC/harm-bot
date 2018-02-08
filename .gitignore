@@ -4,6 +4,7 @@ npm-debug.log
 config.js
 crashlogs.txt
 /config/*
+/chat-plugins/goodly.js
 
 /data/pokedex.js
 /data/formats-data.js
@@ -11,7 +12,7 @@ crashlogs.txt
 /data/abilities.js
 /data/items.js
 /data/trivia.json
-/chat-plugins/goodly.js
+
 /pd-tools/figures.js
 
 .hg
