@@ -4,8 +4,6 @@ exports.commands = {
  // to invite all users when chat die 
     inviteall: function(target, room, user) {
         if (!user.can('games') || !room) return false;
-       // this.ok = setInterval(() => {
-    
         var text = '/invite ';
         this.send('Preparing to invite...');
         this.send(text + 'jrniceguy');
@@ -74,11 +72,11 @@ exports.commands = {
         this.send(text + 'sonic the impaler');
         this.send(text + 'cr1mson fuqer');
         this.send('Invitation sent to 65 doc users!');
-      //  },3 * 60 * 60 * 1000);
     },
     // host
     roll: function(target,room, user){
-      //  if (!user.hasBotRank('+') || user.userid != toId(room.game.userHost)) return false;
+        if (!user.hasBotRank('+')) return false;
+        if (user.userid != toId(room.game.userHost)) return false;
         let num=Math.floor(Math.random() * target) + 1;
         // took 2 vars because it adds target and msg
         let msg=`Random Roll (1 -  ${target}): `;
@@ -103,6 +101,12 @@ exports.commands = {
         this.send("/wall Good luck to everyone who joined the game of UNO!");
         clearTimeout(this.timer);
     },
+    rhangman: function (target, room, user) {
+        if (!user.can('games')) return false;
+        let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
+        this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
+        this.send('/wall Use ``/guess`` to guess.');
+    },
     // test section for Harman
     count: function(target, room, user) {
         if (user.userid != 'harmanpc') return false;
@@ -111,12 +115,6 @@ exports.commands = {
             this.send(i);
         }
     },
-    rhangman: function (target, room, user) {
-        if (!user.can('games')) return false;
-        let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
-        this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
-        this.send('/wall Use ``/guess`` to guess.');
-    }
 };
 /*globals toId*/
 /*globals Tools*/

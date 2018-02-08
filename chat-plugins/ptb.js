@@ -23,8 +23,6 @@ class PassthebombGame extends Rooms.botGame {
         
         this.turn = 1;
         this.allowRenames = false;
-      //  this.parse(`/set mod, flooding,off`);
-     //   this.parse(`/set mod, spam, off`);
         this.sendRoom("Harmgame! A new game of Pass the bomb is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
     }
     
@@ -90,9 +88,7 @@ class PassthebombGame extends Rooms.botGame {
             Leaderboard.onWin("passthebomb", this.room, winner.userid, this.startingPlayers);
             this.sendRoom(`Congratulations to ${winner.name} for winning the game!`);
         }
-        this.destroy()
-       // this.parse(`/set mod,spam, on`);
-       // this.parse('/set mod ,flooding,on');
+        this.destroy();
     }
     
     eliminate(player) {
@@ -107,9 +103,13 @@ exports.commands = {
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new PassthebombGame(room);
     },
-    
+    egg:"toss",
+    pass:"toss",
     toss: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== "passthebomb") return false;
         room.game.onBomb(user, target);
     },
 };
+/*globals toId*/
+/*globals Leaderboard*/
+/*globals Rooms*/

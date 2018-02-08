@@ -89,7 +89,7 @@ exports.commands = {
     validtype: function (target, room, user) {
         if (!user.can('games')) return false;
         function objectValues (obj) {
-        return Object.keys(obj).map(k => obj[k]);
+            return Object.keys(obj).map(k => obj[k]);
         }
         let random = Tools.shuffle(Object.keys(Tools.Pokedex))[0];
         this.send(`**Types:** ${objectValues(Tools.Pokedex[random].types)}`);

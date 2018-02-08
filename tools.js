@@ -61,7 +61,7 @@ const tools = exports.Tools = {
         this.uncacheTree("./commands.js");
         try {
             Commands = require("./commands.js").commands;
-            log("ok", "Reloaded commands.js")
+            log("ok", "Reloaded commands.js");
         }
         catch (e) {
             log("error", "Unable to load commands.js");
@@ -200,11 +200,6 @@ function arrayToObject (array, value) {
 
 // load the data modules
 require("./data-downloader")().then(() => {
-tools.Types = Object.assign({}, 
-        arrayToObject(Object.keys(tools.Pokedex).map(p => tools.Pokedex[p].types), "Types"),
-        );
-});
-require("./data-downloader")().then(() => {
     tools.Formats = require("./data/formats-data.js").BattleFormatsData;
     tools.Pokedex = require("./data/pokedex.js").BattlePokedex;
     tools.Movedex = require("./data/moves.js").BattleMovedex;
@@ -235,3 +230,6 @@ try {
         })
         .catch(err => console.log("Failed download: " + err));
 }
+/*globals log*/
+/*globals Commands*/
+/*globals Monitor*/
