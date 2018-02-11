@@ -100,6 +100,6 @@ exports.commands = {
     },
     plprepost: function (target, room, user) {
         if (!room || !this.can("games") || !room.game || room.game.gameId !== "plp") return false;
-        this.send("/wall ``Repost`` - Round " + room.game.roundNumber + " | " + room.game.plp + ".");
+        this.send(`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} \`\`Repost\`\`: Round " ${room.game.roundNumber} | ${room.game.plp}.`);
     },
 };

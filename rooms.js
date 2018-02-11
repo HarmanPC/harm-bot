@@ -300,6 +300,8 @@ let deleteRoom = Rooms.delete = function(room, keepAutojoin) {
         Db.save();
     }
 };
+Rooms.debate = require("./debate.js").debate;
+Rooms.debatePlayer = require("./debate.js").dPlayer;
 
 Rooms.botGame = require("./botgame.js").game;
 Rooms.botGamePlayer = require("./botgame.js").player;

@@ -1,10 +1,10 @@
 // this is where all the standard game commands are put
 'use strict';
-this.unotimer = setInterval(() => {
+/*this.unotimer = setInterval(() => {
                     this.send('!uno players');
                     this.send('/uno start');
                     clearTimeout(this.timer);
-                },  1 * 1000 * 120);
+                },  1 * 1000 * 120);*/
 exports.commands = {
     'j': 'join',
     'y': 'join',
@@ -122,13 +122,13 @@ exports.commands = {
         this.send(`/uno create ${target} `);
         this.send(`/uno timer 69`);
         this.send(`/wall Harmgame! A new game of UNO is starting in 2 minutes. Do \`\`/uno join\`\` to join.`);
-        this.unotimer;
+       // this.unotimer;
     },
     unostart:  function(target,room,user) {
         this.can("broadcast");
         this.send(`/uno start`);
         this.send("/wall Good luck to everyone who joined the game of UNO!");
-        clearTimeout(this.unotimer);
+        //clearTimeout(this.unotimer);
     },
     /*globals Tools*/
     /*globals Monitor*/
