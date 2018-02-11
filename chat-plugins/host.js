@@ -19,7 +19,6 @@ class hostGame extends Rooms.botGame {
         
     }
     onStart(user) {
-    //    if (!user.hasBotRank('+') || (!user.id == this.userHost)) return false;
         if (this.state !== "signups") return false;
         this.state = 'started';
         this.sendRoom(`Signups are now closed.`);

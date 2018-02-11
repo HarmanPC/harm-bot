@@ -1,8 +1,8 @@
 // this is where all the standard game commands are put
 'use strict';
 /*this.unotimer = setInterval(() => {
-                    this.send('!uno players');
-                    this.send('/uno start');
+                    this.sendRoom('!uno players');
+                    this.sendRoom('/uno start');
                     clearTimeout(this.timer);
                 },  1 * 1000 * 120);*/
 exports.commands = {
@@ -69,7 +69,6 @@ exports.commands = {
     },
     signups: function(target, room, user) {
         if (!room || !user.can('broadcast')) return false;
-       // if (!target) this.parse("/help signups");
         if (toId(target) == 'dd' || toId(target) == 'diddlydice') return false;
         let arg;
         [target, arg] = target.split(",").map(p => p.trim());
@@ -128,7 +127,7 @@ exports.commands = {
         this.can("broadcast");
         this.send(`/uno start`);
         this.send("/wall Good luck to everyone who joined the game of UNO!");
-        //clearTimeout(this.unotimer);
+       // clearTimeout(this.unotimer);
     },
     /*globals Tools*/
     /*globals Monitor*/

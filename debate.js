@@ -1,7 +1,7 @@
 'use strict';
 
 class debate {
-    constructor(room) {
+    constructor(room, user1, user2) {
         this.room = room;
         this.users = {};
         this.userList = [];

@@ -132,18 +132,6 @@ class ResourceMonitor {
                 this.settings.moderate(user.userid, this.warnings[user.userid]);
             }
         }
-        //general
-      /*  if (Object.values(this.users[user.userid]).sum() >= this.settings.user) {
-            log("monitor", "[USER: " + user.userid + "] spamming commands in" + (!pm ? " room - " + room.id : " pms") + ".");
-            this.warnings[user.userid]++;
-            this.settings.moderate(user.userid, this.warnings[user.userid]);
-            //search for patterns
-            for (let cmd in this.users[user.userid]) {
-                if (this.users[user.userid][cmd] > 6) {
-                    this.setPattern(cmd);
-                }
-            }
-        }*/
     }
 
     transferRecords(oldId, newId) {
