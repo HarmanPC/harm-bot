@@ -11,27 +11,27 @@ class debate {
         this.state = null;
         this.answerCommand = "special";
         this.allowRenames = false;
-        
+
         this.playerType = null;
     }
-    
+
     sendRoom(message) {
         this.room.send(null, `${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""}${message}`);
     }
-    
+
     buildPlayerList() {
         return {count: this.userList.length, players: this.userList.sort().map(u => this.users[u].name).join(", ")};
     }
-    
+
     postPlayerList() {
         let pl = this.buildPlayerList();
         this.sendRoom(`Players (${pl.count}): ${pl.players}`);
     }
-    
+
     onEnd() {
         this.destroy();
     }
-    
+
     destroy() {
         if (this.timer) {
             clearTimeout(this.timer);
