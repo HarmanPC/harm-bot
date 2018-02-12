@@ -17,11 +17,21 @@ exports.commands = {
         if (!room || !room.game || room.game.answerCommand !== "standard") return false;
         if (room.game.onGuess) room.game.onGuess(user, target);
     }, 
-    apl: "addplayer",
-    addplayer: function(target, room, user) {
+    rpl: "removeplayer",
+    removeplayer: function(target, room, user) {
         if (!room || !room.game || !user.hasBotRank('%')) return false;
-        if (room.game.onLeave) room.game.onJoin(Users.get(target));
-        this.send(`${target} is added in game.`);
+        room.game.state = 'signups';
+        if (room.game.onLeave) room.game.onLeave(Users.get(target));
+        room.game.state = 'started';
+        this.send(`${target} is removed from playerlist.`);
+    },
+    apl: function(target, room, user){
+        this.can('games');
+        if (!room || !room.game) return false;
+        room.game.state = 'signups';
+        if (room.game.onJoin) room.game.onJoin(Users.get(target));
+        room.game.state = 'started';
+        this.send(`${target} is added in playerlist.`);
     },
     leave: function(target, room, user) {
         if (!room || !room.game) return false;
@@ -91,10 +101,10 @@ exports.commands = {
         }
     },
     rhangman: function (target, room, user) {
-        if (!user.can('games')) return false;
+        this.can('games');
         let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
-        this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
-        this.send('/wall Use ``/guess`` to guess.');
+        this.sendRoom(`/hangman create ${poke}, ${Tools.Words[poke]}`);
+        this.sendRoom('/wall Use ``/guess`` to guess.');
     },
     type: function(target, room, user) {
         if (!user.can('games')) return false;
