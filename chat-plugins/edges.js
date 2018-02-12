@@ -62,11 +62,12 @@ class EdgeGame extends Rooms.botGame {
 }
 
 exports.commands = {
-    edges: function (target, room, user) {
+    // disabling games
+    /*edges: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if(room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new EdgeGame(room, target);
-    },
+    },*/
     edgesscore: function (target, room, user) {
         if (!room || !this.can("games") || !room.game || room.game.gameId !== "edges") return false;
         this.send(room.game.getScoreBoard());

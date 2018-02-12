@@ -100,11 +100,12 @@ class TriviaGame extends Rooms.botGame {
 }
 
 exports.commands = {
-    trivia: function (target, room, user) {
+    // disabling games
+    /*trivia: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new TriviaGame(room, target);
-    },
+    },*/
     
     triviarepost: function (target, room, user) {
         if (!room || !this.can("games") || !room.game || room.game.gameId !== "trivia") return false;

@@ -199,11 +199,12 @@ class BlackjackGamePlayer extends Rooms.botGamePlayer {
 }
 
 exports.commands = {
-    blackjack: function (target, room, user) {
+    // disabling games
+   /* blackjack: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if(room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new BlackjackGame(room);
-    },
+    },*/
     hit: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== "blackjack") return false;
         room.game.onHit(user);

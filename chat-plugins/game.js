@@ -1,10 +1,5 @@
 // this is where all the standard game commands are put
 'use strict';
-/*this.unotimer = setInterval(() => {
-                    this.sendRoom('!uno players');
-                    this.sendRoom('/uno start');
-                    clearTimeout(this.timer);
-                },  1 * 1000 * 120);*/
 exports.commands = {
     'j': 'join',
     'y': 'join',
@@ -12,11 +7,11 @@ exports.commands = {
         if (!room || !room.game) return false;
         if (room.game.onJoin) room.game.onJoin(user);
     },
-    "guess": "g",
+    /*"guess": "g",
     g: function(target, room, user) {
         if (!room || !room.game || room.game.answerCommand !== "standard") return false;
         if (room.game.onGuess) room.game.onGuess(user, target);
-    }, 
+    }, */
     rpl: "removeplayer",
     removeplayer: function(target, room, user) {
         if (!room || !room.game || !user.hasBotRank('%')) return false;
@@ -25,7 +20,8 @@ exports.commands = {
         room.game.state = 'started';
         this.send(`${target} is removed from playerlist.`);
     },
-    apl: function(target, room, user){
+    apl:'addplayer',
+    addplayer: function(target, room, user){
         this.can('games');
         if (!room || !room.game) return false;
         room.game.state = 'signups';
@@ -50,13 +46,10 @@ exports.commands = {
         if (room.game.onStart) room.game.onStart();
     
     },
-    game: function (target, room, user){
+    checkdebate: function (target, room, user){
         this.can("games");
-        if (!room.game) return this.send(`No game is going on right now.`);
-        if (room.game.gameId == 'host') return this.send(room.game.userHost + " is hosting.");
-        else 
-        this.send(`A game of ${room.game.gameName} is going on.`);
-        
+        if (!room.game) return this.send(`No debate is going on right now.`);
+        if (room.game.gameId == 'host') return this.send(room.game.userHost + " is hosting a debate.");
     },
     autostart: function (target, room, user) {
         if (!room || !user.can('broadcast') || !room.game) return false;
@@ -65,9 +58,9 @@ exports.commands = {
     end: function(target, room, user) {
         if (!room || !user.can('games') || !room.game) return false;
         room.game.destroy();
-        this.send("The game has been ended.");
+        this.send("The debate has been ended.");
     },
-    skip: function(target, room, user) {
+    /*skip: function(target, room, user) {
         if (!room || !user.can('broadcast') || !room.game) return false;
         let gameId = room.game.gameId;
         this.parse("/" + gameId + "skip");
@@ -87,7 +80,7 @@ exports.commands = {
         if (!gameId) return this.send("Invalid game.");
         
         this.parse("/" + gameId + (arg ? " " + arg : ""));
-    },
+    },*/
     roll: function(target,room, user){
         let num=Math.floor(Math.random() * target) + 1;
         let msg=`Random Roll (1 -  ${target}): `;
@@ -103,8 +96,8 @@ exports.commands = {
     rhangman: function (target, room, user) {
         this.can('games');
         let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
-        this.sendRoom(`/hangman create ${poke}, ${Tools.Words[poke]}`);
-        this.sendRoom('/wall Use ``/guess`` to guess.');
+        this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
+        this.send('/wall Use ``/guess`` to guess.');
     },
     type: function(target, room, user) {
         if (!user.can('games')) return false;
@@ -125,22 +118,7 @@ exports.commands = {
         let random = Tools.shuffle(Object.keys(Tools.Pokedex))[0];
         this.send(`**Types:** ${objectValues(Tools.Pokedex[random].types)}`);
     },
-     // UNO
-    uno: function (target, room, user){
-        this.can("broadcast");
-        this.send(`/uno create ${target} `);
-        this.send(`/uno timer 69`);
-        this.send(`/wall Harmgame! A new game of UNO is starting in 2 minutes. Do \`\`/uno join\`\` to join.`);
-       // this.unotimer;
-    },
-    unostart:  function(target,room,user) {
-        this.can("broadcast");
-        this.send(`/uno start`);
-        this.send("/wall Good luck to everyone who joined the game of UNO!");
-       // clearTimeout(this.unotimer);
-    },
     /*globals Tools*/
-    /*globals Monitor*/
     /*globals toId*/
     /*globals Users*/
 };

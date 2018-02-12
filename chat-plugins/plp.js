@@ -84,11 +84,12 @@ class plpGame extends Rooms.botGame {
 }
 
 exports.commands = {
-    plp: function (target, room, user) {
+    // disabling games 
+   /* plp: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
-        //room.game = new plpGame(room, target);
-    },
+        room.game = new plpGame(room, target);
+    },*/
     plpscore: function (target, room, user) {
         if (!room || !this.can("games") || !room.game || room.game.gameId !== "plp") return false;
         this.send(room.game.getScoreBoard());

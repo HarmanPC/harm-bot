@@ -62,11 +62,12 @@ class AnagramGame extends Rooms.botGame {
 }
 
 exports.commands = {
-    anagrams: function (target, room, user) {
+    // disabling games
+   /* anagrams: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if(room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new AnagramGame(room, target);
-    },
+    },*/
     anagramsscore: function (target, room, user) {
         if (!room || !this.can("games") || !room.game || room.game.gameId !== "anagrams") return false;
         this.send(room.game.getScoreBoard());

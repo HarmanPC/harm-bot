@@ -98,11 +98,12 @@ class PassthebombGame extends Rooms.botGame {
 }
 
 exports.commands = {
-    passthebomb: function (target, room, user) {
+    /* disabling games
+   /* passthebomb: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new PassthebombGame(room);
-    },
+    },*/
     egg:"toss",
     pass:"toss",
     toss: function (target, room, user) {

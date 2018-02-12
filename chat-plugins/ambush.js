@@ -119,11 +119,12 @@ class AmbushGamePlayer extends Rooms.botGamePlayer {
 }
 
 exports.commands = {
-    ambush: function (target, room, user) {
+    // disabling games 
+  /*  ambush: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new AmbushGame(room);
-    },
+    },*/
 
     fire: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== "ambush") return false;

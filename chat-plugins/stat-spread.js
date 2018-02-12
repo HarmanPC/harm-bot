@@ -100,11 +100,12 @@ class StatspreadGame extends Rooms.botGame {
 }
 
 exports.commands = {
-    statspread: function (target, room, user) {
+    // disabling games
+  /*  statspread: function (target, room, user) {
         if (!room || !this.can("games")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         room.game = new StatspreadGame(room, target);
-    },
+    },*/
     
     statspreadrepost: function (target, room, user) {
         if (!room || !this.can("games") || !room.game || room.game.gameId !== "statspread") return false;

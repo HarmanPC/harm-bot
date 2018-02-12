@@ -78,7 +78,7 @@ class HangmanGame extends Rooms.botGame {
     
     onEnd(winner) {
         if (winner) {
-            Leaderboard.onWin("hangman", this.room, winner.userid).write();
+           // Leaderboard.onWin("hangman", this.room, winner.userid).write();
             this.sendRoom(`${winner.name} has gotten the correct answer - ${this.answer}!`);
         }
         

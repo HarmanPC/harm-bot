@@ -47,6 +47,8 @@ class ddGame extends Rooms.botGame{
         else {
             this.sendRoom(`The randomly chosen number is ${rand}! RIP ${this.bidder}`);
             this.eliminate(this.bidder);
+            this.bidder = [];
+            this.maxBid = [];
             this.init();
         }
         
@@ -68,11 +70,12 @@ class ddGame extends Rooms.botGame{
 }
 
 exports.commands = {
-    diddlydice: function (target, room, user) {
+    // disabling games
+  /*  diddlydice: function (target, room, user) {
         if (!room || !user.can('broadcast')) return false;
         if (room.game) return this.send(`There is already a game going in this room. (${room.game.gameName})`);
         room.game = new ddGame(room);
-    },
+    },*/
      bid: function(target, room, user)
      {
          if (!room.game) return false;
