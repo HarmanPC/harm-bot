@@ -82,6 +82,23 @@ exports.commands = {
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
 };  
+next: function (target, user, room) {
+		if (!user.can('games') return false;
+		let d = new Date();
+		let n = d.getHours();
+		let m = d.getMinutes();
+		let millis = (60 - m) * 60 * 1000
+		if (n < 6) {
+			millis += (5 - n) * 60 * 60 * 1000;
+		} else if (n < 17) {
+			millis += (16 - n) * 60 * 60 * 1000;
+		} else if (n < 23) {
+			millis += (22 - n) * 60 * 60 * 1000;
+		} else {
+			millis += (30 - n) * 60 * 60 * 1000;
+		}
+		this.send("The next official is in " + millisToTime(millis) + ".")
+	},
 
 /* globals Leaderboard*/
 /* globals Users*/ 
