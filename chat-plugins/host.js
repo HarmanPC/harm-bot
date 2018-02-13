@@ -81,13 +81,12 @@ exports.commands = {
     this.send(`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} MVP points awarded to ${winner}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
-};  
-next: function (target, user, room) {
-		if (!user.can('games') return false;
+    next: function (target, user, room) {
+		this.can('games');
 		let d = new Date();
 		let n = d.getHours();
 		let m = d.getMinutes();
-		let millis = (60 - m) * 60 * 1000
+		let millis = (60 - m) * 60 * 1000;
 		if (n < 6) {
 			millis += (5 - n) * 60 * 60 * 1000;
 		} else if (n < 17) {
@@ -99,7 +98,7 @@ next: function (target, user, room) {
 		}
 		this.send("The next official is in " + millisToTime(millis) + ".")
 	},
-
+};
 /* globals Leaderboard*/
 /* globals Users*/ 
 /* globals toId*/
