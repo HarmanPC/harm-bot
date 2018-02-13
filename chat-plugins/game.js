@@ -48,8 +48,9 @@ exports.commands = {
     },
     checkdebate: function (target, room, user){
         this.can("games");
-        if (!room.game) return this.send(`No debate is going on right now.`);
-        if (room.game.gameId == 'host') return this.send(room.game.userHost + " is hosting a debate.");
+     //   else this.send(`No debate is going on right now.`);
+        if (room.game) return this.send(room.game.userHost + " is hosting a debate.");
+        else this.send(`No debate is going on right now.`);
     },
     autostart: function (target, room, user) {
         if (!room || !user.can('broadcast') || !room.game) return false;
