@@ -39,7 +39,7 @@ class hostGame extends Rooms.botGame {
 function getRank(room, message){
     Users.get(Monitor.username).hasRank(room, "%") ? "wall " : "" + message;
 }
-letlet millisToTime = function(millis){
+let millisToTime = function(millis){
 	let seconds = millis/1000;
 	let hours = Math.floor(seconds/3600);
 	let minutes = Math.floor((seconds-hours*3600)/60);
