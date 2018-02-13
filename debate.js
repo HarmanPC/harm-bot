@@ -1,7 +1,7 @@
 'use strict';
 
 class debate {
-    constructor(room, user1, user2) {
+    constructor(room, topic, user1, user2) {
         this.room = room;
         this.users = {};
         this.userList = [];
@@ -16,7 +16,7 @@ class debate {
     }
 
     sendRoom(message) {
-        this.room.send(null, `${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""}${message}`);
+        this.room.send(null,message);
     }
 
     buildPlayerList() {
@@ -55,5 +55,3 @@ module.exports = {
     debate: debate,
     dPlayer: DebatePlayer,
 };
-/*globals Users*/
-/*globals Monitor*/
