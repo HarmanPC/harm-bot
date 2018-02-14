@@ -8,6 +8,7 @@ class botGame {
         this.gameId = "game";
         this.gameName = "Game";
         this.allowJoins = false;
+        this.official = false;
         this.state = null;
         this.answerCommand = "standard";
         this.allowRenames = true;
