@@ -9,7 +9,7 @@ class debate extends Rooms.debate{
       this.player2 = p2;
       this.userList = [];
       this.state = 'signups';
-      this.sendRoom(`/wall A debate for:- Topic: ${this.topic} | **${this.player1}** VS **${this.player2}** is starting.`);
+      this.sendRoom('/wall A debate for:- Topic: ' + this.topic + ' | **' + this.player1 + '** VS **' + this.player2 + '** is starting.');
   }
   onStart(){
       this.state = 'started';
