@@ -36,12 +36,9 @@ class hostGame extends Rooms.botGame {
         this.destroy();
     }
 }
-<<<<<<< HEAD
-=======
 function getRank(room, message){
     Users.get(Monitor.username).hasRank(room, "%") ? "wall " : "" + message;
 }
->>>>>>> 658dd9cacf721b02c78d3e12ef3e97d831b9e248
 let millisToTime = function(millis){
 	let seconds = millis/1000;
 	let hours = Math.floor(seconds/3600);
@@ -54,11 +51,7 @@ let millisToTime = function(millis){
 	}
 	return response;
 };
-<<<<<<< HEAD
-let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
-=======
 
->>>>>>> 658dd9cacf721b02c78d3e12ef3e97d831b9e248
 exports.commands = {
     host: function (target, room, user) {
         if (!room || !target[0] || !this.can("games")) return false;
@@ -72,7 +65,8 @@ exports.commands = {
         room.game.userHost = toId(target);
     },
     parts: function (target, room, user) {
-         if (!user.can('debate')) return false;
+        let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
+        if (!user.can('debate')) return false;
         target = target.split(',');
         if (target.length < 2) {
             this.send(`${rank} Participation points awarded to ${target[0]}.`);

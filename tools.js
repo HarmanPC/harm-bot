@@ -205,7 +205,6 @@ require("./data-downloader")().then(() => {
     tools.Movedex = require("./data/moves.js").BattleMovedex;
     tools.Abilities = require("./data/abilities.js").BattleAbilities;
     tools.Items = require("./data/items.js").BattleItems;
-    tools.PSrooms = require("./data/psrooms.js").PSrooms;
    // tools.Locations = require("./data/locations.js").locations;
     
     
