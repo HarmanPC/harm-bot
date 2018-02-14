@@ -12,11 +12,12 @@ class hostGame extends Rooms.botGame {
         this.scorecap = [];
         this.official = false;
         this.userHost = toId(target);
+        this.hostName = target;
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
         
-        this.sendRoom(`Debateinfo! ${this.userHost} is hosting. Do \`\`.join\`\` to join.`);
+        this.sendRoom(`Debateinfo! ${this.hostName} is hosting. Do \`\`.join\`\` to join.`);
         
     }
     onStart(user) {
@@ -35,9 +36,6 @@ class hostGame extends Rooms.botGame {
         this.state = "ended";
         this.destroy();
     }
-}
-function getRank(room, message){
-    Users.get(Monitor.username).hasRank(room, "%") ? "wall " : "" + message;
 }
 let millisToTime = function(millis){
 	let seconds = millis/1000;
@@ -105,9 +103,10 @@ exports.commands = {
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     win: function (target, room, user){
-        if (!room.game || !room || !user.can('debate') || room.game.userHost != user.userid) return false;
-        target = target.split(',');
-        this.send(`${target.length > 1 ? 'The winners are ' + target[0]: 'The winner is ' + target.join(',')}`);
+        if (!room.game || !room || !user.can('games') || room.game.userHost != user.userid) return false;
+        target = target.split(', ');
+        this.send(`${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + target[0]}! Thanks for hosting.`);
+        room.game.onEnd();
     },
     next: function (target, user, room) {
 		this.can('games');
