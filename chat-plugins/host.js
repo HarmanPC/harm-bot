@@ -12,7 +12,7 @@ class hostGame extends Rooms.botGame {
         this.scorecap = [];
         this.official = false;
         this.userHost = toId(target);
-        this.hostName = target;
+        this.hostName = Users.get(target).name;
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
@@ -52,15 +52,17 @@ let millisToTime = function(millis){
 
 exports.commands = {
     host: function (target, room, user) {
-        if (!room || !target[0] || !this.can("games")) return false;
+        if (!room || !target[0] || !this.can("debate")) return false;
         target = target.split(',');
         if (room.game) return this.send("There is already a debate going on in this room! (By " + room.game.userHost + ")");
         room.game = new hostGame(room, target[0], target[1]);
         if (toId(target[1]) == 'official') return room.game.official = true;
     },
     subhost: function (target, room, user) {
+        this.can('debate');
         this.send(target + ' has been subhosted.');
         room.game.userHost = toId(target);
+        room.game.hostName = target;
     },
     parts: function (target, room, user) {
         let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
@@ -78,7 +80,7 @@ exports.commands = {
         }
     },
     officialwin: function (target, room, user) {
-        if (!user.can('debate')) return false;
+        this.can('debate');
         let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
         target = target.split(',');
         if (target.length < 2) {
@@ -97,13 +99,15 @@ exports.commands = {
         room.game.onEnd();
     },
     mvp: function (target, room, user) {
-    if (!room || !user.can('debate')) return false;
+    this.can('debate');
+    if (!room) return false;
     let winner = toId(target);
     this.send(`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} MVP points awarded to ${winner}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     win: function (target, room, user){
-        if (!room.game || !room || !user.can('games') || room.game.userHost != user.userid) return false;
+        this.can('debate');
+        if (!room.game || !room  || room.game.userHost != user.userid) return false;
         target = target.split(', ');
         this.send(`${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + target[0]}! Thanks for hosting.`);
         room.game.onEnd();
