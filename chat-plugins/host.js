@@ -85,7 +85,7 @@ exports.commands = {
         target = target.split(',');
         if (target.length < 2) {
             this.send(`${rank} The winner is ${target[0]}! Thanks for hosting.`);
-            Leaderboard.onWin('t', this.room, target[0], 10).write();
+            Leaderboard.onWin('t', this.room, toId(target[0]), 10).write();
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
