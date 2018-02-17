@@ -17,8 +17,8 @@ class Debate extends Rooms.botGame {
 exports.commands = {
     debate: function(target, room, user) 
     {
-        if (!this.can('debate') || !room ) return false;
-        if (room.game == 'host') return this.send(`${room.game.hostName} is hosting a game.`);
+        if (!user.can('debate') || !room ) return false;
+        if (room.game.gameId == 'host') return this.send(`${room.game.hostName} is hosting a game.`);
         room.game = new Debate(room);
     }
 };

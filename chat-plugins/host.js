@@ -31,7 +31,7 @@ class hostGame extends Rooms.botGame {
         
         this.sendRoom(`Players (${this.userList.length}): ${pl.join(", ")}`);
     }
-     onEnd() {
+    onEnd() {
         this.state = "ended";
         this.destroy();
     }
