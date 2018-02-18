@@ -46,8 +46,8 @@ exports.commands = {
         if (parts.length !== 2) return this.send(room.commandCharacter[0] + "sub [old player], [new player]");
         if (!room.users.has(toId(parts[1]))) this.send("The sub player is not in the room.");
         if (toId(parts[1]) === room.game.userHost) return this.send("You cannot add the host into the game.");
-        if (room.game.onJoin) return room.game.onJoin(target[1]);
-        if (room.game.onLeave) return room.game.onLeave(target[0]);
+        if (room.game.onJoin) return room.game.onJoin(Users.get(target[1]));
+        if (room.game.onLeave) return room.game.onLeave(Users.get(target[0]));
         this.send(target[1] + ' has joined the game.');
     },
     players: function(target, room, user) {
