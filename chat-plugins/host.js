@@ -10,6 +10,7 @@ class hostGame extends Rooms.botGame {
         this.gameName = 'Host';
         
         this.official = false;
+	if (toId(target[1]) == 'official') return room.game.official = true;
         this.userHost = toId(target);
         this.hostName = Users.get(target2).name;
         this.answerCommand = "special";
@@ -55,7 +56,6 @@ exports.commands = {
         target = target.split(',');
         if (room.game) return this.send("There is already a debate going on in this room! (By " + room.game.hostName + ")");
         room.game = new hostGame(room, target[0], target[1]);
-        if (toId(target[1]) == 'official') return room.game.official = true;
     },
     subhost: function (target, room, user) {
         this.can('debate');
