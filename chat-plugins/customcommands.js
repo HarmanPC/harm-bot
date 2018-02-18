@@ -46,7 +46,7 @@ exports.commands = {
     },
     comlist: function(target, room, user) {
         if (!this.can("addcom")) return false;
-        let targetRoom = room ? room.id : "global";
+        let targetRoom = room ? room.name : "global";
         if (target && !room) {
             targetRoom = toId(target);
         }

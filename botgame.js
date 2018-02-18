@@ -8,6 +8,7 @@ class botGame {
         this.gameId = "game";
         this.gameName = "Game";
         this.allowJoins = false;
+        this.official = false;
         this.state = null;
         this.answerCommand = "standard";
         this.allowRenames = true;
@@ -37,7 +38,7 @@ class botGame {
         if (this.userList.includes(user.userid)) return user.sendTo("You have already joined!");
         this.users[user.userid] = this.playerObject ? new this.playerObject(user, this) : new botGamePlayer(user, this);
         this.userList.push(user.userid);
-        user.sendTo("You have joined the game of " + this.gameName + ".");
+        user.sendTo("You have joined the debate.");
     }
     
     onLeave(user) {
@@ -86,7 +87,7 @@ class botGame {
             this.onStart(); // we will assume that it will not try to start 2 games at the same time.
         }, seconds * 1000);
         
-        this.sendRoom("The game will automatically start in " + seconds + " seconds.");
+        this.sendRoom("The debate will automatically start in " + seconds + " seconds.");
     }
 }
 

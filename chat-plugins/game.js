@@ -1,136 +1,90 @@
 // this is where all the standard game commands are put
 'use strict';
-/*this.unotimer = setInterval(() => {
-                    this.sendRoom('!uno players');
-                    this.sendRoom('/uno start');
-                    clearTimeout(this.timer);
-                },  1 * 1000 * 120);*/
 exports.commands = {
     'j': 'join',
-    'y': 'join',
     join: function(target, room, user) {
-        if (!room || !room.game) return false;
+        if (!room || !room.game || room.game.userHost == user.userid) return false;
         if (room.game.onJoin) room.game.onJoin(user);
-    },
-    "guess": "g",
-    g: function(target, room, user) {
-        if (!room || !room.game || room.game.answerCommand !== "standard") return false;
-        if (room.game.onGuess) room.game.onGuess(user, target);
-    }, 
-    apl: "addplayer",
-    addplayer: function(target, room, user) {
-        if (!room || !room.game || !user.hasBotRank('%')) return false;
-        if (room.game.onLeave) room.game.onJoin(Users.get(target));
-        this.send(`${target} is added in game.`);
     },
     leave: function(target, room, user) {
         if (!room || !room.game) return false;
         if (room.game.onLeave) room.game.onLeave(user);
     },
+    rpl: "removeplayer",
+    removeplayer: function(target, room, user) {
+        if (!room || !room.game || !user.can('debate') || user.userid != room.game.userHost) return false;
+        if (room.game.state == 'signups') {
+            if (room.game.onLeave) room.game.onLeave(Users.get(target));
+            this.send(`${Users.get(target).name} is removed from playerlist`);
+        }
+        else if (room.game.state == 'started') { 
+            room.game.state = 'signups';
+            if (room.game.onLeave) room.game.onLeave(Users.get(target));
+            room.game.state = 'started';
+            this.send(`${Users.get(target).name} is removed from playerlist.`);
+        }
+    },
+    apl:'addplayer',
+    addplayer: function(target, room, user){
+        if (!room || !room.game || !user.can('debate') || user.userid != room.game.userHost) return false;
+        if (room.game.state == 'signups') {
+            if (room.game.onJoin) room.game.onJoin(Users.get(target));
+            this.send(`${Users.get(target).name} is added in playerlist`);
+        }
+        else if (room.game.state == 'started') {
+            room.game.state = 'signups';
+            if (room.game.onJoin) room.game.onJoin(Users.get(target));
+            room.game.state = 'started';
+            this.send(`${Users.get(target).name} is added in playerlist.`);
+        }
+    },
+    sub: "replace",
+    replace: function (target, room, user) {
+        if (!room || user.hostName != user.userid || !room.game || !user.can('debate') || room.game.gameId !== "host"  || room.game.state === "signups") return false;
+        if (!target) return this.send(room.commandCharacter[0] + "sub [old player], [new player]");
+        let parts = target.split(",");
+        if (parts.length !== 2) return this.send(room.commandCharacter[0] + "sub [old player], [new player]");
+        if (!room.users.has(toId(parts[1]))) this.send("The sub player is not in the room.");
+        if (toId(parts[1]) === room.game.userHost) return this.send("You cannot add the host into the game.");
+        if (room.game.onJoin) return room.game.onJoin(target[1]);
+        if (room.game.onLeave) return room.game.onLeave(target[0]);
+        this.send(target[1] + ' has joined the game.');
+    },
     players: function(target, room, user) {
-        if (!room || !user.can('games') || !room.game) return false;
+        if (!room || !user.can('debate') || !room.game) return false;
         if (room.game.postPlayerList) room.game.postPlayerList();
     },
-    score: function(target, room, user) {
-        if (!room || !user.can('games') || !room.game) return false;
-        if (room.game.getScoreBoard) this.send(room.game.getScoreBoard());
-    },
     start: function(target, room, user) {
-        if (!room || !user.can('broadcast') || !room.game) return false;
+        if (!room || !user.can('debate') || !room.game) return false;
         if (room.game.onStart) room.game.onStart();
-    
-    },
-    game: function (target, room, user){
-        this.can("games");
-        if (!room.game) return this.send(`No game is going on right now.`);
-        if (room.game.gameId == 'host') return this.send(room.game.userHost + " is hosting.");
-        else 
-        this.send(`A game of ${room.game.gameName} is going on.`);
-        
     },
     autostart: function (target, room, user) {
-        if (!room || !user.can('broadcast') || !room.game) return false;
+        if (!room ||  !user.can('debate')|| !room.game) return false;
         if (room.game.runAutoStart) room.game.runAutoStart(target);
     },
     end: function(target, room, user) {
-        if (!room || !user.can('games') || !room.game) return false;
+        if (!room || !user.can('debate')|| !room.game) return false;
         room.game.destroy();
-        this.send("The game has been ended.");
+        this.send("The debate has been ended.");
     },
-    skip: function(target, room, user) {
-        if (!room || !user.can('broadcast') || !room.game) return false;
-        let gameId = room.game.gameId;
-        this.parse("/" + gameId + "skip");
+    win: function (target, room, user){
+        if (!room.game || !room  || !user.can('debate') || room.game.userHost != user.userid) return false;
+        target = target.split(', ');
+        this.send(`${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + target[0]}! Thanks for hosting.`);
+        room.game.onEnd();
     },
-    repost: function(target, room, user) {
-        if (!room || !user.can('broadcast') || !room.game) return false;
-        let gameId = room.game.gameId;
-        this.parse("/" + gameId + "repost");
+    checkdebate: function (target, room, user){
+        this.can('debate');
+        if (room.game && room.game.official == true) return this.send(room.game.hostName + " is hosting official debate.");
+        if (room.game && room.game.official == false) return this.send(room.game.hostName + " is hosting a debate.");
+        else this.send(`No debate is going on right now.`);
     },
-    signups: function(target, room, user) {
-        if (!room || !user.can('broadcast')) return false;
-        if (toId(target) == 'dd' || toId(target) == 'diddlydice') return false;
-        let arg;
-        [target, arg] = target.split(",").map(p => p.trim());
-        
-        let gameId = Monitor.games[toId(target)];
-        if (!gameId) return this.send("Invalid game.");
-        
-        this.parse("/" + gameId + (arg ? " " + arg : ""));
-    },
-    roll: function(target,room, user){
-        let num=Math.floor(Math.random() * target) + 1;
-        let msg=`Random Roll (1 -  ${target}): `;
-        if (!room.game){
-        if (!user.hasBotRank('+')) return false;
-        this.send(`${msg} ${num}`);
-        }
-        if (room.game) {
-            if (user.userid != toId(room.game.userHost)) return false;
-            this.send(`${msg} ${num}`);
-        }
-    },
-    rhangman: function (target, room, user) {
-        if (!user.can('games')) return false;
+    hangman: function (target, room, user) {
+        if (!user.can('debate')) return false;
         let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
         this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
         this.send('/wall Use ``/guess`` to guess.');
     },
-    type: function(target, room, user) {
-        if (!user.can('games')) return false;
-        let types=["Water","Fire","Grass","Electric","Ground","Flying","Psychic","Dark","Fighitng","Rock","Dragon","Fairy","Poison","Steel","Bug","Ice","Ghost"];
-        let rand1=types[Math.floor(Math.random() * 16)];
-        let rand2=types[Math.floor(Math.random() * 16)];
-        let t1=`**Types:** ${rand1}`;
-        let t2=`**Types:** ${rand1} / ${rand2}`;
-        let rand3=[t1,t2];
-        let rand4=rand3[Math.floor(Math.random() * 2)];
-        this.send(rand4);
-    },
-    validtype: function (target, room, user) {
-        if (!user.can('games')) return false;
-        function objectValues (obj) {
-            return Object.keys(obj).map(k => obj[k]);
-        }
-        let random = Tools.shuffle(Object.keys(Tools.Pokedex))[0];
-        this.send(`**Types:** ${objectValues(Tools.Pokedex[random].types)}`);
-    },
-     // UNO
-    uno: function (target, room, user){
-        this.can("broadcast");
-        this.send(`/uno create ${target} `);
-        this.send(`/uno timer 69`);
-        this.send(`/wall Harmgame! A new game of UNO is starting in 2 minutes. Do \`\`/uno join\`\` to join.`);
-       // this.unotimer;
-    },
-    unostart:  function(target,room,user) {
-        this.can("broadcast");
-        this.send(`/uno start`);
-        this.send("/wall Good luck to everyone who joined the game of UNO!");
-       // clearTimeout(this.unotimer);
-    },
-    /*globals Tools*/
-    /*globals Monitor*/
-    /*globals toId*/
-    /*globals Users*/
 };
+/*globals Tools*/
+/*globals Users*/

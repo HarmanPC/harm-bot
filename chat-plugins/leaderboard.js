@@ -43,11 +43,6 @@ class MainLeaderboard extends LEADERBOARD {
 global.Leaderboard = new MainLeaderboard(FILE_DIRECTORY);
 
 exports.commands = {
-    games: function (target, room, user) {
-        if (!this.can("broadcast")) return false;
-        
-        this.send("List of games: " + Leaderboard.getGames().join(", "));
-    },
     
     "lb": "leaderboard",
     leaderboard: function (target, room, user) {
@@ -72,7 +67,7 @@ exports.commands = {
                 break;
             case "takepoints":
             case "givepoints": 
-                if (!this.can("games")) return false;
+                if (!this.can("debate")) return false;
                 
                 let [userid, points] = arg.split(",");
                 userid = toId(userid);
