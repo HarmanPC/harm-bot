@@ -59,8 +59,9 @@ exports.commands = {
     },
     subhost: function (target, room, user) {
         this.can('debate');
-        this.send(target + ' has been subhosted.');
-        room.game.hostName = target;
+        this.send(Users.get(target).name + ' has been subhosted.');
+        room.game.hostName = Users.get(target).name;
+	room.game.userHost = toId(target);
     },
     parts: function (target, room, user) {
         let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
