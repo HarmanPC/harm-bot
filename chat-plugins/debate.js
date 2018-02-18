@@ -178,7 +178,7 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 
 exports.commands = {
     debate: function (target, room, user) {
-        if (!room || !this.can("games")) return false;
+        if (!room || !this.can("debate")) return false;
         if (room.game) return this.send("There is already a game going on in this room! (" + room.game.gameName + ")");
         if (target.split(",")[0].toLowerCase() == "1v1"){
 			room.game = new DebateGame(room, target);
@@ -186,7 +186,7 @@ exports.commands = {
 			room.game = new DebateGame(room, target);
 		}
     },
-	adq: function (target, room, user) {
+    adq: function (target, room, user) {
         if (!user.hasBotRank("@")) return false;
         
         let question = target.toString();
@@ -211,11 +211,11 @@ exports.commands = {
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
             link => user.sendTo(`${questions.length} questions - ${link}`));
     },
-	rtopic: function (target, room, user) {
-		if (!user.hasBotRank("+")) return false;
+    rtopic: function (target, room, user) {
+	if (!user.hasBotRank("+")) return false;
 		
-		let question = Debate.getQuestion();
+	let question = Debate.getQuestion();
 		
-		this.send(question.question.trim() + "?");
+	this.send(question.question.trim() + "?");
 	}
 };
