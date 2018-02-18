@@ -3,16 +3,16 @@ exports.game = 'host';
 exports.aliases = ['host'];
 
 class hostGame extends Rooms.botGame {
-    constructor(room, target, target2) {
+    constructor(room, target) {
         super(room);
         
         this.gameId = "host";
         this.gameName = 'Host';
         
+	let targets = target.split(',');
         this.official = false;
-	if (toId(target[1]) == 'official') return room.game.official = true;
-        this.userHost = toId(target);
-        this.hostName = Users.get(target2).name;
+	if (toId(targets[1]) == 'official') this.official = true;
+	this.hostName = Users.get(targets[0]).name;
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
@@ -53,14 +53,12 @@ let millisToTime = function(millis){
 exports.commands = {
     host: function (target, room, user) {
         if (!room || !target[0] || !this.can("debate")) return false;
-        target = target.split(',');
         if (room.game) return this.send("There is already a debate going on in this room! (By " + room.game.hostName + ")");
-        room.game = new hostGame(room, target[0], target[1]);
+        room.game = new hostGame(room, target);
     },
     subhost: function (target, room, user) {
         this.can('debate');
         this.send(target + ' has been subhosted.');
-        room.game.userHost = toId(target);
         room.game.hostName = target;
     },
     parts: function (target, room, user) {
