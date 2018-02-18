@@ -13,6 +13,7 @@ class hostGame extends Rooms.botGame {
         this.official = false;
 	if (toId(targets[1]) == 'official') this.official = true;
 	this.hostName = Users.get(targets[0]).name;
+	this.userHost = toId(targets[0]);
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
