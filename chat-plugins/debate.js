@@ -211,7 +211,7 @@ exports.commands = {
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
             link => user.sendTo(`${questions.length} questions - ${link}`));
     },
-    rtopic: function (target, room, user) {
+    topic: function (target, room, user) {
 	if (!user.hasBotRank("+")) return false;
 		
 	let question = Debate.getQuestion();
