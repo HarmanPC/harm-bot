@@ -68,7 +68,7 @@ exports.commands = {
         this.send("The debate has been ended.");
     },
     win: function (target, room, user){
-        if (room.game.gameId !== 'host' || !room  || !user.hasBotRank('+') || room.game.userHost !== user.userid) return false;
+        if (!room.game ||room.game.gameId !== 'host' || !room  || !user.hasBotRank('+') || room.game.userHost !== user.userid) return false;
         target = target.split(',');
         this.send(`${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
         room.game.onEnd();
