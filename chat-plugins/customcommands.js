@@ -10,7 +10,7 @@ exports.commands = {
         let commandInformation = {
             rank: parts[1] in Config.ranks ? parts[1] : Config.defaultRank,
             text: [parts.slice(2).join(",").trim()],
-        }
+        };
         let existing = Db("customcommands").get([targetRoom, toId(parts[0])], null);
         if (Commands[toId(parts[0])]) return this.send("You cannot set a custom command with with the same name as a bot command.")
         if (existing) return this.send("This command already exists as a custom command in this room!");
@@ -18,7 +18,7 @@ exports.commands = {
         this.send("**" + toId(parts[0]) + "** has been added as a custom command to this room.");
     },
     delcom: function(target, room, user) {
-        if (!this.can("addcom")) return false
+        if (!this.can("addcom")) return false;
         if (!target) return this.parse("/help delcom");
         target = toId(target);
         let targetRoom = room ? room.id : "global";
@@ -29,13 +29,13 @@ exports.commands = {
         this.send("The custom command \"" + target + "\" has been removed from this room.");
     },
     appendcom: function(target, room, user) {
-        if (!this.can("addcom")) return false
+        if (!this.can("addcom")) return false;
         if (!target) return this.parse("/help apppendcom");
         let parts = target.split(",");
         if(parts.length < 2) return this.parse("/help appendcom");
         let command = toId(parts[0]);
         let output = parts.slice(1).join(",");
-        if(output.length > 250) return this.send("The additional output has to be under 250 characters long")
+        if(output.length > 250) return this.send("The additional output has to be under 250 characters long");
         let targetRoom = room ? room.id : "global";
         let existing = Db("customcommands").get([targetRoom, command], null);
         if (!existing) return this.send("This room does not have that custom command.");
@@ -44,9 +44,9 @@ exports.commands = {
         Db("customcommands").set([targetRoom, command], existing);
         this.send("An additional line has been added to the custom command \"" + command + "\".");
     },
-    comlist: function(target, room, user) {
+   comlist: function(target, room, user) {
         if (!this.can("addcom")) return false;
-        let targetRoom = room ? room.name : "global";
+        let targetRoom = room ? room.id : "global";
         if (target && !room) {
             targetRoom = toId(target);
         }
@@ -63,3 +63,7 @@ exports.commands = {
         this.parse("/addcom " + target.replace(/, ?[^a-z0-9]?/i, ", ,{parse}/"));
     },
 };
+/*globals Db*/
+/*globals Tools*/
+/*globals toId*/
+/*globals Config*/

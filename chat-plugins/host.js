@@ -1,18 +1,20 @@
 "use strict";
 exports.game = 'host';
-exports.aliases = ['host'];
 
 class hostGame extends Rooms.botGame {
-    constructor(room, target, target2) {
+    constructor(room, target) {
         super(room);
         
         this.gameId = "host";
         this.gameName = 'Host';
-        
         this.official = false;
-	if (toId(target[1]) == 'official') return room.game.official = true;
-        this.userHost = toId(target);
-        this.hostName = Users.get(target2).name;
+        
+	    let targets = target.split(',');
+	    if (toId(targets[1]) == 'official') this.official = true;
+	    
+	    this.hostName = Users.get(targets[0]).name;
+	    this.userHost = toId(targets[0]);
+	    
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
@@ -52,16 +54,16 @@ let millisToTime = function(millis){
 
 exports.commands = {
     host: function (target, room, user) {
-        if (!room || !target[0] || !this.can("debate")) return false;
-        target = target.split(',');
+        if (!room || !target || !this.can("debate")) return false;
+        if (!room.users.has(target)) return this.send('The user "' + Users.get(target).name + '" is not in the room.');
         if (room.game) return this.send("There is already a debate going on in this room! (By " + room.game.hostName + ")");
-        room.game = new hostGame(room, target[0], target[1]);
+        room.game = new hostGame(room, target);
     },
     subhost: function (target, room, user) {
         this.can('debate');
-        this.send(target + ' has been subhosted.');
-        room.game.userHost = toId(target);
-        room.game.hostName = target;
+        this.send(Users.get(target).name + ' has been subhosted.');
+        room.game.hostName = Users.get(target).name;
+	    room.game.userHost = toId(target);
     },
     parts: function (target, room, user) {
         let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
@@ -108,15 +110,16 @@ exports.commands = {
 		let d = new Date();
 		let n = d.getHours();
 		let m = d.getMinutes();
+		let time = 60 * 1000 * 60;
 		let millis = (60 - m) * 60 * 1000;
 		if (n < 6) {
-			millis += (5 - n) * 60 * 60 * 1000;
+			millis += (5 - n) * time;
 		} else if (n < 17) {
-			millis += (16 - n) * 60 * 60 * 1000;
+			millis += (16 - n) * time;
 		} else if (n < 23) {
-			millis += (22 - n) * 60 * 60 * 1000;
+			millis += (22 - n) * time;
 		} else {
-			millis += (30 - n) * 60 * 60 * 1000;
+			millis += (30 - n) * time;
 		}
 		this.send("The next official is in " + millisToTime(millis) + ".");
 	},

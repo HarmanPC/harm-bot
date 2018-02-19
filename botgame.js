@@ -45,6 +45,7 @@ class botGame {
         if (!this.allowJoins || this.state !== "signups" || !this.userList.includes(user.userid)) return;
         delete this.users[user.userid];
         this.userList.splice(this.userList.indexOf(user.userid), 1);
+        user.sendTo('You have left the debate.');
         return true;
     }
     
