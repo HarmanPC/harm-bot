@@ -26,6 +26,8 @@ class DebateGame extends Rooms.botGame {
 			super.onJoin(Users.get(this.args[1].split("vs")[0].trim()));
 			super.onJoin(Users.get(this.args[1].split("vs")[1].trim()));
 			this.allowJoins = false;
+			this.pone = Users.get(this.args[1].split("vs")[0].trim()).name;
+			this.ptwo = Users.get(this.args[1].split("vs")[1].trim()).name;
 			this.onStart();
 		} else {
 			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the game.");
@@ -56,6 +58,7 @@ class DebateGame extends Rooms.botGame {
 	loopTimeout(mode, time) {
 		if (mode == "1v1"){
 			this.clock++;
+			console.log(this.clock);
 			this.timer = setTimeout(() => {
 				if (this.clock > 3) {
 					this.sendRoom(`Time is up!`);
@@ -63,7 +66,11 @@ class DebateGame extends Rooms.botGame {
 					this.onEnd();
 				} else {
 					this.sendRoom(`Time is up!`);
-					this.sendRoom(`${this.args[1].split("vs")[` + this.count % 2 + `].trim()}'s turn!`);
+					if (this.clock % 2 == 1) {
+						this.sendRoom(`${this.ptwo}'s turn!`);
+					} else if (this.clock % 2 == 0) {
+						this.sendRoom(`${this.pone}'s turn!`);
+					}
 					this.loopTimeout(mode, time);
 				}
 			}, time)
@@ -111,8 +118,7 @@ class DebateGame extends Rooms.botGame {
 		}
 		if (this.args[0].toLowerCase() == "1v1") {
 			let debate;
-			let count = 0;
-			this.clock == 0;
+			this.clock = 0;
 			if (!this.args[3]) {
 				debate = Debate.getQuestion();
 			} else {
@@ -127,7 +133,7 @@ class DebateGame extends Rooms.botGame {
 				this.sendRoom(`Time is up! The debate shall now commence!`);
 				this.sendRoom(`${this.args[1].split("vs")[0].trim()}'s turn!`)
 				this.loopTimeout("1v1", (this.args[2] * 60 * 1000) || 3 * 60 * 1000);
-			}, 5 * 60 * 1000);
+			}, 1); //5 * 60 * 1000
 		}
 		if (this.args[0].toLowerCase() == "teams") {
 			let debate;
