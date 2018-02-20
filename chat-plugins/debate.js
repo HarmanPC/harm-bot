@@ -32,6 +32,7 @@ class DebateGame extends Rooms.botGame {
 			super.onJoin(Users.get(this.args[1].split("vs")[1].trim()));
 			
 			this.allowJoins = false;
+			this.type = this.args[0];
 			
 			this.pone = Users.get(this.args[1].split("vs")[0].trim()).name;
 			this.ptwo = Users.get(this.args[1].split("vs")[1].trim()).name;
@@ -40,7 +41,6 @@ class DebateGame extends Rooms.botGame {
 		} else {
 			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the debate. (" + this.type + ")");
 		}
-		 this.type = this.args[0];
     }
     
     onStart() {
@@ -193,8 +193,9 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 exports.commands = {
     debate: function (target, room, user) {
         if (!room || !this.can("debate")) return false;
-        if (room.game && room.game.gameId !== 'host') return this.send("There is already a debate going on in this room! (" + room.game.type + ")");
-			room.game = new DebateGame(room, target);
+        if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.send("There is already a debate going on in this room!");
+        if (room.game && room.game.gameId !== 'host' && room.game.type) return this.send("There is already a debate going on in this room! (" + room.game.type + ")");
+		room.game = new DebateGame(room, target);
     },
     addq:'addquestion',
     addquestion: function (target, room, user) {
