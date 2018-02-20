@@ -133,7 +133,7 @@ class DebateGame extends Rooms.botGame {
 				this.sendRoom(`Time is up! The debate shall now commence!`);
 				this.sendRoom(`${this.args[1].split("vs")[0].trim()}'s turn!`)
 				this.loopTimeout("1v1", (this.args[2] * 60 * 1000) || 3 * 60 * 1000);
-			}, 1); //5 * 60 * 1000
+			}, /5 * 60 * 1000);
 		}
 		if (this.args[0].toLowerCase() == "teams") {
 			let debate;
