@@ -14,7 +14,6 @@ You will be given admin privileges on the bot that way.
 2) Jr Nice Guy
 3) sniper
 4) PowerHitter0418
-5) XnadrojX
 # Special Thanks
 1)  XnadrojX
 2)  Hoeenhero
