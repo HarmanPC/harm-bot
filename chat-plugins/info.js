@@ -27,7 +27,10 @@ exports.commands = {
         this.can("set");
         this.send(Monitor.username + "'s github repository: https://github.com/HarmanPC/harm-bot");
     },
+    time: function (target, room, user) {
+        this.can('debate');
+        this.send('The EST time is: ' + getEST());
+    },
 };
 /*globals Monitor*/
 /*globals Tools*/
-/*globals Config*/

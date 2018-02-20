@@ -1,6 +1,6 @@
 "use strict";
 
-class TriviaManager {
+class DebateManager {
     constructor(file) {
         this.questions = [];
         this.file = file;
@@ -14,7 +14,7 @@ class TriviaManager {
     load() {
 		fs.readFile(this.file, 'utf8', (err, content) => {
 			if (err && err.code === 'ENOENT') return false; // file doesn't exist (yet)
-			if (err) return console.log(`ERROR: Unable to load trivia questions: ${err}`);
+			if (err) return console.log(`ERROR: Unable to load debate questions: ${err}`);
 
 			this.questions = JSON.parse(content);
 		});
@@ -22,7 +22,7 @@ class TriviaManager {
     
     write() {
 		fs.writeFile(this.file, JSON.stringify(this.questions), err => {
-			if (err) console.log(`ERROR: Failed to write to trivia file - ${err}`);
+			if (err) console.log(`ERROR: Failed to write to debate file - ${err}`);
 		});
     }
     
@@ -34,8 +34,8 @@ class TriviaManager {
         return this.questions.find(q => q.question === str);
     }
     
-    addQuestion(question, answers) {
-        this.questions.push({question: question, answers: answers});
+    addQuestion(question) {
+        this.questions.push({question: question});
         return this;
     }
     
@@ -55,4 +55,4 @@ class TriviaManager {
     }
 }
 
-module.exports = TriviaManager;
+module.exports = DebateManager;

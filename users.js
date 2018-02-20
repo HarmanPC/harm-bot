@@ -1,12 +1,12 @@
 'use strict';
 
-//const cache_db = require("./cache-db.js");
+const cache_db = require("./cache-db.js");
 
-const developers = ["harmanpc","amice","sniper","jrniceguy"];
+const developers = ["sniper","healndeal","amice","xnadrojx"];
 let Users = {};
 let users = Users.users = new Map();
-//Users.seen = new cache_db();
-//Users.seen.load("config/seen");
+Users.seen = new cache_db();
+Users.seen.load("config/seen");
 
 class User {
     constructor(name) {
@@ -33,12 +33,12 @@ class User {
             this.name = (/[a-zA-Z0-9]/i.test(name.charAt(0)) ? name : name.slice(1));
         }
         Plugins.mail.receive(this);
-//        Users.seen.set(this.userid, [Date.now(), room.name]);
+        Users.seen.set(this.userid, [Date.now(), room.name]);
     }
     
     onLeave(room) {
         this.ranks.delete(room.id);
-        //Users.seen.set(this.userid, [Date.now(), room.name]);
+        Users.seen.set(this.userid, [Date.now(), room.name]);
     }
     
     botPromote(rank) {

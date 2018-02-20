@@ -65,6 +65,7 @@ exports.commands = {
             .catch(err => {
                 this.send(`Error: ${err}`);
             });
-    },
+    }
 };
+/*globals toId*/
 
