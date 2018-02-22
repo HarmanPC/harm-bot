@@ -73,13 +73,6 @@ exports.commands = {
         this.send(`${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
         room.game.onEnd();
     },
-    checkdebate: function (target, room, user){
-        this.can('debate');
-        if (room.game.gameId === 'host' && room.game.official == true) return this.send(room.game.hostName + " is hosting official debate.");
-        if (room.game.gameId === 'host' && room.game.official == false) return this.send(room.game.hostName + " is hosting a debate.");
-        if (room.game.gameid === 'debate') return this.send(`A scripted debate is in progress. (${room.game.type})`);
-        if (!room.game) return this.send(`No debate is going on right now.`);
-    },
     hangman: function (target, room, user) {
         this.can('games');
         let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
