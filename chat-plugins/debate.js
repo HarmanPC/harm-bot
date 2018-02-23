@@ -140,7 +140,7 @@ class DebateGame extends Rooms.botGame {
 			this.sendRoom(`Both players get 5 minutes to agree on a side and do research!`);
 			this.timer = setTimeout(() => {
 				this.sendRoom(`Time is up! The debate shall now commence!`);
-				this.sendRoom(`${Users.get(this.args[1].split("vs")[0].trim())}'s turn!`);
+				this.sendRoom(`${Users.get(this.args[1].split("vs")[0].trim()).name}'s turn!`);
 				this.loopTimeout("1v1", (this.args[2] * 60 * 1000) || 3 * 60 * 1000);
 			}, 5 * 60 * 1000);
 		}
@@ -192,10 +192,17 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 
 exports.commands = {
     debate: function (target, room, user) {
-        if (!room || !this.can("debate")) return false;
+        if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
         if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.send("There is already a debate going on in this room!");
         if (room.game && room.game.gameId !== 'host' && room.game.type) return this.send("There is already a debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
+    },
+	checkdebate: function (target, room, user){
+        if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
+        if (room.game.gameId === 'host' && room.game.official == true) return this.send(room.game.hostName + " is hosting official debate.");
+        if (room.game.gameId === 'host' && room.game.official == false) return this.send(room.game.hostName + " is hosting a debate.");
+        if (room.game.gameId === 'debate') return this.send(`A scripted debate is in progress. (${room.game.type})`);
+        if (!room.game) return this.send(`No debate is going on right now.`);
     },
     addq:'addquestion',
     addquestion: function (target, room, user) {

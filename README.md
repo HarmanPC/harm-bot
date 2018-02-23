@@ -24,6 +24,5 @@ Usage: `debate [casual/teams], [Time (per rebuttal)], [Topic (optional, pulls fr
 
 `debate [1v1], [Player 1 vs Player 2], [Time (per rebuttal)], [Topic (optional, pulls from default pool if left blank)]`
 
-
 # Note
 Get ``config/config.js`` from https://github.com/sparkychildcharlie/Foxiebot-kit/tree/master/config
