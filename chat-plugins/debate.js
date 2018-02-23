@@ -21,6 +21,7 @@ class DebateGame extends Rooms.botGame {
         
         this.playerObject = DebateGamePlayer;
 		this.args = arg.split(',');
+		this.type = this.args[0];
         if (this.args[0].toLowerCase() == "1v1") {
         	if (this.args[1].split("vs")[0].trim() == this.args[1].split("vs")[1].trim()) {
 				this.sendRoom('Both players are same.');
