@@ -198,9 +198,6 @@ exports.commands = {
 		room.game = new DebateGame(room, target);
     },
 	checkdebate: function (target, room, user){
-		console.log(Users.get(user.userid).hasBotRank("+"));
-		console.log(room);
-		console.log(room.game);
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
         if (room.game.gameId === 'host' && room.game.official == true) return this.send(room.game.hostName + " is hosting official debate.");
         if (room.game.gameId === 'host' && room.game.official == false) return this.send(room.game.hostName + " is hosting a debate.");
