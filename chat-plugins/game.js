@@ -15,7 +15,7 @@ exports.commands = {
         if (!room || !room.game || !(!user.hasBotRank('+') || user.userid == room.game.userHost)) return false;
         if (room.game.state == 'signups') {
             if (room.game.onLeave) room.game.onLeave(Users.get(target));
-            this.room.send(null, `Users.get(target).name} is removed from playerlist`);
+            this.room.send(null, `${Users.get(target).name} is removed from playerlist`);
         }
         else if (room.game.state == 'started') { 
             room.game.state = 'signups';
