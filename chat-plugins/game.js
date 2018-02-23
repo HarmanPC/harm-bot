@@ -12,7 +12,7 @@ exports.commands = {
     },
     rpl: "removeplayer",
     removeplayer: function(target, room, user) {
-        if (!room || !room.game || !user.hasBotRank('+') || user.userid !== room.game.userHost) return false;
+        if (!room || !room.game || !(!user.hasBotRank('+') || user.userid == room.game.userHost)) return false;
         if (room.game.state == 'signups') {
             if (room.game.onLeave) room.game.onLeave(Users.get(target));
             this.send(`${Users.get(target).name} is removed from playerlist`);
@@ -25,22 +25,22 @@ exports.commands = {
         }
     },
     apl:'addplayer',
-    addplayer: function(target, room, user){
-        if (!room || !room.game || !user.hasBotRank('+') || user.userid !== room.game.userHost) return false;
+    addplayer: function (target, room, user) {
+        if (!room || !room.game || !(!user.hasBotRank('+') || user.userid == room.game.userHost)) return false;
         if (room.game.state == 'signups') {
             if (room.game.onJoin) room.game.onJoin(Users.get(target));
-            this.send(`${Users.get(target).name} is added in playerlist`);
+            this.send(`${Users.get(target).name} is added to playerlist`);
         }
         else if (room.game.state == 'started') {
             room.game.state = 'signups';
             if (room.game.onJoin) room.game.onJoin(Users.get(target));
             room.game.state = 'started';
-            this.send(`${Users.get(target).name} is added in playerlist.`);
+            this.send(`${Users.get(target).name} is added to playerlist.`);
         }
     },
     sub: "replace",
     replace: function (target, room, user) {
-        if (!room || user.hostName !== user.userid || !room.game || !user.hasBotRank('+') || room.game.gameId !== "host"  || room.game.state === "signups") return false;
+        if (!room || !(!user.hasBotRank('+') || user.userid == room.game.userHost) || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
         if (!target) return this.send(room.commandCharacter[0] + "sub [old player], [new player]");
         let parts = target.split(",");
         if (parts.length !== 2) return this.send(room.commandCharacter[0] + "sub [old player], [new player]");
@@ -50,9 +50,15 @@ exports.commands = {
         if (room.game.onLeave) return room.game.onLeave(Users.get(target[0]));
         this.send(target[1] + ' has joined the game.');
     },
+<<<<<<< HEAD
     players: function(target, room, user) {
         if (!room || !user.hasBotRank('+') || !room.game) return false
         if (!room || !room.game) return false;
+=======
+	pl: 'players',
+    players: function (target, room, user) {
+        if (!room || !user.hasBotRank('+') || !room.game) return false;
+>>>>>>> a931b3fbfae43f431f82a46e8741659f426ff0b2
         if (room.game.postPlayerList) room.game.postPlayerList();
     },
     start: function(target, room, user) {

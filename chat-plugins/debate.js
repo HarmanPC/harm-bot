@@ -33,7 +33,6 @@ class DebateGame extends Rooms.botGame {
 			super.onJoin(Users.get(this.args[1].split("vs")[1].trim()));
 			
 			this.allowJoins = false;
-			this.type = this.args[0];
 			
 			this.pone = Users.get(this.args[1].split("vs")[0].trim()).name;
 			this.ptwo = Users.get(this.args[1].split("vs")[1].trim()).name;
