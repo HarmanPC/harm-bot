@@ -140,7 +140,6 @@ class DebateGame extends Rooms.botGame {
 			this.sendRoom(`Both players get 5 minutes to agree on a side and do research!`);
 			this.timer = setTimeout(() => {
 				this.sendRoom(`Time is up! The debate shall now commence!`);
-				this.sendRoom(`Time is up! The debate shall now commence!`);
 				this.sendRoom(`${Users.get(this.args[1].split("vs")[0].trim()).name}'s turn!`);
 				this.loopTimeout("1v1", (this.args[2] * 60 * 1000) || 3 * 60 * 1000);
 			}, 5 * 60 * 1000);
