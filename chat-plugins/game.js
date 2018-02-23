@@ -15,13 +15,13 @@ exports.commands = {
         if (!room || !room.game || !(!user.hasBotRank('+') || user.userid == room.game.userHost)) return false;
         if (room.game.state == 'signups') {
             if (room.game.onLeave) room.game.onLeave(Users.get(target));
-            this.send(`${Users.get(target).name} is removed from playerlist`);
+            this.room.send(null, `Users.get(target).name} is removed from playerlist`);
         }
         else if (room.game.state == 'started') { 
             room.game.state = 'signups';
             if (room.game.onLeave) room.game.onLeave(Users.get(target));
             room.game.state = 'started';
-            this.send(`${Users.get(target).name} is removed from playerlist.`);
+            this.room.send(null, `${Users.get(target).name} is removed from playerlist.`);
         }
     },
     apl:'addplayer',
@@ -29,13 +29,13 @@ exports.commands = {
         if (!room || !room.game || !(!user.hasBotRank('+') || user.userid == room.game.userHost)) return false;
         if (room.game.state == 'signups') {
             if (room.game.onJoin) room.game.onJoin(Users.get(target));
-            this.send(`${Users.get(target).name} is added to playerlist`);
+            this.room.send(null, `${Users.get(target).name} is added to playerlist`);
         }
         else if (room.game.state == 'started') {
             room.game.state = 'signups';
             if (room.game.onJoin) room.game.onJoin(Users.get(target));
             room.game.state = 'started';
-            this.send(`${Users.get(target).name} is added to playerlist.`);
+            this.room.send(null, `${Users.get(target).name} is added to playerlist.`);
         }
     },
     sub: "replace",
@@ -66,12 +66,12 @@ exports.commands = {
     end: function(target, room, user) {
         if (!room || !user.hasBotRank('+') || !room.game) return false;
         room.game.destroy();
-        this.send("The debate has been ended.");
+        this.room.send(null, "The debate has been ended.");
     },
     win: function (target, room, user){
-        if (!room.game ||room.game.gameId !== 'host' || !room  || !user.hasBotRank('+') || room.game.userHost !== user.userid) return false;
+        if (!room.game || room.game.gameId !== 'host' || !room  || !(!user.hasBotRank('+') || room.game.userHost == user.userid)) return false;
         target = target.split(',');
-        this.send(`${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
+        this.room.send(null, `${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
         room.game.onEnd();
     },
     /*checkdebate: function (target, room, user){
