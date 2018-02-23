@@ -15,13 +15,13 @@ exports.commands = {
         if (!room || !room.game || !(!user.hasBotRank('+') || user.userid == room.game.userHost)) return false;
         if (room.game.state == 'signups') {
             if (room.game.onLeave) room.game.onLeave(Users.get(target));
-            this.send(`${Users.get(target).name} is removed from playerlist`);
+            this.room.send(null, `${Users.get(target).name} is removed from playerlist`);
         }
         else if (room.game.state == 'started') { 
             room.game.state = 'signups';
             if (room.game.onLeave) room.game.onLeave(Users.get(target));
             room.game.state = 'started';
-            this.send(`${Users.get(target).name} is removed from playerlist.`);
+            this.room.send(null, `${Users.get(target).name} is removed from playerlist.`);
         }
     },
     apl:'addplayer',
@@ -29,26 +29,26 @@ exports.commands = {
         if (!room || !room.game || !(!user.hasBotRank('+') || user.userid == room.game.userHost)) return false;
         if (room.game.state == 'signups') {
             if (room.game.onJoin) room.game.onJoin(Users.get(target));
-            this.send(`${Users.get(target).name} is added to playerlist`);
+            this.room.send(null, `${Users.get(target).name} is added to playerlist`);
         }
         else if (room.game.state == 'started') {
             room.game.state = 'signups';
             if (room.game.onJoin) room.game.onJoin(Users.get(target));
             room.game.state = 'started';
-            this.send(`${Users.get(target).name} is added to playerlist.`);
+            this.room.send(null, `${Users.get(target).name} is added to playerlist.`);
         }
     },
     sub: "replace",
     replace: function (target, room, user) {
         if (!room || !(!user.hasBotRank('+') || user.userid == room.game.userHost) || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
-        if (!target) return this.send(room.commandCharacter[0] + "sub [old player], [new player]");
+        if (!target) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
         let parts = target.split(",");
-        if (parts.length !== 2) return this.send(room.commandCharacter[0] + "sub [old player], [new player]");
-        if (!room.users.has(toId(parts[1]))) this.send("The sub player is not in the room.");
-        if (toId(parts[1]) === room.game.userHost) return this.send("You cannot add the host into the game.");
+        if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
+        if (!room.users.has(toId(parts[1]))) this.room.send(null, "The sub player is not in the room.");
+        if (toId(parts[1]) === room.game.userHost) return this.room.send(null, "You cannot add the host into the game.");
         if (room.game.onJoin) return room.game.onJoin(Users.get(target[1]));
         if (room.game.onLeave) return room.game.onLeave(Users.get(target[0]));
-        this.send(target[1] + ' has joined the game.');
+        this.room.send(null, target[1] + ' has joined the game.');
     },
 	pl: 'players',
     players: function (target, room, user) {
@@ -66,12 +66,12 @@ exports.commands = {
     end: function(target, room, user) {
         if (!room || !user.hasBotRank('+') || !room.game) return false;
         room.game.destroy();
-        this.send("The debate has been ended.");
+        this.room.send(null, "The debate has been ended.");
     },
     win: function (target, room, user){
-        if (!room.game ||room.game.gameId !== 'host' || !room  || !user.hasBotRank('+') || room.game.userHost !== user.userid) return false;
+        if (!room.game || room.game.gameId !== 'host' || !room  || !(!user.hasBotRank('+') || room.game.userHost == user.userid)) return false;
         target = target.split(',');
-        this.send(`${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
+        this.room.send(null, `${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
         room.game.onEnd();
     },
     /*checkdebate: function (target, room, user){
@@ -82,9 +82,10 @@ exports.commands = {
         else return this.send(`No debate is going on right now.`);
     },*/
     hangman: function (target, room, user) {
+		if (!room || !user.hasBotRank('+')) return false;
         let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
-        this.send(`/hangman create ${poke}, ${Tools.Words[poke]}`);
-        this.send('/wall Use ``/guess`` to guess.');
+        this.room.send(null, `/hangman create ${poke}, ${Tools.Words[poke]}`);
+        this.room.send(null, '/wall Use ``/guess`` to guess.');
     },
 };
 /*globals Tools*/
