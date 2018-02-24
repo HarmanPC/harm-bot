@@ -193,16 +193,16 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 exports.commands = {
     debate: function (target, room, user) {
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
-        if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.send("There is already a debate going on in this room!");
-        if (room.game && room.game.gameId !== 'host' && room.game.type) return this.send("There is already a debate going on in this room! (" + room.game.type + ")");
+        if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a debate going on in this room!");
+        if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
     },
 	checkdebate: function (target, room, user){
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
-        if (room.game.gameId === 'host' && room.game.official == true) return this.send(room.game.hostName + " is hosting official debate.");
-        if (room.game.gameId === 'host' && room.game.official == false) return this.send(room.game.hostName + " is hosting a debate.");
-        if (room.game.gameId === 'debate') return this.send(`A scripted debate is in progress. (${room.game.type})`);
-        else return this.send(`No debate is going on right now.`);
+        if (room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, room.game.hostName + " is hosting official debate.");
+        if (room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a debate.");
+        if (room.game.gameId === 'debate') return this.room.send(null, `A scripted debate is in progress. (${room.game.type})`);
+        else return this.room.send(null, `No debate is going on right now.`);
     },
     addq:'addquestion',
     addquestion: function (target, room, user) {
@@ -210,11 +210,11 @@ exports.commands = {
         
         let question = target.toString();
         
-        if (Debate.findQuestion(question)) return this.send("The question already exists.");
+        if (Debate.findQuestion(question)) return this.room.send(null, "The question already exists.");
         
         Debate.addQuestion(question).write();
         
-        this.send("Added!");
+        this.room.send(null, "Added!");
     },
     delq:'deletequestion',
     deletequestion: function (target, room, user) {
@@ -237,7 +237,7 @@ exports.commands = {
 		
 	let question = Debate.getQuestion();
 		
-	this.send(question.question.trim() + "?");
+	this.room.send(null, question.question.trim() + "?");
 	}
 };
 /*globals Tools*/

@@ -55,7 +55,7 @@ let millisToTime = function(millis){
 exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !this.can("debate")) return false;
-        if (!room.users.has(target)) return this.send('The user "' + Users.get(target).name + '" is not in the room.');
+        if (!room.users.has(toId(target))) return this.send('The user "' + Users.get(target).name + '" is not in the room.');
         if (room.game) return this.send("There is already a debate going on in this room! (By " + room.game.hostName + ")");
         room.game = new hostGame(room, target);
     },
