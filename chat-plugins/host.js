@@ -54,31 +54,31 @@ let millisToTime = function(millis){
 
 exports.commands = {
     host: function (target, room, user) {
-        if (!room || !target || !this.can("debate")) return false;
-        if (!room.users.has(toId(target))) return this.send('The user "' + Users.get(target).name + '" is not in the room.');
-        if (room.game && room.game.gameId == 'host') return this.send(room.game.hostName + ' is hosting.');
-        if (room.game && room.game.gameId == 'debate') return this.send('There is already a debate going on in this room! (' + room.game.type + ')');
+        if (!room || !target || !user.hasBotRank('+')) return false;
+        if (!room.users.has(toId(target))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
+        if (room.game && room.game.gameId == 'host') return this.room.send(null,room.game.hostName + ' is hosting.');
+        if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
         room.game = new hostGame(room, target);
     },
     subhost: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
-        this.send(Users.get(target).name + ' has been subhosted.');
+        this.room.send(null,Users.get(target).name + ' has been subhosted.');
         room.game.hostName = Users.get(target).name;
 	    room.game.userHost = toId(target);
     },
     parts: function (target, room, user) {
         let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
-        if (!user.can('debate')) return false;
+        if (!user.hasBotRank('+')) return false;
         target = target.split(',');
         if (target.length < 2) {
-            this.send(`${rank} Participation points awarded to ${target[0]}.`);
+            this.room.send(null,`${rank} Participation points awarded to ${target[0]}.`);
             Leaderboard.onWin('t', this.room, target[0], 4).write();
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
             }
-            this.send(`${rank} Participation points awarded to ${target.join(',')}.`);
+            this.room.send(null,`${rank} Participation points awarded to ${target.join(',')}.`);
         }
     },
     officialwin: function (target, room, user) {
@@ -86,28 +86,28 @@ exports.commands = {
         let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
         target = target.split(',');
         if (target.length < 2) {
-            this.room.send(`${rank} The winner is ${target[0]}! Thanks for hosting.`);
+            this.room.send(null,`${rank} The winner is ${target[0]}! Thanks for hosting.`);
             Leaderboard.onWin('t', this.room, toId(target[0]), 10).write();
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
             }
-            this.send(`${rank}The winners are ${target.join(', ')}! Thanks for hosting.`);
+            this.room.send(null,`${rank}The winners are ${target.join(', ')}! Thanks for hosting.`);
         }
         else {
-            this.send(rank + 'The winner is ' + target[0] + '! Thanks for hosting.');
+            this.room.send(null,rank + 'The winner is ' + target[0] + '! Thanks for hosting.');
         }
         room.game.onEnd();
     },
     mvp: function (target, room, user) {
-    if (!room ||  !this.can('debate')) return false;
+    if (!room ||  !user.hasBotRank('+')) return false;
     let winner = toId(target);
-    this.send(`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} MVP points awarded to ${winner}!`);
+    this.room.send(null,`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} MVP points awarded to ${winner}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     next: function (target, user, room) {
-		this.can('games');
+		this.can('debate');
 		let d = new Date();
 		let n = d.getHours();
 		let m = d.getMinutes();
