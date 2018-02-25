@@ -56,11 +56,12 @@ exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !this.can("debate")) return false;
         if (!room.users.has(toId(target))) return this.send('The user "' + Users.get(target).name + '" is not in the room.');
-        if (room.game) return this.send("There is already a debate going on in this room! (By " + room.game.hostName + ")");
+        if (room.game && room.game.gameId == 'host') return this.send(room.game.hostName + ' is hosting.');
+        if (room.game && room.game.gameId == 'debate') return this.send('There is already a debate going on in this room! (' + room.game.type + ')');
         room.game = new hostGame(room, target);
     },
     subhost: function (target, room, user) {
-        this.can('debate');
+        if (!room || !target || !user.hasBotRank('+')) return false;
         this.send(Users.get(target).name + ' has been subhosted.');
         room.game.hostName = Users.get(target).name;
 	    room.game.userHost = toId(target);
@@ -81,11 +82,11 @@ exports.commands = {
         }
     },
     officialwin: function (target, room, user) {
-        if (!this.can('debate')) return false;
+        if (!user.hasBotRank('+')) return false;
         let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
         target = target.split(',');
         if (target.length < 2) {
-            this.send(`${rank} The winner is ${target[0]}! Thanks for hosting.`);
+            this.room.send(`${rank} The winner is ${target[0]}! Thanks for hosting.`);
             Leaderboard.onWin('t', this.room, toId(target[0]), 10).write();
         }
         else if (target.length > 1) {
@@ -114,7 +115,7 @@ exports.commands = {
 		let millis = (60 - m) * 60 * 1000;
 		if (n < 6) {
 			millis += (5 - n) * time;
-		} else if (n < 17) {
+		} else if (n < 17) {u
 			millis += (16 - n) * time;
 		} else if (n < 23) {
 			millis += (22 - n) * time;
