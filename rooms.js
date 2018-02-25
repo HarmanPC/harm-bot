@@ -189,6 +189,12 @@ class Room {
                             applyModeration.reasons.push("flooding");
                         }
                         break;
+                    case "bold":
+                        if (msg.slice(0,2) == '**' && msg.slice(msg.length -1, msg.length) == '**') {
+                            applyModeration.points += 2.5;
+                            applyModeration.reasons.push("Bolding");
+                        }
+                        break;
                     case "spam":
                         function arrayCount(array, search) {
                             let tarTimes = 0;
