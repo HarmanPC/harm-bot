@@ -40,11 +40,8 @@ exports.commands = {
     },
     sub: "replace",
     replace: function (target, room, user) {
-<<<<<<< HEAD
         if (!room || !(user.hasBotRank('+') || user.userid == room.game.userHost) || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
-=======
         if (!room || !(!user.hasBotRank('+') || user.userid == room.game.userHost) || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
->>>>>>> 0853424a29f432f337a10a235227c1a9f8cd815e
         if (!target) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
         let parts = target.split(",");
         if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
@@ -73,15 +70,12 @@ exports.commands = {
         this.room.send(null, "The debate has been ended.");
     },
     win: function (target, room, user){
-<<<<<<< HEAD
         if (!room.game || room.game.gameId !== 'host' || !room  || !(user.hasBotRank('+') || room.game.userHost == user.userid)) return false;
         let targets = target.split(',');
         this.room.send(null, `${target.length > 1 ? 'The winners are ' + targets.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
-=======
         if (!room.game || room.game.gameId !== 'host' || !room  || !(!user.hasBotRank('+') || room.game.userHost == user.userid)) return false;
         target = target.split(',');
         this.room.send(null, `${target.length > 1 ? 'The winners are ' + target.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
->>>>>>> 0853424a29f432f337a10a235227c1a9f8cd815e
         room.game.onEnd();
     },
     hangman: function (target, room, user) {
