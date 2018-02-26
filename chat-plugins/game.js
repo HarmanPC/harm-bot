@@ -40,8 +40,7 @@ exports.commands = {
     },
     sub: "replace",
     replace: function (target, room, user) {
-        if (!room || !(user.hasBotRank('+') || user.userid == room.game.userHost) || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
-        if (!room || !(!user.hasBotRank('+') || user.userid == room.game.userHost) || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
+        if (!room || !user.hasBotRank('+') || room.game.userHost !== user.id || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
         if (!target) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
         let parts = target.split(",");
         if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
@@ -57,7 +56,11 @@ exports.commands = {
         if (room.game.postPlayerList) return room.game.postPlayerList();
     },
     start: function(target, room, user) {
-        if (!room || !(user.hasBotRank('+') || user.userid == room.game.userHost) || !room.game) return false;
+        if (!room  || !room.game) return false;
+        if (room.game.gameId =='host') {
+            if (user.userid !== room.game.userHost || !user.hasBotRank('+')) return false;
+            if (room.game.onStart) return room.game.onStart();
+        }
         if (room.game.onStart) return room.game.onStart();
     },
     autostart: function (target, room, user) {
