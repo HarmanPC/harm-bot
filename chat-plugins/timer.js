@@ -59,19 +59,24 @@ class Timer {
         this.room.countdown = null;
     }
 }
-
-exports.commands = {
-    timer: function (target, room, user) {
-        if (!this.can('broadcast') || !room) return false;
-        
-        if (target === 'end') {
-            if (!room.countdown) return this.send('There is no timer running in this room.');
-            this.send(room.countdown.getTimeLeft() + '. The timer has been ended.');
+    function tem(target, room, user){
+            if (target === 'end') {
+            if (!room.countdown) return this.room.send('There is no timer running in this room.');
+            this.room.send(room.countdown.getTimeLeft() + '. The timer has been ended.');
             room.countdown.destroy();
             return;
         }
         
         if (room.countdown) return this.send(room.countdown.getTimeLeft());
         room.countdown = new Timer(room, user, target);
+        }
+exports.commands = {
+    timer: function (target, room, user) {
+        if (room.game.gameId =='host') {
+            if (room.game.userhost !== user.userid || !user.hasBotRank('+')) return false;
+            tem();
+        }
+        if (!user.hasBotRank('+')) return false;
+        tem();
     },
 };

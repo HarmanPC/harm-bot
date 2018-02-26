@@ -40,7 +40,7 @@ exports.commands = {
     },
     sub: "replace",
     replace: function (target, room, user) {
-        if (!room || !user.hasBotRank('+') || room.game.userHost !== user.id || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
+        if (!room || !user.hasBotRank('+') || room.game.userHost !== user.userid || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
         if (!target) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
         let parts = target.split(",");
         if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
