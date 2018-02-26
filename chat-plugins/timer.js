@@ -74,9 +74,9 @@ exports.commands = {
     timer: function (target, room, user) {
         if (room.game.gameId =='host') {
             if (room.game.userhost !== user.userid || !user.hasBotRank('+')) return false;
-            tem();
+            tem(target, room, user);
         }
         if (!user.hasBotRank('+')) return false;
-        tem();
+        tem(target, room, user);
     },
 };
