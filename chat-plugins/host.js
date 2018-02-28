@@ -115,7 +115,7 @@ exports.commands = {
 		let millis = (60 - m) * 60 * 1000;
 		if (n < 6) {
 			millis += (5 - n) * time;
-		} else if (n < 17) {u
+		} else if (n < 17) {
 			millis += (16 - n) * time;
 		} else if (n < 23) {
 			millis += (22 - n) * time;

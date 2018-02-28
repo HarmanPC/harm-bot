@@ -1,6 +1,15 @@
 'use strict';
 
 exports.commands = {
+     seen: function(target, room, user) {
+        if(!target) return this.parse("/help seen");
+        this.can("set");
+        target = toId(target);
+        let lastSeen = Users.seen.get(target, null);
+        if (!lastSeen) return this.send("'" + target + "' was never seen before.");
+        let seenRoom = Db("settings").get([toId(lastSeen[1], true), "isPrivate"], false) && ((!user.isDev() && !user.isStaff) || room) ? "a private room" : lastSeen[1];
+        this.send("'" + target + "' was last seen " + Tools.getTimeAgo(lastSeen[0]) + " ago in " + seenRoom + ".");
+    },
     uptime: function(target, room, user) {
         this.can("set");
         let startTime = Date.now() - (process.uptime() * 1000);
@@ -34,3 +43,8 @@ exports.commands = {
 };
 /*globals Monitor*/
 /*globals Tools*/
+/*globals toId*/
+/*globals getEST*/
+/*globals Config*/
+/*globals Users*/
+/*globals Db*/

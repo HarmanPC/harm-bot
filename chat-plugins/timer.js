@@ -30,7 +30,6 @@ class Timer {
             this.destroy();
             return;
         }
-        
         this.endTime = Date.now() + duration;
         
         this.timer = setTimeout(() => {
@@ -59,24 +58,18 @@ class Timer {
         this.room.countdown = null;
     }
 }
-    function tem(target, room, user){
-            if (target === 'end') {
+exports.commands = {
+    timer: function (target, room, user) {
+        if (!room || !user.hasBotRank('+')) return false;
+        if (target === 'end') {
             if (!room.countdown) return this.room.send('There is no timer running in this room.');
             this.room.send(room.countdown.getTimeLeft() + '. The timer has been ended.');
             room.countdown.destroy();
             return;
         }
-        
-        if (room.countdown) return this.send(room.countdown.getTimeLeft());
+        if (target <= 0) return this.room.send(null, 'Invalid Duration.');
+        if (target == 5) return room.countdown = new Timer(room, user, '5:00');
+        if (room.countdown) return this.room.send(null,room.countdown.getTimeLeft());
         room.countdown = new Timer(room, user, target);
-        }
-exports.commands = {
-    timer: function (target, room, user) {
-        if (room.game.gameId =='host') {
-            if (room.game.userhost !== user.userid || !user.hasBotRank('+')) return false;
-            tem(target, room, user);
-        }
-        if (!user.hasBotRank('+')) return false;
-        tem(target, room, user);
     },
 };
