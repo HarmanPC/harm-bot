@@ -68,4 +68,8 @@ exports.commands = {
     }
 };
 /*globals toId*/
-
+/*globals Config*/
+/*globals Monitor*/
+/*globals removeCommand*/
+/*globals Users*/
+/*globals Events*/
