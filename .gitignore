@@ -5,14 +5,12 @@ config.js
 package-lock.json
 crashlogs.txt
 /config/*
-/chat-plugins/goodly.js
 
 /data/pokedex.js
 /data/formats-data.js
 /data/moves.js
 /data/abilities.js
 /data/items.js
-/data/trivia.json
 
 /pd-tools/figures.js
 

@@ -229,7 +229,6 @@ global.send = function(text, user, priority, bypass) {
     }
 };
 
-
 global.clearQueue = function(user) {
     if (!user) return false;
     user = toId(user);
@@ -238,10 +237,10 @@ global.clearQueue = function(user) {
         if (sendQueue[i][1] === user) {
             continue;
         }
-        newQueue.push(sendQueue[i])
+        newQueue.push(sendQueue[i]);
     }
     sendQueue = newQueue;
-}
+};
 
 
 
@@ -301,7 +300,6 @@ let connect = function(retry) {
     for (let i = 0, l = chars.length; i < 8; i++) {
         str += chars.charAt(~~(Math.random() * l));
     }
-
     let conStr = "ws://" + Config.info.server + ":" + Config.info.port + "/showdown/" + id + "/" + str + "/websocket";
     log("info", "connecting to " + conStr + " - secondary protocols: " + util.inspect(Config.secprotocols));
     ws.connect(conStr, Config.secprotocols);
