@@ -263,7 +263,7 @@ exports.commands = {
     roomstats: function (target, room, user) {
         if (!room) {
             [room, target] = target.split(",").map(p => p.trim());
-            if (!Rooms.rooms.has(toId(room))) return this.send("Invalid room.");
+          //  if (!Rooms.rooms.has(toId(room))) return this.send("Invalid room.");
             
             room = Rooms.get(room);
         }
