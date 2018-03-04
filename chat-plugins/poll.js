@@ -24,7 +24,7 @@ let ans5V = 0;
 let ans6V = 0;
 let ans7V = 0;
 let ans8V = 0;
-// boolean
+// determines if poll is running or not
 let POLL;
 
 exports.commands = {
@@ -42,7 +42,7 @@ exports.commands = {
         ans6 = targets[6].trim();
         ans7 = targets[7].trim();
         ans8 = targets[8].trim();
-        this.room.send(null, `!code        Poll: ${q}\n ${ans1}\n ${ans2}\n ${ans3}\n ${ans4}\n ${ans5}\n ${ans6}\n ${ans7}\n ${ans8}\n `);
+        this.room.send(null, `!code             Poll: ${q}          \n\n 1) ${ans1}\n\n 2) ${ans2}\n\n 3) ${ans3}\n\n 4) ${ans4}\n\n 5) ${ans5}\n\n 6) ${ans6}\n\n 7) ${ans7}\n\n 8) ${ans8}\n\n `);
         POLL = true;
         this.room.send(null, `Use \`\`.vote\`\` to vote.`);
     },
@@ -63,14 +63,14 @@ exports.commands = {
     pollend: function (target, room, user) {
         if (!user.hasBotRank('+')) return false;
         if (!POLL) return this.room.send(null, 'There is no poll running in this room.');
-        this.room.send(null, `!code             Poll: ${q}          \n ${ans1}: ${ans1V}\n ${ans2}: ${ans2V}\n ${ans3}: ${ans3V}\n ${ans4}: ${ans4V}\n ${ans5}: ${ans5V}\n ${ans6}: ${ans6V}\n ${ans7}: ${ans7V}\n ${ans8}: ${ans8V}\n `);
+        this.room.send(null, `!code             Poll: ${q}          \n\n 1) ${ans1}: ${ans1V}\n\n 2) ${ans2}: ${ans2V}\n\n 3) ${ans3}: ${ans3V}\n\n 4) ${ans4}: ${ans4V}\n\n 5) ${ans5}: ${ans5V}\n\n 6) ${ans6}: ${ans6V}\n\n 7) ${ans7}: ${ans7V}\n\n 8) ${ans8}: ${ans8V}\n\n `);
         this.room.send(null, 'Poll has been ended by ' + user.name);
         POLL = false;
     },
     pollshow: function (target, room, user) {
         if (!user.hasBotRank('+')) return false;
         if (!POLL) return this.room.send(null, 'There is no poll running in this room.');
-        this.room.send(null, `!code         Poll: ${q}          \n ${ans1}: ${ans1V}\n ${ans2}: ${ans2V}\n ${ans3}: ${ans3V}\n ${ans4}: ${ans4V}\n ${ans5}: ${ans5V}\n ${ans6}: ${ans6V}\n ${ans7}: ${ans7V}\n ${ans8}: ${ans8V}\n `);
+        this.room.send(null, `!code             Poll: ${q}          \n\n 1) ${ans1}: ${ans1V}\n\n 2) ${ans2}: ${ans2V}\n\n 3) ${ans3}: ${ans3V}\n\n 4) ${ans4}: ${ans4V}\n\n 5) ${ans5}: ${ans5V}\n\n 6) ${ans6}: ${ans6V}\n\n 7) ${ans7}: ${ans7V}\n\n 8) ${ans8}: ${ans8V}\n\n `);
     },
     userscheck: function (target, room, user) {
         this.send(users[0]);
