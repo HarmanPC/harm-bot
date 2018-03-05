@@ -148,7 +148,9 @@ class DebateGame extends Rooms.botGame {
 			let debate;
 			this.clock = 0;
 			if (!this.args[2]) {
-				debate = Debate.getQuestion();
+				debate = {
+				    question: Debate.getQuestion()
+				};
 			} else {
 				debate = {
 					question: this.args[2]

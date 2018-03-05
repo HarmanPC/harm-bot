@@ -51,20 +51,20 @@ let millisToTime = function(millis){
 	}
 	return response;
 };
-
+//let auths = ['ayia healndeal sniper amice tonixy bored6886 skyfigueroa ahelpfulrayquaza patekphillipe xnadrojx zorq itzviper482 deltastatics sentimentality jrniceguy omroom'];
 exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
         if (!room.users.has(toId(target))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') return this.room.send(null,room.game.hostName + ' is hosting.');
         if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
-        this.parse(`/promote ${target}, +`);
+       // this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', +'}`);
         room.game = new hostGame(room, target);
     },
     subhost: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
-        this.parse(`/promote ${target}, +`);
-        this.parse(`/promote ${room.game.userHost}, deauth`);
+        //this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', +'}`);
+       // this.parse(`${room.game.userHost.includes(auths) ? '/kek' : '/promote ' + room.game.userHost + ', deauth'}`);
         this.room.send(null,Users.get(target).name + ' has been subhosted.');
         room.game.hostName = Users.get(target).name;
 	    room.game.userHost = toId(target);
@@ -106,7 +106,7 @@ exports.commands = {
     mvp: function (target, room, user) {
     if (!room ||  !user.hasBotRank('+')) return false;
     let winner = toId(target);
-    this.room.send(null,`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} MVP points awarded to ${winner}!`);
+    this.room.send(null,`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} MVP points awarded to ${Users.get(winner).name}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     next: function (target, user, room) {
