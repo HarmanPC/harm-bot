@@ -55,7 +55,7 @@ exports.commands = {
         let hastebin = "Custom Commmands for room: " + targetRoom + "\n\n" +
             Object.keys(CC).sort().map(c => (room ? room.commandCharacter[0] : Config.defaultCharacter[0]) + c + "\nRank: " + CC[c].rank + "\nOutput: " + CC[c].text.join("\n")).join("\n\n");
         Tools.uploadToHastebin(hastebin, link => {
-            this.send("Custom commands for room " + targetRoom + ": " + link);
+            this.send("Custom commands for room " + room.name + ": " + link);
         });
     },
     alias: function (target, room, user) {

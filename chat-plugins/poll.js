@@ -34,14 +34,14 @@ exports.commands = {
         if (toId(target) == 'end') return this.parse('/pollend');
         let targets = target.split(',');
         q = targets[0];
-        ans1 = targets[1].trim();
-        ans2 = targets[2].trim();
-        ans3 = targets[3].trim();
-        ans4 = targets[4].trim();
-        ans5 = targets[5].trim();
-        ans6 = targets[6].trim();
-        ans7 = targets[7].trim();
-        ans8 = targets[8].trim();
+        ans1 = targets[1]
+        ans2 = targets[2]
+        ans3 = targets[3];
+        ans4 = targets[4];
+        ans5 = targets[5]
+        ans6 = targets[6]
+        ans7 = targets[7]
+        ans8 = targets[8]
         this.room.send(null, `!code             Poll: ${q}          \n\n 1) ${ans1}\n\n 2) ${ans2}\n\n 3) ${ans3}\n\n 4) ${ans4}\n\n 5) ${ans5}\n\n 6) ${ans6}\n\n 7) ${ans7}\n\n 8) ${ans8}\n\n `);
         POLL = true;
         this.room.send(null, `Use \`\`.vote\`\` to vote.`);
