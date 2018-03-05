@@ -3,7 +3,8 @@
 exports.commands = {
     'j': 'join',
     join: function (target, room, user) {
-        if (!room || !room.game || room.game.userHost === user.userid) return false;
+        if (!room || !room.game) return false;
+        if (room.game.userHost === user.userid) return user.sendTo('You can\'t join your own game..');
         if (room.game.onJoin) room.game.onJoin(user);
     },
     leave: function (target, room, user) {
@@ -25,7 +26,7 @@ exports.commands = {
                 this.room.send(null, `${Users.get(target).name} is removed from playerlist.`);
             }
         }
-        if (user.hasBotRank('+') && !room.game.userHost) {
+        if (user.hasBotRank('+') && !room.game.userHost !== user.userid) {
             if (room.game.state == 'signups') {
                 if (room.game.onLeave) room.game.onLeave(Users.get(target));
                 this.room.send(null, `${Users.get(target).name} is removed from playerlist`);
@@ -53,7 +54,7 @@ exports.commands = {
                 this.room.send(null, `${Users.get(target).name} is added to playerlist.`);
             }
         }
-        if (user.hasBotRank('+') && !room.game.userHost) {
+        if (user.hasBotRank('+') && !room.game.userHost !== user.userid) {
             if (room.game.state == 'signups') {
                 if (room.game.onJoin) room.game.onJoin(Users.get(target));
                 this.room.send(null, `${Users.get(target).name} is added to playerlist`);
@@ -79,7 +80,7 @@ exports.commands = {
             if (room.game.onLeave) return room.game.onLeave(Users.get(target[0]));
             this.room.send(null, target[1] + ' has joined the game.');
         }
-        if (user.hasBotRank('+') && !room.game.userHost) {
+        if (user.hasBotRank('+') && !room.game.userHost !== user.userid) {
             if (!target) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
             let parts = target.split(",");
             if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
@@ -97,7 +98,7 @@ exports.commands = {
             if (user.userid !== room.game.userHost || !user.hasBotRank('+')) return false;
             if (room.game.postPlayerList) return room.game.postPlayerList();
         }
-        if (user.hasBotRank('+') && !room.game.userHost) {
+        if (user.hasBotRank('+') && !room.game.userHost !== user.userid) {
         if (room.game.postPlayerList) return room.game.postPlayerList();
         }
     },
@@ -107,7 +108,7 @@ exports.commands = {
             if (user.userid !== room.game.userHost || !user.hasBotRank('+')) return false;
             room.game.onStart();
         }
-        if (user.hasBotRank('+') && !room.game.userHost) {
+        if (user.hasBotRank('+') && !room.game.userHost !== user.userid) {
             room.game.onStart();
         }
     },
@@ -117,7 +118,7 @@ exports.commands = {
             if (user.userid !== room.game.userHost || !user.hasBotRank('+')) return false;
             room.game.runAutoStart(target);
         }
-        if (user.hasBotRank('+') && !room.game.userHost) {
+        if (user.hasBotRank('+') && !room.game.userHost !== user.userid) {
             room.game.runAutoStart(target);
         }
     },

@@ -1,6 +1,6 @@
 "use strict";
 
-const DEBATE_FILE = "data/debate.json";
+const DEBATE_FILE = "config/debate.json";
 const DebateManager = require("../debate-manager");
 
 exports.game = "debate";
@@ -210,11 +210,11 @@ exports.commands = {
         
         let question = target.toString();
         
-        if (Debate.findQuestion(question)) return this.room.send(null, "The question already exists.");
+        if (Debate.findQuestion(question)) return this.send("The question already exists.");
         
         Debate.addQuestion(question).write();
         
-        this.room.send(null, "Added!");
+        this.send("Added! (__" + question + "__)");
     },
     delq:'deletequestion',
     deletequestion: function (target, room, user) {
@@ -223,6 +223,8 @@ exports.commands = {
         let question = target.toString();
         
         Debate.removeQuestion(question).write();
+        
+        this.send("Deleted! (__" + question + "__)");
     },
     debateqs:'debatequestions',
     debatequestions: function (target, room, user) {
@@ -230,8 +232,9 @@ exports.commands = {
         let questions = Debate.allQuestions();
         
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
-            link => user.sendTo(`${questions.length} questions - ${link}`));
+            link => this.room.send(null, `${questions.length} questions - ${link}`));
     },
+    question:'topic',
     topic: function (target, room, user) {
 	if (!user.hasBotRank("+")) return false;
 		
