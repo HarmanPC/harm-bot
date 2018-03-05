@@ -18,6 +18,7 @@ You will be given admin privileges on the bot that way.
 1)  XnadrojX
 2)  Hoeenhero
 3)  ZestOfLife
+4)  Sparkychild
 
 # Debate
 Usage: `debate [casual/teams], [Time (per rebuttal)], [Topic (optional, pulls from default pool if left blank)]`
