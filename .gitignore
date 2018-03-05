@@ -6,11 +6,6 @@ package-lock.json
 crashlogs.txt
 /config/*
 
-/data/pokedex.js
-/data/formats-data.js
-/data/moves.js
-/data/abilities.js
-/data/items.js
 
 /pd-tools/figures.js
 
