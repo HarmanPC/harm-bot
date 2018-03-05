@@ -14,7 +14,7 @@ exports.commands = {
     rpl: "removeplayer",
     removeplayer: function(target, room, user) {
         if (!room || !room.game ) return false;
-       if (room.game.gameId =='host') {
+        if (room.game.gameId =='host' && room.game.userHost === user.userid) {
             if (room.game.state == 'signups') {
                 if (room.game.onLeave) room.game.onLeave(Users.get(target));
                 this.room.send(null, `${Users.get(target).name} is removed from playerlist`);
@@ -42,7 +42,7 @@ exports.commands = {
     apl:'addplayer',
     addplayer: function (target, room, user) {
         if (!room || !room.game) return false;
-        if (room.game.gameId =='host') {
+        if (room.game.gameId =='host' && room.game.userHost === user.userid) {
             if (room.game.state == 'signups') {
                 if (room.game.onJoin) room.game.onJoin(Users.get(target));
                 this.room.send(null, `${Users.get(target).name} is added to playerlist`);
@@ -70,7 +70,7 @@ exports.commands = {
     sub: "replace",
     replace: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== "host"  || room.game.state === "signups") return false;
-        if (room.game.gameId =='host') {
+        if (room.game.gameId =='host' && room.game.userHost === user.userid) {
             if (!target) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
             let parts = target.split(",");
             if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");

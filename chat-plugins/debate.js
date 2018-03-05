@@ -236,11 +236,16 @@ exports.commands = {
     },
     question:'topic',
     topic: function (target, room, user) {
-	if (!user.hasBotRank("+")) return false;
-		
-	let question = Debate.getQuestion();
-		
-	this.room.send(null, question.question.trim() + "?");
+    	let question = Debate.getQuestion();
+    	if (room.game) {
+    		if (room.game.gameId === 'host') {
+    			if (room.game.userhost !== user.userid || !user.hasBotRank('+')) return false;
+    			this.room.send(null, question.question.trim() + "?");
+    		}
+    	}
+    	if (user.hasBotRank('+')) {
+    		this.room.send(null, question.question.trim() + "?");
+    	}
 	}
 };
 /*globals Tools*/
