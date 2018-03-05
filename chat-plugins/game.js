@@ -99,7 +99,7 @@ exports.commands = {
             if (room.game.postPlayerList) return room.game.postPlayerList();
         }
         if (user.hasBotRank('+') && !room.game.userHost !== user.userid) {
-        if (room.game.postPlayerList) return room.game.postPlayerList();
+            if (room.game.postPlayerList) return room.game.postPlayerList();
         }
     },
     start: function (target, room, user) {
@@ -124,6 +124,7 @@ exports.commands = {
     },
     end: function (target, room, user) {
         if (!room || !room.game || !user.hasBotRank('+')) return false;
+        this.parse(`/promote ${room.game.userHost}, deauth`);
         room.game.destroy();
         this.room.send(null, "The debate has been ended.");
     },
@@ -133,11 +134,13 @@ exports.commands = {
         let targets = target.split(',');
         this.room.send(null, `${target.length > 1 ? 'The winners are ' + targets.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
         room.game.onEnd();
+        this.parse(`/promote ${user.userid}, deauth`);
     },
     done: function (target, room, user) {
         if (!room.game || room.game.gameId !== 'host') return false;
         if (user.userid !== room.game.userHost) return false;
         room.game.onEnd();
+        this.parse(`/promote ${user.userid}, deauth`);
     },
     hangman: function (target, room, user) {
 		if (!room || !user.hasBotRank('+')) return false;
