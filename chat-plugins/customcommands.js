@@ -50,12 +50,12 @@ exports.commands = {
         if (target && !room) {
             targetRoom = toId(target);
         }
+        let text = room.id !== 'groupchat-sniper-debate' ? targetRoom : 'Debate';
         if (!Db("customcommands").get(targetRoom, null)) return this.send("No custom commands have been set yet.");
         let CC = Db("customcommands").get(targetRoom, {});
-        let hastebin = "Custom Commmands for room: " + targetRoom + "\n\n" +
+        let hastebin = "Custom Commmands for room: " + text + "\n\n" +
             Object.keys(CC).sort().map(c => (room ? room.commandCharacter[0] : Config.defaultCharacter[0]) + c + "\nRank: " + CC[c].rank + "\nOutput: " + CC[c].text.join("\n")).join("\n\n");
         Tools.uploadToHastebin(hastebin, link => {
-            let text = room.id !== 'groupchat-sniper-debate' ? targetRoom : 'Debate';
             this.send("Custom commands for room  " + text + ": " + link);
         });
     },
