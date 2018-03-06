@@ -76,9 +76,9 @@ exports.commands = {
             if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
             if (!room.users.has(toId(parts[1]))) this.room.send(null, "The new player is not in the room.");
             if (toId(parts[1]) === room.game.userHost) return this.room.send(null, "You cannot add the host into the game.");
-            if (room.game.onJoin) room.game.onJoin(Users.get(target[1]));
-            if (room.game.onLeave) room.game.onLeave(Users.get(target[0]));
-            this.room.send(null, target[1] + ' has joined the game.');
+            if (room.game.onJoin) room.game.onJoin(Users.get(parts[1]));
+            if (room.game.onLeave) room.game.onLeave(Users.get(parts[0]));
+            this.room.send(null, parts[1] + ' has joined the game.');
         }
     },
     pl: 'players',
