@@ -51,21 +51,19 @@ let millisToTime = function(millis){
 	}
 	return response;
 };
-//let auths = ['ayia healndeal sniper amice tonixy bored6886 skyfigueroa ahelpfulrayquaza patekphillipe xnadrojx zorq itzviper482 deltastatics sentimentality jrniceguy omroom'];
 exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
-      /*  if (!room.users.has(toId(target))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
-        if (room.game && room.game.gameId == 'host') return this.room.send(null,room.game.hostName + ' is hosting.');
+        if (!room.users.has(toId(target))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
+        if (room.game && room.game.gameId == 'host') return this.room.send(null, room.game.hostName + ' is hosting.');
         if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
-       // this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', +'}`); 
-        room.game = new hostGame(room, target); */
-        this.room.send(null, 'Host is in construction, please use .debate for now.');
+        this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', +'}`); 
+        room.game = new hostGame(room, target);
     },
     subhost: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== 'host' || !target || !user.hasBotRank('+')) return false;
-        //this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', +'}`);
-       // this.parse(`${room.game.userHost.includes(auths) ? '/kek' : '/promote ' + room.game.userHost + ', deauth'}`);
+        this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`);
+        this.parse(`${Users.get(room.game.userHost).hasBotRank('+') ? '/kek' : '/promote ' + room.game.userHost + ', deauth'}`);
         this.room.send(null,Users.get(target).name + ' has been subhosted.');
         room.game.hostName = Users.get(target).name;
 	    room.game.userHost = toId(target);

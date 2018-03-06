@@ -66,10 +66,11 @@ exports.commands = {
     auth: "promote",
     promote: function(target, room, user) {
         if (!target) return this.parse("/botauth");
-        if (target.split(",").length !== 2 || !["deauth", "+", "%", "@", "~"].includes(target.split(",")[1].trim())) return false;
+        if (target.split(",").length !== 2 || !["deauth", "host", "+", "%", "@", "~"].includes(target.split(",")[1].trim())) return false;
         if (!this.can("promote", target.split(",")[1].trim().replace("deauth", " "))) return false;
         let rankNames = {
             "deauth": "Regular",
+            "host":"Host",
             "+": "Voice",
             "%": "Driver",
             "@": "Moderator",
@@ -83,7 +84,8 @@ exports.commands = {
         else {
             typeof this.targetUser !== "string" ? this.targetUser.botPromote(target.split(",")[1].trim().replace("deauth", " ")) : Db("ranks").set(toId(this.targetUser), target.split(",")[1].trim().replace("deauth", " "));
         }
-        this.send((this.targetUser.name || this.targetUser) + " was appointed Bot " + rankNames[target.split(",")[1].trim()] + ".");
+        let text = target.split(",")[1].trim() === "host" || target.split(",")[1].trim() === "deauth" ? "":(this.targetUser.name || this.targetUser) + " was appointed Bot " + rankNames[target.split(",")[1].trim()] + ".";
+        this.send(text);
     },
     botauth: function(target, room, user) {
         this.can("say");
