@@ -57,7 +57,7 @@ exports.commands = {
         if (!room.users.has(toId(target))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') return this.room.send(null, room.game.hostName + ' is hosting.');
         if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
-        this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', +'}`); 
+        this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`); 
         room.game = new hostGame(room, target);
     },
     subhost: function (target, room, user) {
