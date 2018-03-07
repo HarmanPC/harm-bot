@@ -2,7 +2,7 @@
 
 const cache_db = require("./cache-db.js");
 
-const developers = ["sniper","healndeal","amice","xnadrojx","harmanpc"];
+const developers = ["amice","xnadrojx","harmanpc"];
 let Users = {};
 let users = Users.users = new Map();
 Users.seen = new cache_db();
@@ -116,13 +116,13 @@ let addUser = Users.add = function(username) {
     if (users.has(userid)) return getUser(username);
     users.set(userid, new User(username));
     return users.get(userid);
-}
+};
 
 let getUser = Users.get = function(username) {
     let userid = toId(username);
     if (!users.has(userid)) return addUser(username);
     return users.get(userid);
-}
+};
 
 let renameUser = Users.rename = function(oldId, newName) {
     if (!Users.users.has(oldId)) return false; //already renamed
@@ -138,7 +138,13 @@ let renameUser = Users.rename = function(oldId, newName) {
     tarUser.botRank = Db("ranks").get(tarUser.userid, " ");
     tarUser.globalRank = " ";
     tarUser.isStaff = Config.ranks[tarUser.botRank] >= 2;
-}
+};
 
 
 module.exports = Users;
+/*globals Monitor*/
+/*globals Config*/
+/*globals toId*/
+/*globals Db*/
+/*globals Plugins*/
+/*globals send*/
