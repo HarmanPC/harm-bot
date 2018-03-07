@@ -1,8 +1,8 @@
 "use strict";
 
-const Debate_FILE = "config/Debate.json";
+const Debate_FILE = "config/debate.json";
 
-exports.game = "Debate";
+exports.game = "debate";
 
 const DebateFile = new Debate(Debate_FILE);
 
@@ -10,7 +10,7 @@ class DebateGame extends Rooms.botGame {
     constructor (room, arg) {
         super(room);
         
-        this.gameId = "Debate";
+        this.gameId = "debate";
         this.gameName = "Debate";
         
         this.answerCommand = "special";
@@ -32,12 +32,20 @@ class DebateGame extends Rooms.botGame {
 			super.onJoin(Users.get(this.args[1].split("vs")[1].trim()));
 			
 			this.allowJoins = false;
+			this.state = "started";
 			
 			this.pone = Users.get(this.args[1].split("vs")[0].trim()).name;
 			this.ptwo = Users.get(this.args[1].split("vs")[1].trim()).name;
 			
 			this.onStart();
-		} else {
+			
+		} if (this.args[0].toLowerCase() == 'casual') {
+			this.sendRoom('A casual Debate is starting. (Free Join!)');
+			this.allowJoins = false;
+			this.state = "started";
+			this.onStart();
+		}
+		else {
 			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type + ")");
 		}
     }
