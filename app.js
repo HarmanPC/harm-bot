@@ -105,6 +105,7 @@ global.log = function(item, text) {
         "<<": "yellow",
         "join": "magenta",
         "left": "magenta",
+        "debate": "green"
     };
     console.log("[" + d + "] " + item.toUpperCase()[fontColours[item] || "blue"] + "        ".slice(item.length) + text);
 };

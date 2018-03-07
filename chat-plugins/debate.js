@@ -46,7 +46,7 @@ class DebateGame extends Rooms.botGame {
 			this.onStart();
 		}
 		else {
-			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type + ")");
+			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type.toLowerCase() + ")");
 		}
     }
     
@@ -74,7 +74,7 @@ class DebateGame extends Rooms.botGame {
 	loopTimeout(mode, time) {
 		if (mode == "1v1"){
 			this.clock++;
-			console.log('The debate clock: ' + this.clock);
+			log("debate",'The debate clock: ' + this.clock);
 			this.timer = setTimeout(() => {
 				if (this.clock > 3) {
 					this.sendRoom(`Time is up!`);
@@ -256,3 +256,4 @@ exports.commands = {
 /*globals Tools*/
 /*globals Users*/
 /*globals Rooms*/
+/*globals log*/
