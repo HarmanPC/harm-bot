@@ -115,16 +115,16 @@ class DebateGame extends Rooms.botGame {
 	startDebate() {
 		clearTimeout(this.timer);
 		if (this.args[0].toLowerCase() == "casual") {
-			let Debate;
+			let debate;
 			if (!this.args[2]) {
-				Debate = Debate.getQuestion();
+				debate = DebateFile.getQuestion();
 			} else {
-				Debate = {
+				debate = {
 					question: this.args[2]
 				};
 			}
-			this.DebateTopic = Debate.question.trim();
-			this.sendRoom(`The Debate has begun! The topic is: **${this.DebateTopic}?**`);
+			this.debateTopic = debate.question.trim();
+			this.sendRoom(`The Debate has begun! The topic is: **${this.debateTopic}?**`);
 			if (this.args[1] && !isNaN(this.args[1])) {
 				this.timer = setTimeout(() => {
 					this.sendRoom(`Time's up! The Debate has ended!`);
@@ -133,16 +133,16 @@ class DebateGame extends Rooms.botGame {
 			}
 		}
 		if (this.args[0].toLowerCase() == "1v1") {
-			let Debate;
+			let debate;
 			this.clock = 0;
 			if (!this.args[3]) {
-				Debate = Debate.getQuestion();
+				debate = DebateFile.getQuestion();
 			} else {
-				Debate = {
+				debate = {
 					question: this.args[3]
 				};
 			}
-			this.DebateTopic = Debate.question.trim();
+			this.DebateTopic = debate.question.trim();
 			this.sendRoom(`The Debate has begun! The topic is: **${this.DebateTopic}?**`);
 			this.sendRoom(`Both players get 5 minutes to agree on a side and do research!`);
 			this.timer = setTimeout(() => {
@@ -152,14 +152,14 @@ class DebateGame extends Rooms.botGame {
 			}, 5 * 60 * 1000);
 		}
 		if (this.args[0].toLowerCase() == "teams") {
-			let Debate;
+			let debate;
 			this.clock = 0;
 			if (!this.args[2]) {
-				Debate = {
-				    question: Debate.getQuestion()
+				debate = {
+				    question: DebateFile.getQuestion()
 				};
 			} else {
-				Debate = {
+				debate = {
 					question: this.args[2]
 				};
 			}
@@ -175,8 +175,8 @@ class DebateGame extends Rooms.botGame {
 			for (let i = 0; i < this.teamTwo.length; i++) {
 				this.teamTwo[i] = this.teamTwo[i] + " | ";
 			}
-			this.DebateTopic = Debate.question.trim();
-			this.sendRoom(`The Debate has begun! The topic is: **${this.DebateTopic}?**`);
+			this.debateTopic = debate.question.trim();
+			this.sendRoom(`The Debate has begun! The topic is: **${this.debateTopic}?**`);
 			this.sendRoom(`Team 1: ${this.teamOne.join(',')} vs Team 2: ${this.teamTwo.join(',')} 5 minutes to agree on a side and do research!`);
 			this.timer = setTimeout(() => {
 				this.sendRoom(`Time is up! The Debate shall now commence!`);
@@ -203,13 +203,13 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 }
 
 exports.commands = {
-    Debate: function (target, room, user) {
+    debate: function (target, room, user) {
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
         if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a Debate going on in this room!");
         if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a Debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
     },
-	checkDebate: function (target, room, user){
+	checkdebate: function (target, room, user){
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
         if (room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, room.game.hostName + " is hosting official Debate.");
         if (room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a Debate.");
@@ -218,7 +218,7 @@ exports.commands = {
     },
     addq:'addquestion',
     addquestion: function (target, room, user) {
-        if (!user.hasBotRank("%")) return false;
+        if (!user.hasBotRank("+")) return false;
         
         let question = target.toString();
         
@@ -230,7 +230,7 @@ exports.commands = {
     },
     delq:'deletequestion',
     deletequestion: function (target, room, user) {
-        if (!user.hasBotRank("%")) return false;
+        if (!user.hasBotRank("+")) return false;
         
         let question = target.toString();
         
@@ -238,8 +238,8 @@ exports.commands = {
         
         this.send("Deleted! (__" + question + "__)");
     },
-    Debateqs:'Debatequestions',
-    Debatequestions: function (target, room, user) {
+    eebateqs:'Debatequestions',
+    debatequestions: function (target, room, user) {
         if (!user.hasBotRank("+")) return false;
         let questions = DebateFile.allQuestions();
         
@@ -248,16 +248,9 @@ exports.commands = {
     },
     question:'topic',
     topic: function (target, room, user) {
+    	if (!user.hasBotRank('+')) return false;
     	let question = DebateFile.getQuestion();
-    	if (room.game) {
-    		if (room.game.gameId === 'host') {
-    			if (room.game.userhost !== user.userid || !user.hasBotRank('+')) return false;
-    			this.room.send(null, question.question.trim() + "?");
-    		}
-    	}
-    	if (user.hasBotRank('+')) {
-    		this.room.send(null, question.question.trim() + "?");
-    	}
+		this.room.send(null, question.question.trim() + "?");
 	}
 };
 /*globals Tools*/
