@@ -136,7 +136,6 @@ global.commandParser = require("./command-parser.js").commandParser;
 global.Commands = require("./commands.js").commands;
 global.Users = require("./users.js");
 global.Rooms = require("./rooms.js");
-global.Debate = require("./debate-manager.js")();
 
 function loadChatPlugins() {
     let loaded = [];
