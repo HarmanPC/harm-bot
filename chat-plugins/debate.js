@@ -1,17 +1,16 @@
 "use strict";
 
-const DEBATE_FILE = "config/debate.json";
-const DebateManager = require("../debate-manager");
+const Debate_FILE = "config/Debate.json";
 
-exports.game = "debate";
+exports.game = "Debate";
 
-const Debate = new DebateManager(DEBATE_FILE);
+const DebateFile = new Debate(Debate_FILE);
 
 class DebateGame extends Rooms.botGame {
     constructor (room, arg) {
         super(room);
         
-        this.gameId = "debate";
+        this.gameId = "Debate";
         this.gameName = "Debate";
         
         this.answerCommand = "special";
@@ -39,7 +38,7 @@ class DebateGame extends Rooms.botGame {
 			
 			this.onStart();
 		} else {
-			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the debate. (" + this.type + ")");
+			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type + ")");
 		}
     }
     
@@ -71,7 +70,7 @@ class DebateGame extends Rooms.botGame {
 			this.timer = setTimeout(() => {
 				if (this.clock > 3) {
 					this.sendRoom(`Time is up!`);
-					this.sendRoom(`Debate over! A staff member or staff-approved non-debater shall now judge the winner!`);
+					this.sendRoom(`Debate over! A staff member or staff-approved non-Debater shall now judge the winner!`);
 					this.onEnd();
 				} else {
 					this.sendRoom(`Time is up!`);
@@ -108,51 +107,51 @@ class DebateGame extends Rooms.botGame {
 	startDebate() {
 		clearTimeout(this.timer);
 		if (this.args[0].toLowerCase() == "casual") {
-			let debate;
+			let Debate;
 			if (!this.args[2]) {
-				debate = Debate.getQuestion();
+				Debate = Debate.getQuestion();
 			} else {
-				debate = {
+				Debate = {
 					question: this.args[2]
 				};
 			}
-			this.debateTopic = debate.question.trim();
-			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?**`);
+			this.DebateTopic = Debate.question.trim();
+			this.sendRoom(`The Debate has begun! The topic is: **${this.DebateTopic}?**`);
 			if (this.args[1] && !isNaN(this.args[1])) {
 				this.timer = setTimeout(() => {
-					this.sendRoom(`Time's up! The debate has ended!`);
+					this.sendRoom(`Time's up! The Debate has ended!`);
 					this.onEnd();
 				}, (parseInt(this.args[1]) * 1000 * 60) || 5 * 60 * 1000);
 			}
 		}
 		if (this.args[0].toLowerCase() == "1v1") {
-			let debate;
+			let Debate;
 			this.clock = 0;
 			if (!this.args[3]) {
-				debate = Debate.getQuestion();
+				Debate = Debate.getQuestion();
 			} else {
-				debate = {
+				Debate = {
 					question: this.args[3]
 				};
 			}
-			this.debateTopic = debate.question.trim();
-			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?**`);
+			this.DebateTopic = Debate.question.trim();
+			this.sendRoom(`The Debate has begun! The topic is: **${this.DebateTopic}?**`);
 			this.sendRoom(`Both players get 5 minutes to agree on a side and do research!`);
 			this.timer = setTimeout(() => {
-				this.sendRoom(`Time is up! The debate shall now commence!`);
+				this.sendRoom(`Time is up! The Debate shall now commence!`);
 				this.sendRoom(`${Users.get(this.args[1].split("vs")[0].trim()).name}'s turn!`);
 				this.loopTimeout("1v1", (this.args[2] * 60 * 1000) || 3 * 60 * 1000);
 			}, 5 * 60 * 1000);
 		}
 		if (this.args[0].toLowerCase() == "teams") {
-			let debate;
+			let Debate;
 			this.clock = 0;
 			if (!this.args[2]) {
-				debate = {
+				Debate = {
 				    question: Debate.getQuestion()
 				};
 			} else {
-				debate = {
+				Debate = {
 					question: this.args[2]
 				};
 			}
@@ -168,17 +167,20 @@ class DebateGame extends Rooms.botGame {
 			for (let i = 0; i < this.teamTwo.length; i++) {
 				this.teamTwo[i] = this.teamTwo[i] + " | ";
 			}
-			this.debateTopic = debate.question.trim();
-			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?**`);
+			this.DebateTopic = Debate.question.trim();
+			this.sendRoom(`The Debate has begun! The topic is: **${this.DebateTopic}?**`);
 			this.sendRoom(`Team 1: ${this.teamOne.join(',')} vs Team 2: ${this.teamTwo.join(',')} 5 minutes to agree on a side and do research!`);
 			this.timer = setTimeout(() => {
-				this.sendRoom(`Time is up! The debate shall now commence!`);
+				this.sendRoom(`Time is up! The Debate shall now commence!`);
 				this.sendRoom(`Team 1's turn!`);
 				this.loopTimeout("teams", this.args[1] * 60 * 1000);
 			}, 5 * 60 * 1000); 
 		}
+		else {
+			this.sendRoom('The mode ' + this.args[0].toLowerCase() + ' doesn\'t exist.');
+			this.onEnd();
+		}
 	}
-
     onEnd() {
         this.state = "ended";
 		this.sendRoom(`Debate ended.`);
@@ -193,18 +195,18 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 }
 
 exports.commands = {
-    debate: function (target, room, user) {
+    Debate: function (target, room, user) {
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
-        if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a debate going on in this room!");
-        if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a debate going on in this room! (" + room.game.type + ")");
+        if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a Debate going on in this room!");
+        if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a Debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
     },
-	checkdebate: function (target, room, user){
+	checkDebate: function (target, room, user){
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
-        if (room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, room.game.hostName + " is hosting official debate.");
-        if (room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a debate.");
-        if (room.game.gameId === 'debate') return this.room.send(null, `A scripted debate is in progress. (${room.game.type})`);
-        this.room.send(null, `No debate is going on right now.`);
+        if (room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, room.game.hostName + " is hosting official Debate.");
+        if (room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a Debate.");
+        if (room.game.gameId === 'Debate') return this.room.send(null, `A scripted Debate is in progress. (${room.game.type})`);
+        this.room.send(null, `No Debate is going on right now.`);
     },
     addq:'addquestion',
     addquestion: function (target, room, user) {
@@ -212,9 +214,9 @@ exports.commands = {
         
         let question = target.toString();
         
-        if (Debate.findQuestion(question)) return this.send("The question already exists.");
+        if (DebateFile.findQuestion(question)) return this.send("The question already exists.");
         
-        Debate.addQuestion(question).write();
+        DebateFile.addQuestion(question).write();
         
         this.send("Added! (__" + question + "__)");
     },
@@ -224,21 +226,21 @@ exports.commands = {
         
         let question = target.toString();
         
-        Debate.removeQuestion(question).write();
+        DebateFile.removeQuestion(question).write();
         
         this.send("Deleted! (__" + question + "__)");
     },
-    debateqs:'debatequestions',
-    debatequestions: function (target, room, user) {
+    Debateqs:'Debatequestions',
+    Debatequestions: function (target, room, user) {
         if (!user.hasBotRank("+")) return false;
-        let questions = Debate.allQuestions();
+        let questions = DebateFile.allQuestions();
         
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
             link => this.room.send(null, `${questions.length} questions - ${link}`));
     },
     question:'topic',
     topic: function (target, room, user) {
-    	let question = Debate.getQuestion();
+    	let question = DebateFile.getQuestion();
     	if (room.game) {
     		if (room.game.gameId === 'host') {
     			if (room.game.userhost !== user.userid || !user.hasBotRank('+')) return false;

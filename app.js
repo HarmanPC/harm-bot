@@ -4,10 +4,10 @@ const util = require("util");
 
 Array.prototype.sum = function() {
     return this.reduce((pv, cv) => pv + cv, 0);
-}
+};
 Array.prototype.includes = function(item) {
     return this.indexOf(item) > -1;
-}
+};
 
 function runNpm(command) {
     console.log("Running `npm " + command + "`...");
@@ -55,22 +55,22 @@ global.removeCommand = function(text) {
 
 global.getEST = function(date) {
     function isDst(tarDate) {
-        let deezNuts = new Date(tarDate);
-        let deezMonth = deezNuts.getMonth() + 1;
-        let deezDay = deezNuts.getDate() + 1;
-        let deezDayofWeek = deezNuts.getDay();
-        if (deezMonth > 11 || deezMonth < 3) {
+        let datee = new Date(tarDate);
+        let Month = datee.getMonth() + 1;
+        let Day = datee.getDate() + 1;
+        let DayofWeek = datee.getDay();
+        if (Month > 11 || Month < 3) {
             return false;
         }
-        if (deezMonth === 3) {
-            if (deezDay - deezDayofWeek > 7) {
+        if (Month === 3) {
+            if (Day - DayofWeek > 7) {
                 return true;
             }
             return false;
         }
-        if (deezMonth === 11) {
-            if (deezDay - deezDayofWeek > 0) {
-                return true
+        if (Month === 11) {
+            if (Day - DayofWeek > 0) {
+                return true;
             }
             return false;
         }
@@ -107,7 +107,7 @@ global.log = function(item, text) {
         "left": "magenta",
     };
     console.log("[" + d + "] " + item.toUpperCase()[fontColours[item] || "blue"] + "        ".slice(item.length) + text);
-}
+};
 
 //get the database
 global.Db = require("origindb")("config/database-" + Config.info.serverid);
@@ -117,7 +117,7 @@ global.Db = require("origindb")("config/database-" + Config.info.serverid);
 if (!Object.keys(Db("ranks").object()).length) {
     if (process.argv[2]) {
         Db("ranks").set(toId(process.argv.slice(2).join("")), "~");
-        log("monitor", "Promoted " + process.argv.slice(2).join("").yellow + " to BotAdmin.")
+        log("monitor", "Promoted " + process.argv.slice(2).join("").yellow + " to Bot Admin.");
     }
     else {
         console.log("Please include the name of the bot admin. `node app.js [username]`");
@@ -136,6 +136,7 @@ global.commandParser = require("./command-parser.js").commandParser;
 global.Commands = require("./commands.js").commands;
 global.Users = require("./users.js");
 global.Rooms = require("./rooms.js");
+global.Debate = require("./debate-manager.js")();
 
 function loadChatPlugins() {
     let loaded = [];
@@ -152,9 +153,9 @@ function loadChatPlugins() {
         }
         catch (e) {
             console.log(e.stack);
-            failed.push(f)
+            failed.push(f);
         }
-    })
+    });
     if (loaded.length) {
         log("info", "Loaded command files: " + loaded.join(", "));
     }
@@ -270,7 +271,7 @@ let connect = function(retry) {
         Rooms.rooms.forEach((value, key) => {
             log("info", "Deleting Room object for " + key);
             Rooms.delete(key, true);
-        })
+        });
 
         con.on("error", err => {
             log("error", "connection error: " + util.inspect(err));
@@ -305,3 +306,14 @@ let connect = function(retry) {
     ws.connect(conStr, Config.secprotocols);
 };
 connect();
+/*globals fs*/
+/*globals Config*/
+/*globals log*/
+/*globals Parse*/
+/*globals Rooms*/
+/*globals toId*/
+/*globals send*/
+/*globals Monitor*/
+/*globals Commands*/
+/*globals Db*/
+/*globals getEST*/
