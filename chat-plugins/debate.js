@@ -74,7 +74,7 @@ class DebateGame extends Rooms.botGame {
 	loopTimeout(mode, time) {
 		if (mode == "1v1"){
 			this.clock++;
-			console.log(this.clock);
+			console.log('The debate clock: ' + this.clock);
 			this.timer = setTimeout(() => {
 				if (this.clock > 3) {
 					this.sendRoom(`Time is up!`);
