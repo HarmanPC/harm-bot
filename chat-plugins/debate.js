@@ -46,7 +46,7 @@ class DebateGame extends Rooms.botGame {
     onStart() {
         if (this.userList.length < 2 || this.state !== "signups") return;
 		if (this.userList.length % 2 !== 0 && this.args[0].toLowerCase == "teams") return;
-        this.state = "started";
+		if (!this.args[0].toLowerCase() == "casual") this.state = "started";
         this.startingPlayers = this.userList.length;
         
         this.prepTurn();
@@ -117,7 +117,7 @@ class DebateGame extends Rooms.botGame {
 				};
 			}
 			this.debateTopic = debate.question.trim();
-			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?**`);
+			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?** This is a casual debate; Anyone may join or leave partway through.`);
 			if (this.args[1] && !isNaN(this.args[1])) {
 				this.timer = setTimeout(() => {
 					this.sendRoom(`Time's up! The debate has ended!`);
