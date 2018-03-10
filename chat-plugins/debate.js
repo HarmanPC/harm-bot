@@ -53,7 +53,7 @@ class DebateGame extends Rooms.botGame {
     onStart() {
         if (this.userList.length < 2 || this.state !== "signups") return;
 		if (this.userList.length % 2 !== 0 && this.args[0].toLowerCase == "teams") return;
-        this.state = "started";
+		if (!this.args[0].toLowerCase() == "casual") this.state = "started";
         this.startingPlayers = this.userList.length;
         
         this.prepTurn();
@@ -124,6 +124,7 @@ class DebateGame extends Rooms.botGame {
 				};
 			}
 			this.debateTopic = debate.question.trim();
+			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?** This is a casual debate; Anyone may join or leave partway through.`);
 			this.sendRoom(`The Debate has begun! The topic is: **${this.debateTopic}?**`);
 			if (this.args[1] && !isNaN(this.args[1])) {
 				this.timer = setTimeout(() => {
@@ -213,8 +214,11 @@ exports.commands = {
         if (!room || !Users.get(user.userid).hasBotRank("+")) return false;
         if (room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, room.game.hostName + " is hosting official Debate.");
         if (room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a Debate.");
-        if (room.game.gameId === 'Debate') return this.room.send(null, `A scripted Debate is in progress. (${room.game.type})`);
-        this.room.send(null, `No Debate is going on right now.`);
+        if (room.game.gameId === 'Debate') {
+		return this.room.send(null, `A scripted Debate is in progress. (${room.game.type})`);
+	} else {
+        	return this.room.send(null, `No Debate is going on right now.`);
+	}
     },
     addq:'addquestion',
     addquestion: function (target, room, user) {
