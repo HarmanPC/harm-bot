@@ -251,9 +251,18 @@ class Room {
                             }
                         }
                         break;
+                    case "bold":
+                        msg = msg.split('');
+                        if (msg[msg.length -2] && msg[msg.length -1] == '*') {
+                            if (msg[0] && msg[1] == '*') {
+                                applyModeration.points += 1.5;
+                                applyModeration.reasons.push("bold");
+                            }
+                        }
+                        break;
+                    }
                 }
-            }
-        });
+            });
         if (applyModeration.points) {
             if (moderateAll && applyModeration.reasons.length >= 2) {
                 //deal with purposeful rulebreakers more harshly, turning warn into 7 minutes
