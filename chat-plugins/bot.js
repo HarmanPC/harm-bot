@@ -172,8 +172,9 @@ exports.commands = {
         this.send('/um ' + person);
     },
     modchat: function (target, room, user) {
-        if (!user.hasRank('%')) return false;
-        this.send('/modchat ' + target);
+        if (!user.hasRank('%') || !room) return false;
+        if (target.toLowerCase() !== 'trusted' && target !== '+' && target !== 'ac') return this.room.send(null, 'Usage: ``' + room.commandCharacter[0] + 'modchat trusted/ac/+``');
+        this.room.send(null, '/modchat ' + target);
     }
 };
 /*globals toId*/

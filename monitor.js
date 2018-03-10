@@ -64,14 +64,14 @@ class ResourceMonitor {
     setPattern(command) {
         this.pattern.push(command);
         if (this.pattern.length > 5) {
-            log("monitor", "[LOCKDOWN]")
+            log("monitor", "[LOCKDOWN]");
             this.lockdown = true;
         }
         setTimeout(() => {
             this.pattern.shift();
             if (this.pattern.length < 5) {
                 this.lockdown = false;
-                log("monitor", "[ENDLOCKDOWN]")
+                log("monitor", "[ENDLOCKDOWN]");
             }
         }, 1800000);
     }
@@ -126,7 +126,7 @@ class ResourceMonitor {
         //moderating for patterns
         for (let cmd in this.users[user.userid]) {
             if (this.users[user.userid][cmd] >= this.settings.pattern && this.pattern.includes(cmd)) {
-                log("monitor", "[USER: " + user.userid + "] Abuse of " + cmd + " command.")
+                log("monitor", "[USER: " + user.userid + "] Abuse of " + cmd + " command.");
                 this.setPattern(cmd);
                 this.warnings[user.userid]++;
                 this.settings.moderate(user.userid, this.warnings[user.userid]);
@@ -181,3 +181,8 @@ class ResourceMonitor {
 }
 
 exports.Monitor = new ResourceMonitor();
+/*globals Db*/
+/*globals log*/
+/*globals Config*/
+/*globals clearQueue*/
+/*globals Monitor*/
