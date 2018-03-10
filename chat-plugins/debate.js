@@ -124,11 +124,8 @@ class DebateGame extends Rooms.botGame {
 				};
 			}
 			this.debateTopic = debate.question.trim();
-<<<<<<< HEAD
 			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?** This is a casual debate; Anyone may join or leave partway through.`);
-=======
 			this.sendRoom(`The Debate has begun! The topic is: **${this.debateTopic}?**`);
->>>>>>> 4f29a790ad466437179180d52d2d04ccd8acb097
 			if (this.args[1] && !isNaN(this.args[1])) {
 				this.timer = setTimeout(() => {
 					this.sendRoom(`Time's up! The Debate has ended!`);
