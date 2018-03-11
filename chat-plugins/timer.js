@@ -63,7 +63,7 @@ exports.commands = {
         if (!room || !user.hasBotRank('host')) return false;
         if (target === 'end') {
             if (!room.countdown) return this.room.send('There is no timer running in this room.');
-            this.room.send(room.countdown.getTimeLeft() + '. The timer has been ended.');
+            this.room.send(null, room.countdown.getTimeLeft() + '. The timer has been ended.');
             room.countdown.destroy();
             return;
         }
