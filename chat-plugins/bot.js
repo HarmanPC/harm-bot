@@ -173,7 +173,7 @@ exports.commands = {
     },
     modchat: function (target, room, user) {
         if (!user.hasBotRank('%') || !room) return false;
-        if (target.toLowerCase() !== 'trusted' && target !== '+' && target !== 'ac') return this.room.send(null, 'Usage: ``' + room.commandCharacter[0] + 'modchat trusted/ac/+``');
+        if (target.toLowerCase() !== 'trusted' && target !== '+' && target.toLowerCase() !== 'ac' && target.toLowerCase() !== 'off') return this.room.send(null, 'Usage: ``' + room.commandCharacter[0] + 'modchat trusted/ac/+/off``');
         this.room.send(null, '/modchat ' + target);
     }
 };
