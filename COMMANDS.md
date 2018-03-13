@@ -48,3 +48,33 @@
 `.leaderboard rank [user]` - Shows the rank of a user in leaderboard.
 
 `.leaderboard` - Shows the leaderboard.
+
+# Quotes 
+`.addquote [quote]` - Adds a quote.
+
+`.deletequote [quote]` - Deletes a quote.
+
+`.quote` - GIves a random quote.
+
+`.quotes` - Give list of quotes.
+
+# AI 
+`.8ball [question]` - Gives the answer of your question.
+
+# Stats
+`.roomstats` - Shows all roomstats.
+
+`.roomstats [Month-Day-Year]` - Shows the roomstats on the specific date.
+
+`.userstats [user]` - Shows the user's stats in the room.
+
+`.userstats [user], [Month-Day-Year]` - Shows the user's stats in the room on the specific date.
+
+`.enablelogging [room]` - Enables logging stats for the room.
+
+`.disablelogging [room]` - Disables logging stats for the room.
+
+`.usertimezone [user]` - Shows the user's stats in the room in the hours of each day.
+
+# Other commands
+`.mail [user], [message]`
