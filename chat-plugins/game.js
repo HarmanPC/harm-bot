@@ -79,8 +79,7 @@ exports.commands = {
         this.parse(`/promote ${user.userid}, deauth`);
     },
     done: function (target, room, user) {
-        if (!room.game || room.game.gameId !== 'host') return false;
-        if (user.userid !== room.game.userHost) return false;
+        if (!room.game || room.game.gameId !== 'host' || !user.hasBotRank('host')) return false;
         room.game.onEnd();
         this.parse(`/promote ${user.userid}, deauth`);
     },
