@@ -7,7 +7,7 @@ const DebateManger = require ('../debate-manager.js');
 const DebateFile = new DebateManger(Debate_FILE);
 
 class DebateGame extends Rooms.botGame {
-    constructor (room, arg) {
+	constructor (room, arg) {
         super(room);
         
         this.gameId = "debate";
@@ -22,7 +22,7 @@ class DebateGame extends Rooms.botGame {
 		this.args = arg.split(',');
 		this.type = this.args[0];
         if (this.args[0].toLowerCase() == "1v1") {
-        	if (this.args[1].split("vs")[0].trim() == this.args[1].split("vs")[1].trim()) {
+			if (this.args[1].split("vs")[0].trim() == this.args[1].split("vs")[1].trim()) {
 				this.sendRoom('Both players are same.');
 				return this.onEnd();
 			}
@@ -186,7 +186,7 @@ class DebateGame extends Rooms.botGame {
         this.state = "ended";
 		this.sendRoom(`Debate ended.`);
         this.destroy();
-    }
+	}
 }
 
 class DebateGamePlayer extends Rooms.botGamePlayer {
@@ -198,7 +198,7 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 exports.commands = {
     debate: function (target, room, user) {
         if (!room || !user.hasBotRank("+")) return false;
-	if (!target) return this.room.send(null, 'Usage: ``.debate [casual/teams/1v1], [Time per round / sets default if left blank], [Topic / sets random topic from .debateqs]``');
+		if (!target) return this.room.send(null, 'Usage: ``.debate [casual/teams/1v1], [Time per round / sets default if left blank], [Topic / sets random topic from .debateqs]``');
         if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a Debate going on in this room!");
         if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a Debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
@@ -220,8 +220,12 @@ exports.commands = {
         if (DebateFile.findQuestion(question)) return this.send("The question already exists.");
         
         DebateFile.addQuestion(question).write();
-        
-        this.send("Added! (__" + question + "__)");
+        if (!room) {
+        	this.send("Added! (__" + question + "__)"); 
+        }
+        else {
+        	this.room.send(null,"Added! (__" + question + "__)"); 
+        }
     },
     delq:'deletequestion',
     deletequestion: function (target, room, user) {
@@ -230,8 +234,12 @@ exports.commands = {
         let question = target.toString();
         
         DebateFile.removeQuestion(question).write();
-        
-        this.send("Deleted! (__" + question + "__)");
+        if (!room) {
+        	this.send("Deleted! (__" + question + "__)"); 
+        }
+        else {
+        	this.room.send(null,"Deleted! (__" + question + "__)"); 
+        }
     },
     debateqs:'debatequestions',
     debatequestions: function (target, room, user) {
@@ -239,12 +247,12 @@ exports.commands = {
         let questions = DebateFile.allQuestions();
         
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
-            link => this.room.send(null, `${questions.length} questions - ${link}`));
+            link => this.room.send(null, `Debate questions(${questions.length}): ${link}`));
     },
-    question:'topic',
-    topic: function (target, room, user) {
-    	if (!user.hasBotRank('host')) return false;
-    	let question = DebateFile.getQuestion();
+	question:'topic',
+	topic: function (target, room, user) {
+		if (!user.hasBotRank('host')) return false;
+		let question = DebateFile.getQuestion();
 		this.room.send(null, question.question.trim() + "?");
 	}
 };
