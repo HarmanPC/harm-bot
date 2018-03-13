@@ -22,4 +22,4 @@ You will be given admin privileges on the bot that way.
 # Config
 This is the `../config/config.js` file.
 
-[*File*](https://pastebin.com/a23uMyDp)
+[File](https://pastebin.com/a23uMyDp)
