@@ -33,3 +33,18 @@
 `.parts [user1], [user2]...` - Give participations points.
 
 `.next` - Check when next official is.
+
+# Leaderboard 
+`.leaderboard givepoints [user], [amount]` - Gives user leaderboard points.
+
+`.leaderboard takepoints [user], [amount]` - Takes user's leaderboard points.
+
+`.leaderboard set [game], [points]` - Sets how much points should a game give.
+
+`.leaderboard reset` - Resets the leaderboard.
+
+`.leaderboard settings` - Shows the leaderboard settings.
+
+`.leaderboard rank [user]` - Shows the rank of a user in leaderboard.
+
+`.leaderboard` - Shows the leaderboard.
