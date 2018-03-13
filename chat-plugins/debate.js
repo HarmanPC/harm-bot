@@ -47,9 +47,9 @@ class DebateGame extends Rooms.botGame {
     }
     
     onStart() {
-        if ((this.userList.length < 2 || this.state !== "signups") && !this.args[0].toLowerCase() == 'casual') return;
+	if ((this.userList.length < 2 || this.state !== "signups") && !this.args[0].toLowerCase() == 'casual') return;
 	if ((this.userList.length % 2 !== 0 && this.args[0].toLowerCase == "teams") && !this.args[0].toLowerCase() == 'casual') return;
-	this.state = "started";
+ 	this.state = "started";
 	this.allowJoins = false;
 	if (this.args[0].toLowerCase() == 'casual') this.allowJoins = true;
         this.startingPlayers = this.userList.length;
