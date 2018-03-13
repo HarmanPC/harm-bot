@@ -1,6 +1,6 @@
 "use strict";
 
-const Debate_FILE = "data/debate.json";
+const Debate_FILE = "config/debate.json";
 
 exports.game = "debate";
 const DebateManger = require ('../debate-manager.js');
