@@ -39,10 +39,10 @@ class DebateGame extends Rooms.botGame {
 			
 			this.onStart();
 		} else if (this.args[0].toLowerCase() == 'casual') {
-			this.sendRoom('A casual Debate is starting. (Free Join!)');
+			this.sendRoom('Debateinfo! A casual Debate is starting. (Free Join!)');
 			this.onStart();
 		} else {
-			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type.toLowerCase() + ")");
+			this.sendRoom("Debateinfo! A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type.toLowerCase() + ")");
 		}
     }
     
@@ -197,7 +197,8 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 
 exports.commands = {
     debate: function (target, room, user) {
-        if (!room || !target || !user.hasBotRank("+")) return false;
+        if (!room || !user.hasBotRank("+")) return false;
+	if (!target) return this.room.send(null, 'Usage: ``.debate [casual/teams/1v1], [Time per round / sets default if left blank], [Topic / sets random topic from .debateqs]``');');
         if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a Debate going on in this room!");
         if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a Debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
@@ -232,7 +233,7 @@ exports.commands = {
         
         this.send("Deleted! (__" + question + "__)");
     },
-    debateqs:'Debatequestions',
+    debateqs:'debatequestions',
     debatequestions: function (target, room, user) {
         if (!user.hasBotRank("+")) return false;
         let questions = DebateFile.allQuestions();
