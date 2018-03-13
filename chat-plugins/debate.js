@@ -38,17 +38,20 @@ class DebateGame extends Rooms.botGame {
 			this.ptwo = Users.get(this.args[1].split("vs")[1].trim()).name;
 			
 			this.onStart();
-			
-		} 
-		else {
+		} else if (this.args[0].toLowerCase() == 'casual') {
+			this.sendRoom('A casual Debate is starting. (Free Join!)');
+			this.onStart();
+		} else {
 			this.sendRoom("A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type.toLowerCase() + ")");
 		}
     }
     
     onStart() {
-        if (this.userList.length < 2 || this.state !== "signups") return;
-		if (this.userList.length % 2 !== 0 && this.args[0].toLowerCase == "teams") return;
-		if (!this.args[0].toLowerCase() == "casual") this.state = "started";
+	if ((this.userList.length < 2 || this.state !== "signups") && !this.args[0].toLowerCase() == 'casual') return;
+	if ((this.userList.length % 2 !== 0 && this.args[0].toLowerCase == "teams") && !this.args[0].toLowerCase() == 'casual') return;
+ 	this.state = "started";
+	this.allowJoins = false;
+	if (this.args[0].toLowerCase() == 'casual') this.allowJoins = true;
         this.startingPlayers = this.userList.length;
         
         this.prepTurn();
@@ -61,7 +64,7 @@ class DebateGame extends Rooms.botGame {
     }
     
     prepTurn() {
-        this.postPlayerList();
+        if (!this.args[0].toLowerCase() == 'casual') this.postPlayerList();
 		
 		this.startDebate();
     }
@@ -120,15 +123,11 @@ class DebateGame extends Rooms.botGame {
 			}
 			this.debateTopic = debate.question.trim();
 			this.sendRoom(`The debate has begun! The topic is: **${this.debateTopic}?** This is a casual debate; Anyone may join or leave partway through.`);
-			this.sendRoom(`The Debate has begun! The topic is: **${this.debateTopic}?**`);
-			if (this.args[1] && !isNaN(this.args[1])) {
-				this.timer = setTimeout(() => {
-					this.sendRoom(`Time's up! The Debate has ended!`);
-					this.onEnd();
-				}, (parseInt(this.args[1]) * 1000 * 60) || 5 * 60 * 1000);
-			}
-		}
-		if (this.args[0].toLowerCase().trim() == "1v1") {
+			this.timer = setTimeout(() => {
+				this.sendRoom(`Time's up! The Debate has ended!`);
+				this.onEnd();
+			}, (parseInt(this.args[1]) * 1000 * 60 || 5 * 60 * 1000));
+		} else if (this.args[0].toLowerCase() == "1v1") {
 			let debate;
 			this.clock = 0;
 			if (!this.args[3]) {
@@ -146,8 +145,7 @@ class DebateGame extends Rooms.botGame {
 				this.sendRoom(`${Users.get(this.args[1].split("vs")[0].trim()).name}'s turn!`);
 				this.loopTimeout("1v1", (this.args[2] * 60 * 1000) || 3 * 60 * 1000);
 			}, 5 * 60 * 1000);
-		}
-		if (this.args[0].toLowerCase().trim() == "teams") {
+		} else if (this.args[0].toLowerCase() == "teams") {
 			let debate;
 			this.clock = 0;
 			if (!this.args[2]) {
@@ -179,6 +177,9 @@ class DebateGame extends Rooms.botGame {
 				this.sendRoom(`Team 1's turn!`);
 				this.loopTimeout("teams", this.args[1] * 60 * 1000);
 			}, 5 * 60 * 1000); 
+		} else {
+			this.sendRoom('The mode ' + this.args[0].toLowerCase() + ' doesn\'t exist.');
+			this.onEnd();
 		}
 	}
     onEnd() {
