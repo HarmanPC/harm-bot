@@ -67,8 +67,8 @@ exports.commands = {
     end: function (target, room, user) {
         if (!room || !room.game || !user.hasBotRank('+')) return false;
         this.parse(`/promote ${room.game.userHost}, deauth`);
-        room.game.destroy();
         log('debate',room.game.userHost ? room.game.hostName + "'s debate ended." : 'Debate ended.');
+        room.game.destroy();
         this.room.send(null, "The debate has been ended.");
     },
     win: function (target, room, user){
