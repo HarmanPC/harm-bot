@@ -34,7 +34,7 @@ class botGame {
     }
     
     onJoin(user) {
-        if (!this.allowJoins || this.state !== "signups") return;
+        if (!this.allowJoins) return;
         if (this.userList.includes(user.userid)) return user.sendTo("You have already joined!");
         this.users[user.userid] = this.playerObject ? new this.playerObject(user, this) : new botGamePlayer(user, this);
         this.userList.push(user.userid);
@@ -42,7 +42,7 @@ class botGame {
     }
     
     onLeave(user) {
-        if (!this.allowJoins || this.state !== "signups" || !this.userList.includes(user.userid)) return;
+        if (!this.allowJoins || !this.userList.includes(user.userid)) return;
         delete this.users[user.userid];
         this.userList.splice(this.userList.indexOf(user.userid), 1);
         user.sendTo('You have left the debate.');
