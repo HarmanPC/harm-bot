@@ -44,7 +44,7 @@ exports.commands = {
         if (!room || !room.game || room.game.gameId !== "host" || !user.hasBotRank('host')) return false;
         if (!target) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
         let parts = target.split(",");
-        if (parts.length !== 2) return this.room.send(null, room.commandCharacter[0] + "sub [old player], [new player]");
+        if (parts.length !== 2) return this.room.send(null, "Usage ``" + room.commandCharacter[0] + "sub [old player], [new player]``");
         if (!room.users.has(toId(parts[1]))) this.room.send(null, "The new player is not in the room.");
         if (toId(parts[1]) === room.game.userHost) return this.room.send(null, "You cannot add the host into the game.");
         if (room.game.onJoin) room.game.onJoin(Users.get(parts[1]));

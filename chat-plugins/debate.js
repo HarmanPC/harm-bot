@@ -196,7 +196,7 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 }
 
 exports.commands = {
-    debate: function (target, room, user) {
+	debate: function (target, room, user) {
         if (!room || !user.hasBotRank("+")) return false;
 		if (!target) return this.room.send(null, 'Usage: ``.debate [casual/teams/1v1], [Time per round / sets default if left blank], [Topic / sets random topic from .debateqs]``');
         if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a Debate going on in this room!");
@@ -205,13 +205,13 @@ exports.commands = {
 		log("debate",'Scripted ' + room.game.type + ' debate started.');
     },
 	checkdebate: function (target, room, user){
-        if (!room || !user.hasBotRank('+')) return false;
+		if (!room || !user.hasBotRank('+')) return false;
         if (room.game && room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, room.game.hostName + " is hosting official Debate.");
-        if (room.game && room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a Debate.");
-        if (room.game && room.game.gameId === 'debate') return this.room.send(null, `A scripted Debate is in progress. (${room.game.type})`);
+		if (room.game && room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a Debate.");
+		if (room.game && room.game.gameId === 'debate') return this.room.send(null, `A scripted Debate is in progress. (${room.game.type})`);
 		this.room.send(null, `No Debate is going on right now.`);
 	},
-    addq:'addquestion',
+	addq:'addquestion',
     addquestion: function (target, room, user) {
         if (!user.hasBotRank("+")) return false;
         
