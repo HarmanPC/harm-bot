@@ -186,8 +186,6 @@ const tools = exports.Tools = {
         req.write(toUpload);
         req.end();
     },
-
-    helpEntries: require("./help.js").help,
 };
 
 function arrayToObject (array, value) {
