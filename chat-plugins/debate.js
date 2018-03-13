@@ -209,7 +209,7 @@ exports.commands = {
         if (room.game && room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, room.game.hostName + " is hosting official Debate.");
         if (room.game && room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, room.game.hostName + " is hosting a Debate.");
         if (room.game && room.game.gameId === 'debate') return this.room.send(null, `A scripted Debate is in progress. (${room.game.type})`);
-        this.room.send(null, `No Debate is going on right now.`);
+		this.room.send(null, `No Debate is going on right now.`);
 	},
     addq:'addquestion',
     addquestion: function (target, room, user) {
