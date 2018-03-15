@@ -91,7 +91,7 @@ if (!Config.info.server || !Config.info.serverid || !Config.info.port) {
     log("error", "You need to fill out the config file!");
 }
 if (Config.defaultCharacter.length === 0) {
-    Config.defaultCharacter.push("+");
+    Config.defaultCharacter.push(";");
 }
 
 global.log = function(item, text) {
