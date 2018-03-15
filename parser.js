@@ -89,6 +89,7 @@ exports.parse = {
                 user.updateGlobalRank(pmUsername.charAt(0));
                 if (message.indexOf("/invite ") === 0 && user.isStaff) {
                     send("|/join " + message.slice(8));
+                    console.log('ok');
                 }
                 commandParser(message, user, null, false);
                 if (!Config.defaultCharacter.includes(message.charAt(0)) && Config.pmMessage && !user.pmMessageSent) {

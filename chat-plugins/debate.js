@@ -214,7 +214,7 @@ exports.commands = {
 	addq:'addquestion',
     addquestion: function (target, room, user) {
         if (!user.hasBotRank("+")) return false;
-        
+        if (!target) return this.send('``.addquestion [question]``');
         let question = target.toString();
         
         if (DebateFile.findQuestion(question)) return this.send("The question already exists.");
@@ -230,7 +230,7 @@ exports.commands = {
     delq:'deletequestion',
     deletequestion: function (target, room, user) {
         if (!user.hasBotRank("+")) return false;
-        
+        if (!target) return this.send('``.deletequestion [question]``');
         let question = target.toString();
         
         DebateFile.removeQuestion(question).write();

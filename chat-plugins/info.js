@@ -28,22 +28,6 @@ exports.commands = {
         this.can('debate');
         this.send('The EST time is: ' + getEST());
     },
-    test: function (target, room, user) {
-        if (!user.isDev()) return false;
-        var file = 'config/test.json';
-        fs.writeFile(file, JSON.stringify(/*fs.readFileSync('config/test.json') +*/ {ok: 'ok', t: 'k'}), err => {
-			if (err) this.send(`ERROR: ${err}`);
-			else this.send('success!');
-		});
-		try {
-		Tools.uploadToHastebin(fs.readFileSync('config/test.json'), link => {
-		    this.send(link);
-		});
-		}
-		catch (e) {
-		    this.send(e.name + ': ' + e.message);
-		}
-    },
     calculate: function (target, room, user) {
         this.can('debate');
         if (target.match(/[a-z]/i)) return this.send('Please only use this command to calculate.');
