@@ -1,8 +1,9 @@
 'use strict';
 
 exports.commands = {
-     seen: function(target, room, user) {
-        if(!target) return this.parse("/help seen");
+    seen: function(target, room, user) {
+        if (room) return false;
+        if(!target) return this.send('Invalid username.');
         this.can("set");
         target = toId(target);
         let lastSeen = Users.seen.get(target, null);

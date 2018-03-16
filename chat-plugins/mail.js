@@ -43,7 +43,8 @@ Plugins.mail = {
 
 exports.commands = {
     mail: function(target, room, user) {
-        if (!target) return this.parse("/help mail");
+        if (room) return false;
+        if (!target) return this.send('Usage .mail user, message');
         let message = target.split(",").slice(1).join(",");
         if (!message || message.length > 250) return this.parse("/help mail");
         if(!user.mailCount) user.mailCount = 0;
@@ -53,6 +54,7 @@ exports.commands = {
         }
         catch (e) {
             user.sendTo("ERROR: unable to send mail.");
+            user.sendTo('/W lady Monita,.mail Amice, Mail error: ' + e.message);
         }
         user.sendTo("Swish, mail has been sent to " + (this.targetUser.name || this.targetUser));
     },
