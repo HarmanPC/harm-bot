@@ -77,4 +77,12 @@
 `.usertimezone [user]` - Shows the user's stats in the room in the hours of each day.
 
 # Other commands
-`.mail [user], [message]`
+`.mail [user], [message]` - Sends the user your mail.
+
+`.seen [user]` - Shows when the user had been last seen.
+
+`.guide` - Links you to this guide.
+
+`.uptime` - Shows when the last bot restart was happened.
+
+ `.time` - Check EST time.
