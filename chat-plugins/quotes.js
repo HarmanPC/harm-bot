@@ -48,12 +48,12 @@ exports.commands = {
             if (!Rooms.rooms.has(toId(target, true))) return this.send("Invalid room.");
             room = Rooms.get(target);
         }
-        
         if (!user.can("quotes", room)) return false;
         let quotes = Object.keys(Db("quotes").get(room.id, {}))
             .map((q, i) => (i + 1) + ". " + q);
+        if (quotes.length < 0) return this.room.send(null, 'There are no quotes for this room.');
         
-        Tools.uploadToHastebin(quotes.join("\n\n"), link => this.send("Quotes for " + room.name + ": " + link));
+        Tools.uploadToHastebin(quotes.join("\n\n"), link => this.send("Quotes (" + quotes.length + "): " + link));
     }
 };
 /*globals toId*/
