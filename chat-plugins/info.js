@@ -3,7 +3,9 @@
 exports.commands = {
     seen: function(target, room, user) {
         if (room) return false;
-        if(!target) return this.send('Invalid username.');
+        if (!target) return this.send('Invalid username.');
+        if (toId(target) == toId(Monitor.username)) return this.send(Monitor.username + ' was last seen sending you this message.');
+        if (toId(target) == user.id) return this.send('Look at the person in mirror.');
         this.can("set");
         target = toId(target);
         let lastSeen = Users.seen.get(target, null);
@@ -29,12 +31,6 @@ exports.commands = {
         this.can('debate');
         this.send('The EST time is: ' + getEST());
     },
-    calculate: function (target, room, user) {
-        this.can('debate');
-        if (target.match(/[a-z]/i)) return this.send('Please only use this command to calculate.');
-        if (typeof eval(target) == 'undefined') return this.send('Invalid calculation.');
-        this.send(eval(target));
-    }
 };
 /*globals Monitor*/
 /*globals Tools*/
