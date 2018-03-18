@@ -79,7 +79,7 @@
 # Other commands
 `.mail [user], [message]` - Sends the user your mail.
 
-`.checkmail` - Checks your last mail.
+`.checkmail` - Checks your pending mail.
 
 `.seen [user]` - Shows when the user had been last seen.
 
