@@ -260,7 +260,7 @@ exports.commands = {
 		if (room) return user.sendTo('Please use this command in my PMs only.');
 		fs.readFile("./config/debatelogs.txt", "utf-8", (err, data) => { 
 			if (!err) {
-				Tools.uploadToHastebin(data, link => user.sendTo("Debate logs: " + link));
+				Tools.uploadToHastebin("Debate logs \n\n" + data, link => user.sendTo("Debate logs: " + link));
 			}
 			else {
 				user.sendTo('Error getting logs.');

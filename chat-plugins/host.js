@@ -133,7 +133,7 @@ exports.commands = {
 		if (room) return user.sendTo('Please use this command in my PMs only.');
 		fs.readFile("./config/hostlogs.txt", "utf-8", (err, data) => { 
 			if (!err) {
-				Tools.uploadToHastebin(data, link => user.sendTo("Host logs: " + link));
+				Tools.uploadToHastebin("Host logs\n\n" + data, link => user.sendTo("Host logs: " + link));
 			}
 			else {
 				user.sendTo('Error getting logs.');
@@ -142,9 +142,11 @@ exports.commands = {
 		});
 	}
 };
-/* globals Leaderboard*/
-/* globals Users*/ 
-/* globals toId*/
-/* globals Monitor*/
-/* globals Rooms*/
-/* globals hostlog*/
+/*globals Leaderboard*/
+/*globals Users*/ 
+/*globals toId*/
+/*globals Monitor*/
+/*globals Rooms*/
+/*globals hostlog*/
+/*globals Tools*/
+/*globals fs*/
