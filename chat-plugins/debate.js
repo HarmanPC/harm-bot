@@ -254,9 +254,15 @@ exports.commands = {
 		if (!user.hasBotRank('host')) return false;
 		let question = DebateFile.getQuestion();
 		this.room.send(null, question.question.trim() + "?");
+	},
+	debatelogs: function (target, room, user) {
+		if (!user.hasBotRank('%')) return false;
+		if (room) return this.sendTo('Please use this command in my PMs only.');
+		Tools.uploadToHastebin(fs.readFile('config/debatelogs.txt'), link => this.sendTo("Debate logs: " + link));
 	}
 };
 /*globals Tools*/
 /*globals Users*/
 /*globals Rooms*/
 /*globals debatelog*/
+/*globals fs*/

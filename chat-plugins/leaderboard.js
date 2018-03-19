@@ -2,7 +2,6 @@
 
 const DEFAULT_WIN_AMOUNT = 5;
 const FILE_DIRECTORY = "config/leaderboard.json";
-const Graph = require("../graph");
 const LEADERBOARD = require("../leaderboard");
 
 Config.settableCommands.managegames = true;

@@ -143,7 +143,7 @@ exports.commands = {
     },
     
     updatedata: function(target, room, user) {
-        if (!this.can("dev")) return false;
+        if (!this.can("dev") || room) return false;
         if (Monitor.dataUpdateLock) return this.send("Please wait until a previous data update is complete.");
         
         Monitor.dataUpdateLock = true;
@@ -164,12 +164,12 @@ exports.commands = {
         process.exit();
     },
     warn: function (target, room, user) {
-        if (!user.hasRank('%')) return false;
+        if (!user.hasRank('%') || !room) return false;
         target = target.split(',');
-        let person = target[0];
-        let warnMsg = target[1];
-        this.send('/m ' + person + ', ' + warnMsg + ' - [WARN]');
-        this.send('/um ' + person);
+        const person = target[0];
+        const warnMsg = target[1];
+        this.room.send(null,'/m ' + person + ', ' + warnMsg + ' - [WARN]');
+        this.room.send(null,'/um ' + person);
     },
     modchat: function (target, room, user) {
         if (!user.hasBotRank('%') || !room) return false;
