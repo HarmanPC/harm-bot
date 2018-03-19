@@ -59,14 +59,14 @@ exports.commands = {
         if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`); 
         room.game = new hostGame(room, target);
-        debatelog(Users.get(target).name + " hosted.");
+        hostlog(Users.get(target).name + " hosted.");
     },
     subhost: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== 'host' || !target || !user.hasBotRank('+')) return false;
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`);
         this.parse(`${Users.get(room.game.userHost).hasBotRank('+') ? '/kek' : '/promote ' + room.game.userHost + ', deauth'}`);
         this.room.send(null, Users.get(target).name + ' has been subhosted.');
-        log("debate", Users.get(target).name + " subhosted " + room.game.hostName + "'s host.");
+        hostlog(Users.get(target).name + " subhosted " + room.game.hostName + "'s host.");
         room.game.hostName = Users.get(target).name;
 	    room.game.userHost = toId(target);
     },
@@ -128,10 +128,23 @@ exports.commands = {
 		}
 		this.send("The next official is in " + millisToTime(millis) + ".");
 	},
+	hostlogs: function (target, room, user) {
+		if (!user.hasBotRank('%')) return false;
+		if (room) return user.sendTo('Please use this command in my PMs only.');
+		fs.readFile("./config/hostlogs.txt", "utf-8", (err, data) => { 
+			if (!err) {
+				Tools.uploadToHastebin(data, link => user.sendTo("Host logs: " + link));
+			}
+			else {
+				user.sendTo('Error getting logs.');
+				console.log(err);
+			}
+		});
+	}
 };
 /* globals Leaderboard*/
 /* globals Users*/ 
 /* globals toId*/
 /* globals Monitor*/
 /* globals Rooms*/
-/* globals debatelog*/
+/* globals hostlog*/

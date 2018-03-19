@@ -67,7 +67,12 @@ exports.commands = {
     end: function (target, room, user) {
         if (!room || !room.game || !user.hasBotRank('+')) return false;
         this.parse(`/promote ${room.game.userHost}, deauth`);
-        debatelog(room.game.userHost ? room.game.hostName + "'s host ended." : 'Debate ended.');
+        if (room.game.userHost) {
+            hostlog(room.game.hostName + "'s host ended.");
+        }
+        else {
+            debatelog("Debate ended.");
+        }
         room.game.destroy();
         this.room.send(null, "The debate has been ended.");
     },
@@ -95,3 +100,4 @@ exports.commands = {
 /*globals Users*/
 /*globals toId*/
 /*globals debatelog*/
+/*globals hostlog*/

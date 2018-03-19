@@ -245,7 +245,12 @@ global.clearQueue = function(user) {
 
 global.debatelog = function(logMessage) {
     if (!logMessage) return false;
-    fs.appendFile('config/debatelogs.txt', logMessage + '\n');
+    fs.appendFile('config/debatelogs.txt', `[${getEST()}] ${logMessage}\n`);
+};
+
+global.hostlog = function(logMessage) {
+    if (!logMessage) return false;
+    fs.appendFile('config/hostlogs.txt', `[${getEST()}] ${logMessage}\n`);
 };
 
 let connect = function(retry) {
