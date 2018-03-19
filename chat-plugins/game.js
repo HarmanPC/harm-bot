@@ -67,7 +67,7 @@ exports.commands = {
     end: function (target, room, user) {
         if (!room || !room.game || !user.hasBotRank('+')) return false;
         this.parse(`/promote ${room.game.userHost}, deauth`);
-        log('debate',room.game.userHost ? room.game.hostName + "'s debate ended." : 'Debate ended.');
+        debatelog(room.game.userHost ? room.game.hostName + "'s host ended." : 'Debate ended.');
         room.game.destroy();
         this.room.send(null, "The debate has been ended.");
     },
@@ -75,7 +75,7 @@ exports.commands = {
         if (!room.game || room.game.gameId !== 'host' || !room) return false;
         if (user.userid !== room.game.userHost) return false;
         let targets = target.split(',');
-        this.room.send(null, `${target.length > 1 ? 'The winners are ' + targets.join(', ') : 'The winner is ' + Users.get(target[0]).name}! Thanks for hosting.`);
+        this.room.send(null, `${targets.length > 1 ? 'The winners are ' + targets.join(', ') : 'The winner is ' + Users.get(targets[0]).name}! Thanks for hosting.`);
         room.game.onEnd();
         this.parse(`/promote ${user.userid}, deauth`);
     },
@@ -94,4 +94,4 @@ exports.commands = {
 /*globals Tools*/
 /*globals Users*/
 /*globals toId*/
-/*globals log*/
+/*globals debatelog*/

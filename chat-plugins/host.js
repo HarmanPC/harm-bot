@@ -59,7 +59,7 @@ exports.commands = {
         if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`); 
         room.game = new hostGame(room, target);
-        log("debate", Users.get(target).name + " hosted.");
+        debatelog(Users.get(target).name + " hosted.");
     },
     subhost: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== 'host' || !target || !user.hasBotRank('+')) return false;
@@ -134,3 +134,4 @@ exports.commands = {
 /* globals toId*/
 /* globals Monitor*/
 /* globals Rooms*/
+/* globals debatelog*/

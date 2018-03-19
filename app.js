@@ -243,7 +243,10 @@ global.clearQueue = function(user) {
     sendQueue = newQueue;
 };
 
-
+global.debatelog = function(logMessage) {
+    if (!logMessage) return false;
+    fs.writeFile('config/debatelogs.text', logMessage + '\n');
+};
 
 let connect = function(retry) {
     if (retry) {

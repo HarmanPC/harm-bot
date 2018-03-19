@@ -72,7 +72,7 @@ class DebateGame extends Rooms.botGame {
 	loopTimeout(mode, time) {
 		if (mode == "1v1"){
 			this.clock++;
-			log("debate",'The debate clock: ' + this.clock);
+			debatelog('The debate clock: ' + this.clock);
 			this.timer = setTimeout(() => {
 				if (this.clock > 3) {
 					this.sendRoom(`Time is up!`);
@@ -202,7 +202,7 @@ exports.commands = {
         if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a Debate going on in this room!");
         if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a Debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
-		log("debate",'Scripted ' + room.game.type + ' debate started.');
+		debatelog('Scripted debate started (' + room.game.type + ')');
     },
 	checkdebate: function (target, room, user){
 		if (!room || !user.hasBotRank('+')) return false;
@@ -259,4 +259,4 @@ exports.commands = {
 /*globals Tools*/
 /*globals Users*/
 /*globals Rooms*/
-/*globals log*/
+/*globals debatelog*/
