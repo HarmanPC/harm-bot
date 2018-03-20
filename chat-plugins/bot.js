@@ -111,9 +111,10 @@ exports.commands = {
     },
     mute: function(target, room, user) {
         if (!target || !this.can("mute")) return false;
+        target = target.split(',');
         if (Monitor.isBanned(this.targetUser.userid || this.targetUser) && ["lock", "ban"].includes(Monitor.isBanned(this.targetUser.userid || this.targetUser))) return this.send("The user is already locked/banned.");
-        Monitor.mute(this.targetUser.userid || this.targetUser);
-        this.send((this.targetUser.name || this.targetUser) + " was muted from using the bot for 7 minutes by " + user.name + ".");
+        Monitor.mute(this.targetUser.userid || this.targetUser, target[1]);
+        this.send((this.targetUser.name || this.targetUser) + " was muted from using the bot for " + target[1] ? target[1] : "7" +" minutes by " + user.name + ".");
     },
     lock: function(target, room, user) {
         if (!target || !this.can("lock")) return false;
