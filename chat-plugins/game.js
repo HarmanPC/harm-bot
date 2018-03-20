@@ -85,6 +85,7 @@ exports.commands = {
     },
     done: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== 'host' || !user.hasBotRank('host')) return false;
+        hostlog(Users.get(room.game.hostid).name + "'s host ended.");
         room.game.onEnd();
         this.parse(`/promote ${user.userid}, deauth`);
         this.room.send(null, 'Thanks for hosting!');
