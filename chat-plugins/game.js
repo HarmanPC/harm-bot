@@ -71,7 +71,7 @@ exports.commands = {
             this.parse(`/promote ${room.game.hostid}, deauth`);
         }
         else {
-            debatelog("The debate was forcibly ended.");
+            debatelog("The debate was forcibly ended. (" + room.game.type + ")");
         }
         room.game.destroy();
         this.room.send(null, "The debate has been ended.");
