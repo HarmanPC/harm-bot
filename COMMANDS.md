@@ -34,6 +34,11 @@
 
 `.next` - Check when next official is.
 
+# Logs
+`.hostlogs` - Shows all host logs.
+
+`.debatelogs` - Shows all debate logs.
+
 # Leaderboard 
 `.leaderboard givepoints [user], [amount]` - Gives user leaderboard points.
 

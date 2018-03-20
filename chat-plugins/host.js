@@ -4,23 +4,22 @@ exports.game = 'host';
 class hostGame extends Rooms.botGame {
     constructor(room, target) {
         super(room);
-        
+
         this.gameId = "host";
         this.gameName = 'Host';
         this.official = false;
         
-	    let targets = target.split(',');
-	    if (toId(targets[1]) == 'official') this.official = true;
-	    
-	    this.hostName = Users.get(targets[0]).name;
-	    this.userHost = toId(targets[0]);
-	    
+        let targets = target.split(',');
+        if (toId(targets[1]) == 'official') this.official = true;
+
+        this.hostid = toId(targets[0]);
+
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
-        
+
         this.sendRoom(`Debateinfo! ${this.hostName} is hosting. Do \`\`.join\`\` to join.`);
-        
+
     }
     onStart(user) {
         if (this.state !== "signups") return false;
@@ -31,7 +30,7 @@ class hostGame extends Rooms.botGame {
     }
     postPlayerList() {
         let pl = this.userList.sort().map(u => this.users[u].name);
-        
+
         this.sendRoom(`Players (${this.userList.length}): ${pl.join(", ")}`);
     }
     onEnd() {
@@ -40,22 +39,24 @@ class hostGame extends Rooms.botGame {
     }
 }
 let millisToTime = function(millis){
-	let seconds = millis/1000;
-	let hours = Math.floor(seconds/3600);
-	let minutes = Math.floor((seconds-hours*3600)/60);
-	let response;
-	if(hours>0){
-		response = hours + " hour" + (hours === 1 ? "" : "s") + " and " + minutes + " minute" + (minutes === 1 ? "" : "s");
-	}else{
-		response = minutes + " minute" + (minutes === 1 ? "" : "s");
-	}
-	return response;
+    let seconds = millis/1000;
+    let hours = Math.floor(seconds/3600);
+    let minutes = Math.floor((seconds-hours*3600)/60);
+    let response;
+    if(hours>0){
+        response = hours + " hour" + (hours === 1 ? "" : "s") + " and " + minutes + " minute" + (minutes === 1 ? "" : "s");
+    } else {
+        response = minutes + " minute" + (minutes === 1 ? "" : "s");
+    }
+    return response;
 };
+const rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
+
 exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
         if (!room.users.has(toId(target))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
-        if (room.game && room.game.gameId == 'host') return this.room.send(null, room.game.hostName + ' is hosting.');
+        if (room.game && room.game.gameId == 'host') return this.room.send(null, Users.get(room.game.hostid).name + ' is hosting.');
         if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`); 
         room.game = new hostGame(room, target);
@@ -66,12 +67,10 @@ exports.commands = {
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`);
         this.parse(`${Users.get(room.game.userHost).hasBotRank('+') ? '/kek' : '/promote ' + room.game.userHost + ', deauth'}`);
         this.room.send(null, Users.get(target).name + ' has been subhosted.');
-        hostlog(Users.get(target).name + " subhosted " + room.game.hostName + "'s host.");
-        room.game.hostName = Users.get(target).name;
-	    room.game.userHost = toId(target);
+        hostlog(Users.get(target).name + " subhosted " + Users.get(room.game.hostid).name + "'s host.");
+        room.game.hostid = toId(target);
     },
     parts: function (target, room, user) {
-        let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
         if (!user.hasBotRank('+')) return false;
         target = target.split(',');
         if (target.length < 2) {
@@ -87,7 +86,6 @@ exports.commands = {
     },
     officialwin: function (target, room, user) {
         if (!user.hasBotRank('+')) return false;
-        let rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
         target = target.split(',');
         if (target.length < 2) {
             this.room.send(null,`${rank} The winner is ${target[0]}! Thanks for hosting.`);
@@ -97,17 +95,17 @@ exports.commands = {
             for (let i=0; i<=target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
             }
-            this.room.send(null,`${rank}The winners are ${target.join(', ')}! Thanks for hosting.`);
+            this.room.send(null, `${rank}The winners are ${target.join(', ')}! Thanks for hosting.`);
         }
         else {
-            this.room.send(null,rank + 'The winner is ' + target[0] + '! Thanks for hosting.');
+            this.room.send(null, rank + 'The winner is ' + target[0] + '! Thanks for hosting.');
         }
-        room.game.onEnd();
+        if (room.game) room.game.onEnd();
     },
     mvp: function (target, room, user) {
     if (!room ||  !user.hasBotRank('+')) return false;
     let winner = toId(target);
-    this.room.send(null,`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""} MVP points awarded to ${Users.get(winner).name}!`);
+    this.room.send(null,`${rank} MVP points awarded to ${Users.get(winner).name}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     next: function (target, user, room) {
