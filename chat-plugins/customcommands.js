@@ -39,24 +39,21 @@ exports.commands = {
         let targetRoom = room ? room.id : "global";
         let existing = Db("customcommands").get([targetRoom, command], null);
         if (!existing) return this.send("This room does not have that custom command.");
-        if(existing.text.length >= 3 && !user.hasBotRank("@")) return this.say("The command is too long for more to be added to it.");
+        if (existing.text.length >= 3 && !user.hasBotRank("@")) return this.say("The command is too long for more to be added to it.");
         existing.text.push(output);
         Db("customcommands").set([targetRoom, command], existing);
         this.send("An additional line has been added to the custom command \"" + command + "\".");
     },
    comlist: function(target, room, user) {
-        if (!this.can("addcom")) return false;
-        let targetRoom = room ? room.id : "global";
-        if (target && !room) {
-            targetRoom = toId(target);
-        }
-        let text = room.id !== 'groupchat-sniper-debate' ? targetRoom : 'Debate';
+        if (!user.hasBotRank("%")) return false;
+        if (room) return user.sendTo(null, "Please use this command in my PMs only");
+        let targetRoom = target;
         if (!Db("customcommands").get(targetRoom, null)) return this.send("No custom commands have been set yet.");
         let CC = Db("customcommands").get(targetRoom, {});
-        let hastebin = "Custom Commmands for room: " + text + "\n\n" +
+        let hastebin = "Custom Commmands for room: " + targetRoom + "\n\n" +
             Object.keys(CC).sort().map(c => (room ? room.commandCharacter[0] : Config.defaultCharacter[0]) + c + "\nRank: " + CC[c].rank + "\nOutput: " + CC[c].text.join("\n")).join("\n\n");
         Tools.uploadToHastebin(hastebin, link => {
-            this.send("Custom commands for room  " + text + ": " + link);
+            this.send("Custom commands for room  " + targetRoom + ": " + link);
         });
     },
     alias: function (target, room, user) {

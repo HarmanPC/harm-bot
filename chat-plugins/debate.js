@@ -189,6 +189,7 @@ class DebateGame extends Rooms.botGame {
     onEnd() {
         this.state = "ended";
 		this.sendRoom(`Debate ended.`);
+		debatelog('Debate ended.');
         this.destroy();
 	}
 }
