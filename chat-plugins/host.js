@@ -18,7 +18,7 @@ class hostGame extends Rooms.botGame {
         this.state = "signups";
         this.allowJoins = true;
 
-        this.sendRoom(`Debateinfo! ${this.hostName} is hosting. Do \`\`.join\`\` to join.`);
+        this.sendRoom(`Debateinfo! ${Users.get(this.hostid).name} is hosting. Do \`\`.join\`\` to join.`);
 
     }
     onStart(user) {

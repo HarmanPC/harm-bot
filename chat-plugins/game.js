@@ -84,9 +84,10 @@ exports.commands = {
         this.parse(`/promote ${user.userid}, deauth`);
     },
     done: function (target, room, user) {
-        if (!room.game || room.game.gameId !== 'host' || !user.hasBotRank('host')) return false;
+        if (!room || !room.game || room.game.gameId !== 'host' || !user.hasBotRank('host')) return false;
         room.game.onEnd();
         this.parse(`/promote ${user.userid}, deauth`);
+        this.room.send(null, 'Thanks for hosting!');
     },
     hangman: function (target, room, user) {
 		if (!room || !user.hasBotRank('+')) return false;
