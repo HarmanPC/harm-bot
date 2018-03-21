@@ -50,7 +50,6 @@ let millisToTime = function(millis){
     }
     return response;
 };
-const rank = Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : "";
 
 exports.commands = {
     host: function (target, room, user) {
@@ -74,38 +73,38 @@ exports.commands = {
         if (!user.hasBotRank('+')) return false;
         target = target.split(',');
         if (target.length < 2) {
-            this.room.send(null,`${rank} Participation points awarded to ${target[0]}.`);
+            this.room.send(null,`/wall Participation points awarded to ${target[0]}.`);
             Leaderboard.onWin('t', this.room, target[0], 4).write();
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
             }
-            this.room.send(null,`${rank} Participation points awarded to ${target.join(',')}.`);
+            this.room.send(null,`/wall Participation points awarded to ${target.join(',')}.`);
         }
     },
     officialwin: function (target, room, user) {
         if (!user.hasBotRank('+')) return false;
         target = target.split(',');
         if (target.length < 2) {
-            this.room.send(null,`${rank} The winner is ${target[0]}! Thanks for hosting.`);
+            this.room.send(null,`/wall The winner is ${target[0]}! Thanks for hosting.`);
             Leaderboard.onWin('t', this.room, toId(target[0]), 10).write();
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
             }
-            this.room.send(null, `${rank}The winners are ${target.join(', ')}! Thanks for hosting.`);
+            this.room.send(null, `/wall The winners are ${target.join(', ')}! Thanks for hosting.`);
         }
         else {
-            this.room.send(null, rank + 'The winner is ' + target[0] + '! Thanks for hosting.');
+            this.room.send(null, '/wall The winner is ' + target[0] + '! Thanks for hosting.');
         }
         if (room.game) room.game.onEnd();
     },
     mvp: function (target, room, user) {
     if (!room ||  !user.hasBotRank('+')) return false;
     let winner = toId(target);
-    this.room.send(null,`${rank} MVP points awarded to ${Users.get(winner).name}!`);
+    this.room.send(null,` MVP points awarded to ${Users.get(winner).name}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     next: function (target, user, room) {
