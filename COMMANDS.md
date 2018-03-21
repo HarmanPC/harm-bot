@@ -26,11 +26,11 @@
 `.end` - Forcibly ends the debate.
 
 # Official hosts commands
-`.mvp [user]` - Gives the user MVP points.
+`.mostvaluableplayer [user]` - Gives the user MVP points.
 
 `.officialwin [user1], [user2]...` - Win the users in official and ends the game.
 
-`.parts [user1], [user2]...` - Give participations points.
+`.participations [user1], [user2]...` - Give participations points.
 
 `.next` - Check when next official is.
 
@@ -38,6 +38,8 @@
 `.hostlogs` - Shows all host logs.
 
 `.debatelogs` - Shows all debate logs.
+
+`.officiallogs` - Shows all official logs.
 
 # Leaderboard 
 `.leaderboard givepoints [user], [amount]` - Gives user leaderboard points.

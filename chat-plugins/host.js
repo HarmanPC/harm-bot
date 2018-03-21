@@ -81,7 +81,7 @@ exports.commands = {
             officiallog(`Participation points awarded to ${target[0]}.`);
         }
         else if (target.length > 1) {
-            for (let i=0; i<=target.length - 1; i++) {
+            for (let i = 0; i <= target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
             }
             this.room.send(null,`/wall Participation points awarded to ${target.join(',')}.`);
