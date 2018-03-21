@@ -1,29 +1,27 @@
 'use strict';
 
-
-
 class Timer {
     constructor(room, user, durationString) {
         this.timer = null;
         this.room = room;
         this.name = user.name;
-        
+
         this.run(durationString);
     }
-    
+
     toTimeString(int) {
         if (!int) return "00";
         if (int < 10) return '0' + int;
         return int;
     }
-    
+
     run(durationString) {
         const bits = durationString.split(':').reverse();
         const [seconds, minutes, hours] = bits.map(p => {
             const int = parseInt(p);
             return int && int > 0 ? int : 0;
         });
-        
+
         const duration = (seconds || 0) * 1000 + (minutes || 0) * 60000 + (hours || 0) * 3600000;
         if (!duration) {
             this.room.send(null, 'Invalid duration.');
@@ -31,27 +29,27 @@ class Timer {
             return;
         }
         this.endTime = Date.now() + duration;
-        
+
         this.timer = setTimeout(() => {
             this.room.send(null, `[${this.name}] Time's up!`);
             this.destroy();
         }, duration);
-        
+
         // report duration
         this.room.send(null, `A timer has been set for: ${this.toTimeString(hours)}:${this.toTimeString(minutes)}:${this.toTimeString(seconds)}`);
     }
-    
+
     getTimeLeft() {
-        let diff = Math.ceil((this.endTime - Date.now()) / 1000);
-        
+    let diff = Math.ceil((this.endTime - Date.now()) / 1000);
+
         const seconds = diff % 60;
         diff = Math.floor(diff / 60);
         const minutes = diff % 60;
         const hours = Math.floor(diff / 60);
-        
+
         return `[Timer by ${this.name}] Remaining: ${this.toTimeString(hours)}:${this.toTimeString(minutes)}:${this.toTimeString(seconds)}`;
     }
-    
+
     destroy() {
         if (this.timer) clearTimeout(this.timer);
         this.timer = null;
@@ -67,9 +65,8 @@ exports.commands = {
             room.countdown.destroy();
             return;
         }
-        if (target <= 0) return this.room.send(null, 'Invalid Duration.');
-        if (target == 5) return room.countdown = new Timer(room, user, '5:00');
         if (room.countdown) return this.room.send(null,room.countdown.getTimeLeft());
+        if (target <= 0) return this.room.send(null, 'Invalid Duration.');
         room.countdown = new Timer(room, user, target);
     },
 };
