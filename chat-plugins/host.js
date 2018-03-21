@@ -138,6 +138,7 @@ exports.commands = {
 	hostlogs: function (target, room, user) {
 		if (!user.hasBotRank('%')) return false;
 		if (room) return user.sendTo('Please use this command in my PMs only.');
+		if (!fs.existsSync('./config/hostlogs.txt')) return user.sendTo('The host logs are empty.');
 		fs.readFile("./config/hostlogs.txt", "utf-8", (err, data) => { 
 			if (!err) {
 				Tools.uploadToHastebin("Host logs\n\n" + data, link => user.sendTo("Host logs: " + link));
@@ -151,6 +152,7 @@ exports.commands = {
     officiallogs: function (target, room, user) {
         if (!user.hasBotRank('%')) return false;
         if (room) return user.sendTo('Please use this command in my PMs only.');
+        if (!fs.existsSync('./config/officiallogs.txt')) return user.sendTo('The official logs are empty.');
         fs.readFile("./config/officiallogs.txt", "utf-8", (err, data) => { 
 			if (!err) {
 				Tools.uploadToHastebin("Official logs\n\n" + data, link => user.sendTo("Official logs: " + link));

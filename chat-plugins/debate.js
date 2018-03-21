@@ -266,6 +266,7 @@ exports.commands = {
 	debatelogs: function (target, room, user) {
 		if (!user.hasBotRank('%')) return false;
 		if (room) return user.sendTo('Please use this command in my PMs only.');
+		if (!fs.existsSync('./config/debatelogs.txt')) return user.sendTo('The debate logs are empty.');
 		fs.readFile("./config/debatelogs.txt", "utf-8", (err, data) => { 
 			if (!err) {
 				Tools.uploadToHastebin("Debate logs \n\n" + data, link => user.sendTo("Debate logs: " + link));
