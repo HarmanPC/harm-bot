@@ -23,6 +23,8 @@ class hostGame extends Rooms.botGame {
     }
     onStart(user) {
         if (this.state !== "signups") return false;
+        hostlog(Users.get(this.hostid).name + "'s debate started.");
+        hostlog(this.postPlayerList());
         this.state = 'started';
         this.sendRoom(`Signups are now closed.`);
         this.startingPlayers = this.userList.length;
@@ -69,22 +71,26 @@ exports.commands = {
         hostlog(Users.get(target).name + " subhosted " + Users.get(room.game.hostid).name + "'s host.");
         room.game.hostid = toId(target);
     },
-    parts: function (target, room, user) {
-        if (!user.hasBotRank('+')) return false;
+    parts:'participations',
+    participaions: function (target, room, user) {
+        if (!user.hasBotRank('+') || !target) return false;
         target = target.split(',');
-        if (target.length < 2) {
+        if (target.length == 1) {
             this.room.send(null,`/wall Participation points awarded to ${target[0]}.`);
             Leaderboard.onWin('t', this.room, target[0], 4).write();
+            officiallog(`Participation points awarded to ${target[0]}.`);
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
             }
             this.room.send(null,`/wall Participation points awarded to ${target.join(',')}.`);
+            officiallog(`Participation points awarded to ${target.join(',')}.`);
         }
     },
     officialwin: function (target, room, user) {
-        if (!user.hasBotRank('+')) return false;
+        if (!user.hasBotRank('+') || !room || !room.game || !target) return false;
+        if (!room.game.official) return this.room.send(null,'This host isn\'t official.');
         target = target.split(',');
         if (target.length < 2) {
             this.room.send(null,`/wall The winner is ${target[0]}! Thanks for hosting.`);
@@ -94,17 +100,21 @@ exports.commands = {
             for (let i=0; i<=target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
             }
-            this.room.send(null, `/wall The winners are ${target.join(', ')}! Thanks for hosting.`);
+            this.room.send(null, '/wall The winners are ' + target.join(', ') + '! Thanks for hosting.');
+            officiallog('The official winners were ' + target.join(', ') + '.');
         }
         else {
             this.room.send(null, '/wall The winner is ' + target[0] + '! Thanks for hosting.');
+            officiallog('The official winner was ' + target[0] + '.');
         }
-        if (room.game) room.game.onEnd();
+        room.game.onEnd();
     },
-    mvp: function (target, room, user) {
+    mvp:'mostvaluableplayer',
+    mostvaluableplayer: function (target, room, user) {
     if (!room ||  !user.hasBotRank('+')) return false;
     let winner = toId(target);
-    this.room.send(null,` MVP points awarded to ${Users.get(winner).name}!`);
+    this.room.send(null,`/wall MVP points awarded to ${Users.get(winner).name}!`);
+    officiallog(`MVP points awarded to ${Users.get(winner).name}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     next: function (target, user, room) {
@@ -137,12 +147,25 @@ exports.commands = {
 				console.log(err);
 			}
 		});
-	}
+    },
+    officiallogs: function (target, room, user) {
+        if (!user.hasBotRank('%')) return false;
+        if (room) return user.sendTo('Please use this command in my PMs only.');
+        fs.readFile("./config/officiallogs.txt", "utf-8", (err, data) => { 
+			if (!err) {
+				Tools.uploadToHastebin("Official logs\n\n" + data, link => user.sendTo("Official logs: " + link));
+			}
+			else {
+				user.sendTo('Error getting logs.');
+				console.log(err);
+			}
+		});
+    }
 };
 /*globals Leaderboard*/
 /*globals Users*/ 
 /*globals toId*/
-/*globals Monitor*/
+/*globals officiallog*/
 /*globals Rooms*/
 /*globals hostlog*/
 /*globals Tools*/

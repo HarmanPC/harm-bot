@@ -56,6 +56,9 @@ class DebateGame extends Rooms.botGame {
  	this.state = "started";
 	this.allowJoins = false;
 	if (this.args[0].toLowerCase() == 'casual') this.allowJoins = true;
+        debatelog('Debate started. (' + this.type + ')');
+        debatelog(this.postPlayerList());
+
         this.startingPlayers = this.userList.length;
         
         this.prepTurn();
