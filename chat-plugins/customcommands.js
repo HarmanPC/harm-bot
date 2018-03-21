@@ -47,7 +47,13 @@ exports.commands = {
    comlist: function(target, room, user) {
         if (!user.hasBotRank("%")) return false;
         if (room) return user.sendTo(null, "Please use this command in my PMs only");
-        let targetRoom = target;
+        let targetRoom;
+        if (target.startsWith('groupchat')) {
+            targetRoom = target;
+        }
+        else {
+            targetRoom = toId(target);
+        }
         if (!Db("customcommands").get(targetRoom, null)) return this.send("No custom commands have been set yet.");
         let CC = Db("customcommands").get(targetRoom, {});
         let hastebin = "Custom Commmands for room: " + targetRoom + "\n\n" +
