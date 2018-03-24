@@ -29,8 +29,7 @@ if (!Monitor.statistics) {
             logStat(room.id, userid);
         }
     });
-    
-    require("../skype/index"); // init skype component
+
 }
 
 let db = Monitor.statistics.database;
