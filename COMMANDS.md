@@ -1,5 +1,5 @@
 # Debate commands
-`.debate [casual/teams], [Time per round / Sets the default time], [Topic / Sets the random topic]` - Starts a debate in casual or teams mode.
+`.debate [teams], [Time per round / Sets the default time], [Topic / Sets the random topic]` - Starts a debate in casual or teams mode.
 
 `.debate 1v1, [Player1 vs Player2], [Time per round / Sets the default time], [Topic / Sets the random topic]` -  Starts a debate in 1v1 mode.
 
@@ -44,7 +44,7 @@
 # Leaderboard 
 `.leaderboard givepoints [user], [amount]` - Gives user leaderboard points.
 
-`.leaderboard takepoints [user], [amount]` - Takes user's leaderboard points.
+`.leaderboard removepoints/takepoints [user], [amount]` - Takes user's leaderboard points.
 
 `.leaderboard set [game], [points]` - Sets how much points should a game give.
 
