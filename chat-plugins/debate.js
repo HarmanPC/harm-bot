@@ -12,12 +12,13 @@ class DebateGame extends Rooms.botGame {
         
         this.gameId = "debate";
         this.gameName = "Debate";
-        
+
         this.answerCommand = "special";
         this.allowJoins = true;
-        
+        this.pl;
+
         this.state = "signups";
-        
+
         this.playerObject = DebateGamePlayer;
 		this.args = arg.split(',');
 		this.type = this.args[0];
@@ -57,7 +58,7 @@ class DebateGame extends Rooms.botGame {
 	this.allowJoins = false;
 	if (this.args[0].toLowerCase() == 'casual') this.allowJoins = true;
         debatelog('Debate started. (' + this.type + ')');
-        debatelog(this.postPlayerList());
+        debatelog(`Players (${this.userList.length}): ${this.pl.join(", ")}`);
 
         this.startingPlayers = this.userList.length;
         
@@ -65,9 +66,9 @@ class DebateGame extends Rooms.botGame {
     }
     
     postPlayerList() {
-        let pl = this.userList.sort().map(u => this.users[u].name);
+        this.pl = this.userList.sort().map(u => this.users[u].name);
         
-        this.sendRoom(`Players (${this.userList.length}): ${pl.join(", ")}`);
+        this.sendRoom(`Players (${this.userList.length}): ${this.pl.join(", ")}`);
     }
     
     prepTurn() {
