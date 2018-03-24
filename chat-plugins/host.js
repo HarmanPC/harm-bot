@@ -8,11 +8,8 @@ class hostGame extends Rooms.botGame {
         this.gameId = "host";
         this.gameName = 'Host';
         this.official = false;
-        
-        let targets = target.split(',');
-        if (toId(targets[1]) == 'official') this.official = true;
 
-        this.hostid = toId(targets[0]);
+        this.hostid = toId(target);
 
         this.answerCommand = "special";
         this.state = "signups";
@@ -56,11 +53,18 @@ let millisToTime = function(millis){
 exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
-        if (!room.users.has(toId(target))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
+        target = target.split(',');
+        if (!room.users.has(toId(target[0]))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') return this.room.send(null, Users.get(room.game.hostid).name + ' is hosting.');
-        if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
+        if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')')
+        if (toId(target[1]) === 'official') {
+           room.game = new hostGame(room, target[0]);
+           officiallog(Users.get(target).name + " hosted official.");
+           room.game.official = true;
+           return;
+        }
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`); 
-        room.game = new hostGame(room, target);
+        room.game = new hostGame(room, target[0]);
         hostlog(Users.get(target).name + " hosted.");
     },
     subhost: function (target, room, user) {

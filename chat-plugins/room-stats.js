@@ -186,26 +186,14 @@ exports.commands = {
         this.send("You have disabled aggregate user statistic logging for '" + room.id + "'.");
     },
     
-    requestkey: function (target, room, user) {
-        let targetRoom = Rooms.rooms.has(toId(target)) ? Rooms.get(target) : null;
-        room = targetRoom || room;
-        
-        if (!room) return user.sendTo("Invalid room.");
-        
-        if (!user.hasRank(room, "#")) return this.send("Access denied.");
-        
-        let key = (Math.floor(Math.random() * 0xFFFFFFFFFFFFF) + 0x1000000000000).toString(16).toUpperCase();
-        db("auth-keys").set([room.id, "key"], key);
-        
-        user.sendTo("Your authentication key pair is: " + key + ".  Use ``+authenticate " + room.id + ", " + key + "`` on skype to complete the pairing sequence.");
-    },
-    
     userstats: function (target, room, user) {
         if (!room) {
-            [room, target] = target.split(",").map(p => p.trim());
-            if (!Rooms.rooms.has(toId(room))) return this.send("Invalid room.");
-            
-            room = Rooms.get(room);
+            [target, room] = target.split(",").map(p => p.trim());
+            if (!room) return this.send('Please specify a room.');
+            if  (!room.startsWith('groupchat')) {
+                room = toId(room);
+            }
+            if (!Rooms.rooms.has(room)) return this.send('I am not in the room you specified. (' + room +')');
         }
         
         if (!user.hasRank(room, "%")) return this.send("Access denied.");
@@ -231,16 +219,18 @@ exports.commands = {
     },
     
     usertimezone: function (target, room, user) {
-        if (!room) {
-            [room, target] = target.split(",").map(p => p.trim());
-            if (!Rooms.rooms.has(toId(room))) return this.send("Invalid room.");
-            
-            room = Rooms.get(room);
+       if (!room) {
+            [target, room] = target.split(",").map(p => p.trim());
+            if (!room) return this.send('Please specify a room.');
+            if  (!room.startsWith('groupchat')) {
+                room = toId(room);
+            }
+            if (!Rooms.rooms.has(room)) return this.send('I am not in the room you specified. (' + room +')');
         }
         
         if (!user.hasRank(room, "%")) return this.send("Access denied.");
         
-        if (!target) return this.parse("/help usertimezone");
+        if (!target) return this.send(".usertimezone [user], [room]");
         
         runSearch("timezone", room.id, toId(target)).then(data => {
             Graph(data, {
@@ -263,19 +253,21 @@ exports.commands = {
     roomstats: function (target, room, user) {
         if (!room) {
             [room, target] = target.split(",").map(p => p.trim());
-            if (!Rooms.rooms.has(toId(room))) return this.send("Invalid room.");
-            
-            room = Rooms.get(room);
+            if (!room) return this.send('Please specify a room.');
+            if  (!room.startsWith('groupchat')) {
+                room = toId(room);
+            }
+            if (!Rooms.rooms.has(room)) return this.send('I am not in the room you specified. (' + room +')');
         }
-        
-        if (!user.hasRank(room, "%")) return this.send("Access denied.");
+
+        if (!user.hasBotRank("%")) return this.send("Access denied.");
         
         runSearch("roomstats", room.id, target || null).then(data => {
             Graph(data, {
                 maxBars: 40,
                 title: "Room statistics for '" + room.id + "'" + (target ? " on " + target : ""),
                 sort: "values",
-                showPlacement: true,
+                showPlacement: true
             }).then(graph => {
                 Tools.uploadToHastebin(graph, link => {
                     user.sendTo(link);
@@ -288,10 +280,7 @@ exports.commands = {
             user.sendTo("SEARCH ERROR: " + err);
             console.log(err.stack);
         });
-    },
-    statshelp: function (target, room, user) {
-        this.send("Stats guide: http://pastebin.com/iZCBbynu");
-    },
+    }
 };
 /*globals Tools*/
 /*globals Rooms*/
