@@ -76,14 +76,14 @@ exports.commands = {
         room.game.destroy();
         this.room.send(null, "The debate has been ended.");
     },
-    win: function (target, room, user){
+    /*win: function (target, room, user){
         if (!room.game || room.game.gameId !== 'host' || !room || !user.hasBotRank('host')) return false;
         let targets = target.split(',');
         this.room.send(null, `${targets.length > 1 ? 'The winners are ' + targets.join(', ') : 'The winner is ' + Users.get(targets[0]).name}! Thanks for hosting.`);
         hostlog(`${targets.length > 1 ? 'The winners were ' + targets.join(', ') : 'The winner was ' + Users.get(targets[0]).name}, in ${Users.get(room.game.hostid).name}'s host.`);
         room.game.onEnd();
         this.parse(`/promote ${user.userid}, deauth`);
-    },
+    },*/
     done: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== 'host' || !user.hasBotRank('host')) return false;
         hostlog(Users.get(room.game.hostid).name + "'s host ended.");

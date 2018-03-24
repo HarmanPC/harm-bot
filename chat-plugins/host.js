@@ -81,7 +81,7 @@ exports.commands = {
         target = target.split(',');
         if (target.length == 1) {
             this.room.send(null,`/wall Participation points awarded to ${target[0]}.`);
-            Leaderboard.onWin('t', this.room, target[0], 4).write();
+            Leaderboard.onWin('t', this.room, toId(target[0]), 4).write();
             officiallog(`Participation points awarded to ${target[0]}.`);
         }
         else if (target.length > 1) {
@@ -92,13 +92,14 @@ exports.commands = {
             officiallog(`Participation points awarded to ${target.join(',')}.`);
         }
     },
-    officialwin: function (target, room, user) {
+    win: function (target, room, user) {
         if (!user.hasBotRank('+') || !room || !room.game || !target) return false;
-        if (!room.game.official) return this.room.send(null,'This host isn\'t official.');
+        //if (!room.game.official) return this.room.send(null,'This host isn\'t official.');
         target = target.split(',');
         if (target.length < 2) {
             this.room.send(null,`/wall The winner is ${target[0]}! Thanks for hosting.`);
             Leaderboard.onWin('t', this.room, toId(target[0]), 10).write();
+            officiallog('The official winner was ' + Users.get(target[0]).name + '.');
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
@@ -106,10 +107,6 @@ exports.commands = {
             }
             this.room.send(null, '/wall The winners are ' + target.join(', ') + '! Thanks for hosting.');
             officiallog('The official winners were ' + target.join(', ') + '.');
-        }
-        else {
-            this.room.send(null, '/wall The winner is ' + target[0] + '! Thanks for hosting.');
-            officiallog('The official winner was ' + target[0] + '.');
         }
         room.game.onEnd();
     },
@@ -120,6 +117,12 @@ exports.commands = {
     this.room.send(null,`/wall MVP points awarded to ${Users.get(winner).name}!`);
     officiallog(`MVP points awarded to ${Users.get(winner).name}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
+    },
+    hostpoints: function (target, room, user) {
+        if (!user.hasBotRank('+') || !target) return false;
+        this.room.send(null,`/wall Host points were awarded to ${Users.get(target).name}.`);
+        Leaderboard.onWin('t', this.room, toId(target), 6).write();
+        officiallog('The host was' + Users.get(target).name + '.');
     },
     next: function (target, user, room) {
 		this.can('debate');
