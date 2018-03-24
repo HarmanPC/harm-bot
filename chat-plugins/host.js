@@ -56,7 +56,7 @@ exports.commands = {
         target = target.split(',');
         if (!room.users.has(toId(target[0]))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') return this.room.send(null, Users.get(room.game.hostid).name + ' is hosting.');
-        if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')')
+        if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
         if (toId(target[1]) === 'official') {
            room.game = new hostGame(room, target[0]);
            officiallog(Users.get(target).name + " hosted official.");
@@ -65,7 +65,7 @@ exports.commands = {
         }
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`); 
         room.game = new hostGame(room, target[0]);
-        hostlog(Users.get(target).name + " hosted.");
+        hostlog(Users.get(target[0]).name + " hosted.");
     },
     subhost: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== 'host' || !target || !user.hasBotRank('+')) return false;
@@ -76,7 +76,7 @@ exports.commands = {
         room.game.hostid = toId(target);
     },
     parts:'participations',
-    participaions: function (target, room, user) {
+    participations: function (target, room, user) {
         if (!user.hasBotRank('+') || !target) return false;
         target = target.split(',');
         if (target.length == 1) {
