@@ -257,7 +257,7 @@ global.officiallog = function(logMessage) {
     if (!logMessage) return false;
     fs.appendFile('config/officiallogs.txt', `[${getEST()}] ${logMessage}\n\n`);
 };
-let connect = function(retry) {
+global.connect = function(retry) {
     if (retry) {
         log("info", "retrying...");
     }

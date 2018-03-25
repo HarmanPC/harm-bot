@@ -162,7 +162,7 @@ exports.commands = {
     kill: function (target, room, user) {
         if (!user.isDev()) return false;
         console.log('Killed by ' + user.name.blue);
-        process.exit();
+        process.exit(-1);
     },
     warn: function (target, room, user) {
         if (!user.hasRank('%') || !room) return false;

@@ -186,23 +186,18 @@ exports.commands = {
     },
     
     userstats: function (target, room, user) {
-        if (!room) {
-            [target, room] = target.split(",").map(p => p.trim());
-            if (!room) return this.send('Please specify a room.');
-            if  (!room.startsWith('groupchat')) {
-                room = toId(room);
-            }
-            if (!Rooms.rooms.has(room)) return this.send('I am not in the room you specified. (' + room +')');
+        if (!user.hasBotRank('%')) return false;
+        target = target.split(',');
+        const theRoom = target[0];
+        const theUser = target[1];
+        if (!theRoom.startsWith('groupchat')) {
+            theRoom = toId(theRoom);
         }
-        
-        if (!user.hasRank(room, "%")) return this.send("Access denied.");
-        
-        if (!target) return this.parse("/help userstats");
         
         runSearch("userstats", room.id, toId(target)).then(data => {
             Graph(data, {
                 maxBars: 40,
-                title: "User statistics for '" + toId(target) + "' in " + room.name,
+                title: "User statistics for '" + Users.get(theUser).name + "' in " + theRoom,
             }).then(graph => {
                 Tools.uploadToHastebin(graph, link => {
                     user.sendTo(link);
@@ -218,23 +213,18 @@ exports.commands = {
     },
     
     usertimezone: function (target, room, user) {
-       if (!room) {
-            [target, room] = target.split(",").map(p => p.trim());
-            if (!room) return this.send('Please specify a room.');
-            if  (!room.startsWith('groupchat')) {
-                room = toId(room);
-            }
-            if (!Rooms.rooms.has(room)) return this.send('I am not in the room you specified. (' + room +')');
+       if (!user.hasBotRank('%')) return false;
+        target = target.split(',');
+        const theRoom = target[0];
+        const theUser = target[1];
+        if (!theRoom.startsWith('groupchat')) {
+            theRoom = toId(theRoom);
         }
-        
-        if (!user.hasRank(room, "%")) return this.send("Access denied.");
-        
-        if (!target) return this.send(".usertimezone [user], [room]");
-        
-        runSearch("timezone", room.id, toId(target)).then(data => {
+
+        runSearch("timezone", theRoom, theUser).then(data => {
             Graph(data, {
                 maxBars: 40,
-                title: "Timezone statistics for '" + toId(target) + "' in " + room.name,
+                title: "Timezone statistics for '" + Users.get(theUser).name + "' in " + theRoom,
             }).then(graph => {
                 Tools.uploadToHastebin(graph, link => {
                     user.sendTo(link);
@@ -250,21 +240,18 @@ exports.commands = {
     },
     
     roomstats: function (target, room, user) {
-        if (!room) {
-            [room, target] = target.split(",").map(p => p.trim());
-            if (!room) return this.send('Please specify a room.');
-            if  (!room.startsWith('groupchat')) {
-                room = toId(room);
-            }
-            if (!Rooms.rooms.has(room)) return this.send('I am not in the room you specified. (' + room +')');
+        if (!user.hasBotRank('%')) return false;
+        target = target.split(',');
+        const theRoom = target[0];
+        const stuff = target[1];
+        if (!theRoom.startsWith('groupchat')) {
+            theRoom = toId(theRoom);
         }
 
-        if (!user.hasBotRank("%")) return this.send("Access denied.");
-        
-        runSearch("roomstats", room.id, target || null).then(data => {
+        runSearch("roomstats", theRoom, stuff || null).then(data => {
             Graph(data, {
                 maxBars: 40,
-                title: "Room statistics for '" + room.id + "'" + (target ? " on " + target : ""),
+                title: "Room statistics for '" + theRoom + "'" + (stuff ? " on " + stuff : ""),
                 sort: "values",
                 showPlacement: true
             }).then(graph => {
@@ -285,4 +272,5 @@ exports.commands = {
 /*globals Rooms*/
 /*globals toId*/
 /*globals Events*/
+/*globals Users*/
 /*globals Monitor*/
