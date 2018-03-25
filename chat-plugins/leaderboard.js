@@ -42,11 +42,11 @@ class MainLeaderboard extends LEADERBOARD {
 global.Leaderboard = new MainLeaderboard(FILE_DIRECTORY);
 
 exports.commands = {
-    
+
     "lb": "leaderboard",
     leaderboard: function (target, room, user) {
         if (!room) return;
-        
+
         let [cmd, ...arg] = target.split(" ");
         cmd = toId(cmd);
         arg = arg.join(" ");
@@ -54,41 +54,42 @@ exports.commands = {
         switch(cmd) {
             case "set":
                 if (!this.can("managegames")) return false;
-                
+
                 let [key, value] = arg.split(",").map(p => p.trim());
                 if (!key || !value) return this.send("Please include a game ID and a point value.");
-                
+
                 let error = Leaderboard.onConfig(room, key, value);
                 if (error && typeof error === "string") return this.send("ERROR: " + error);
-                
+
                 Leaderboard.write();
                 this.send(`Game '${key}' will now yield a base point reward of ${value}.`);
                 break;
             case "takepoints":
-            case "givepoints": 
+            case "removepoints":
+            case "givepoints":
                 if (!this.can("debate")) return false;
-                
+
                 let [userid, points] = arg.split(",");
                 userid = toId(userid);
                 points = parseInt(points);
-                
+
                 if (!userid || !points) return this.send("Please include the user and the points to be given/taken.");
-                if (cmd === "takepoints") points = -points;
-                
+                if (cmd === "takepoints" || cmd === "removepoints") points = -points;
+
                 Leaderboard.givePoints(room, userid, points).write();
                 this.send(`'${userid}' has ${points > 0 ? "received" : "lost"} ${Math.abs(points)} points.`);
                 break;
             case "reset":
                 if (!this.can("managegames")) return false;
-                
-                Leaderboard.data[room.id] = {}
+
+                Leaderboard.data[room.id] = {};
                 Leaderboard.write();
-                
+
                 this.send("Leaderboard has been reset.");
                 break;
             case "settings": 
                 if (!this.can("games")) return false;
-                
+
                 let buffer = Object.keys(Leaderboard.settings[room.id] || {})
                     .map(s => `'${s}' -> ${Leaderboard.getWin(room, s)}`);
                 this.send(buffer.join(", "));
@@ -96,7 +97,7 @@ exports.commands = {
             case "rank":
                 this.can("broadcast");
                 let targetId = toId(arg) || user.userid;
-                
+
                 Leaderboard.visualiseLadder(room, targetId).then(rank => this.send(rank));
                 break;
             case "ladder":
@@ -109,3 +110,8 @@ exports.commands = {
         }
     },
 };
+/*globals Leaderboard*/
+/*globals Tools*/
+/*globals toId*/
+/*globals Monitor*/
+/*globals Config*/
