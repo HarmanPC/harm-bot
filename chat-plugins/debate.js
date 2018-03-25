@@ -3,7 +3,7 @@
 const Debate_FILE = "config/debate.json";
 
 exports.game = "debate";
-const DebateManger = require ('../debate-manager.js');
+const DebateManger = require ('../manager.js');
 const DebateFile = new DebateManger(Debate_FILE);
 
 class DebateGame extends Rooms.botGame {
