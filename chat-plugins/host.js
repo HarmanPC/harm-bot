@@ -100,6 +100,7 @@ exports.commands = {
             this.room.send(null,`/wall The winner is ${target[0]}! Thanks for hosting.`);
             Leaderboard.onWin('t', this.room, toId(target[0]), 10).write();
             officiallog('The official winner was ' + Users.get(target[0]).name + '.');
+            hostlog('The official winner was ' + Users.get(target[0]).name + '.');
         }
         else if (target.length > 1) {
             for (let i=0; i<=target.length - 1; i++) {
@@ -107,6 +108,7 @@ exports.commands = {
             }
             this.room.send(null, '/wall The winners are ' + target.join(', ') + '! Thanks for hosting.');
             officiallog('The official winners were ' + target.join(', ') + '.');
+            hostlog('The official winners were ' + target.join(', ') + '.');
         }
         room.game.onEnd();
     },
@@ -122,7 +124,7 @@ exports.commands = {
         if (!user.hasBotRank('+') || !target) return false;
         this.room.send(null,`/wall Host points were awarded to ${Users.get(target).name}.`);
         Leaderboard.onWin('t', this.room, toId(target), 6).write();
-        officiallog('The host was' + Users.get(target).name + '.');
+        officiallog('The host was ' + Users.get(target).name + '.');
     },
     next: function (target, user, room) {
 		this.can('debate');
