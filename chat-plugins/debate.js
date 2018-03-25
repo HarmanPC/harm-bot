@@ -232,6 +232,7 @@ exports.commands = {
     debateqs:'debatequestions',
     debatequestions: function (target, room, user) {
         if (!user.hasBotRank("+")) return false;
+        if (DebateFile.isEmpty()) return this.room.send(null, "There are no questions.");
         let questions = DebateFile.allQuestions();
         
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
