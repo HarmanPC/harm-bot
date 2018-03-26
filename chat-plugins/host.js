@@ -85,7 +85,7 @@ exports.commands = {
     topic: function (target, room, user) {
         if (!user.hasBotRank('host') || !room.game || !room.game.gameId === "host" ) return false;
         if (!room.game.topic) return this.room.send(null, 'There is no topic.');
-        this.room.send(null, 'Topic is: ' + room.game.topic);
+        this.room.send(null, 'DebateInfo:Topic is: ' + room.game.topic);
     },
     parts:'participations',
     participations: function (target, room, user) {
