@@ -238,8 +238,8 @@ exports.commands = {
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
             link => this.room.send(null, `Debate questions(${questions.length}): ${link}`));
     },
-	question:'topic',
-	topic: function (target, room, user) {
+	randquestion:'topic',
+	randtopic: function (target, room, user) {
 		if (!user.hasBotRank('host')) return false;
 		let question = DebateFile.getQuestion();
 		this.room.send(null, question.question.trim() + "?");

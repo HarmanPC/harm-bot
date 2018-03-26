@@ -10,10 +10,12 @@ class hostGame extends Rooms.botGame {
         this.official = false;
 
         this.hostid = toId(target);
+        this.pl;
 
         this.answerCommand = "special";
         this.state = "signups";
         this.allowJoins = true;
+        this.topic = '';
 
         this.sendRoom(`Debateinfo! ${Users.get(this.hostid).name} is hosting. Do \`\`.join\`\` to join.`);
 
@@ -28,9 +30,9 @@ class hostGame extends Rooms.botGame {
         this.postPlayerList();
     }
     postPlayerList() {
-        let pl = this.userList.sort().map(u => this.users[u].name);
+        this.pl = this.userList.sort().map(u => this.users[u].name);
 
-        this.sendRoom(`Players (${this.userList.length}): ${pl.join(", ")}`);
+        this.sendRoom(`Players (${this.userList.length}): ${this.pl.join(", ")}`);
     }
     onEnd() {
         this.state = "ended";
@@ -74,6 +76,16 @@ exports.commands = {
         this.room.send(null, Users.get(target).name + ' has been subhosted.');
         hostlog(Users.get(target).name + " subhosted " + Users.get(room.game.hostid).name + "'s host.");
         room.game.hostid = toId(target);
+    },
+    settopic: function (target, room, user) {
+        if (!user.hasBotRank('host') || !room.game || !room.game.gameId === "host" || !target) return false;
+        room.game.topic = target;
+        this.room.send(null, 'The topic has been set to: ' + target);
+    },
+    topic: function (target, room, user) {
+        if (!user.hasBotRank('host') || !room.game || !room.game.gameId === "host" ) return false;
+        if (!room.game.topic) return this.room.send(null, 'There is no topic.');
+        this.room.send(null, 'Topic is: ' + room.game.topic);
     },
     parts:'participations',
     participations: function (target, room, user) {

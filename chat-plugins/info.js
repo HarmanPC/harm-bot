@@ -90,7 +90,26 @@ exports.commands = {
     checkmail: function(target, room, user) {
         let mail = receiveMail(user);
         if (!mail) return user.sendTo("You have no mail!");
-    }
+    },
+    suggest: 'submit',
+    submit: function (target, room, user) {
+        fs.writeFile('config/suggestions.txt', 'Suggested by ' + user.name + ': ' + target + '\n\n');
+        user.sendTo('Your suggestion: "' + target + '" has been submitted.');
+    },
+    suggestions: function (target, room, user) {
+        if (!user.hasBotRank('%')) return false;
+		if (room) return user.sendTo('Please use this command in my PMs only.');
+		if (!fs.existsSync('./config/suggestions.txt')) return user.sendTo('The suggestions are empty.');
+		fs.readFile("./config/suggestions.txt", "utf-8", (err, data) => { 
+			if (!err) {
+				Tools.uploadToHastebin(data, link => user.sendTo("Suggestions: " + link));
+			}
+			else {
+				user.sendTo('Error getting suggestions.');
+				console.log(err);
+			}
+		});
+	}
 };
 /*globals Monitor*/
 /*globals Tools*/
@@ -101,3 +120,4 @@ exports.commands = {
 /*globals Db*/
 /*globals Plugins*/
 /*globals log*/
+/*globals fs*/
