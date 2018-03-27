@@ -56,7 +56,7 @@ exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
         target = target.split(',');
-        if (!room.users.has(toId(target[0]))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
+        if (!room.users.has(toId(target[0]))) return this.room.send(null, 'The user "' + Users.get(target).name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') {
             this.room.send(null, Users.get(target[0]).name + ' was added to hostqueue.');
             queue.push(target[0]);
@@ -79,7 +79,7 @@ exports.commands = {
     dehost: function (target, room, user) {
         if (!user.hasBotRank('+') || !room) return false;
         if (!(queue.indexOf(target) > -1)) return this.room.send(null, Users.get(target).name + ' is not in the hostqueue.');
-        queue.pop(target);
+        queue.splice(target, 1);
         this.room.send(null, Users.get(target).name + ' has been removed from hostqueue.');
     },
     subhost: function (target, room, user) {
@@ -98,9 +98,7 @@ exports.commands = {
             msg += 'Hostqueue: __' + Users.get(queue[0]).name + '__';
         }
         else {
-            msg += 'Hostqueue: ' + queue.join(', ').map(str => {
-                '__' + Users.get(str).name + '__';
-            });
+            msg += 'Hostqueue: ' + queue.join(', ');
         }
         this.room.send(null, msg);
     },
@@ -127,12 +125,8 @@ exports.commands = {
             for (let i = 0; i <= target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
             }
-            this.room.send(null,'/wall Participation points awarded to ' + target.join(', ').map(str => {
-                Users.get(str).name;
-                }) + '.');
-            officiallog('Participation points awarded to ' +  target.join(', ').map(str => {
-                Users.get(str).name;
-                }) + '.');
+            this.room.send(null,'/wall Participation points awarded to ' + target.join(', ') + '.');
+            officiallog('Participation points awarded to ' +  target.join(', ') + '.');
         }
     },
     win: function (target, room, user) {
@@ -150,12 +144,8 @@ exports.commands = {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
             }
             this.room.send(null, '/wall The winners are ' + target.join(', ') + '! Thanks for hosting.');
-            officiallog('The official winners were ' + target.join(', ').map(str => {
-                Users.get(str).name;
-                }) + '.');
-            hostlog('The official winners were ' + target.join(', ').map(str => {
-                Users.get(str).name;
-                }) + '.');
+            officiallog('The official winners were ' + target.join(', ') + '.');
+            hostlog('The official winners were ' + target.join(', ') + '.');
         }
         room.game.onEnd();
     },
