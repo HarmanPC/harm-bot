@@ -114,7 +114,7 @@ exports.commands = {
         target = target.split(',');
         if (Monitor.isBanned(this.targetUser.userid || this.targetUser) && ["lock", "ban"].includes(Monitor.isBanned(this.targetUser.userid || this.targetUser))) return this.send("The user is already locked/banned.");
         Monitor.mute(this.targetUser.userid || this.targetUser, target[1]);
-        this.send((this.targetUser.name || this.targetUser) + " was muted from using the bot for " + target[1] ? target[1] : "7" +" minutes by " + user.name + ".");
+        this.send((this.targetUser.name || this.targetUser) + " was muted from using the bot for " + (target[1] ? target[1] : "7") + " minutes by " + user.name + ".");
     },
     lock: function(target, room, user) {
         if (!target || !this.can("lock")) return false;
@@ -142,7 +142,7 @@ exports.commands = {
         Monitor.release(this.targetUser.userid || this.targetUser);
         this.send((this.targetUser.name || this.targetUser) + " was unbanned by " + user.name + ".");
     },
-    
+
     updatedata: function(target, room, user) {
         if (!this.can("dev") || room) return false;
         if (Monitor.dataUpdateLock) return this.send("Please wait until a previous data update is complete.");
