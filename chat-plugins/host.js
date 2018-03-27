@@ -17,7 +17,7 @@ class hostGame extends Rooms.botGame {
         this.allowJoins = true;
         this.topic = '';
 
-        this.sendRoom(`${Users.get(this.hostid).name} is hosting. Do \`\`.join\`\` to join.`);
+        this.sendRoom(`Debateinfo! ${Users.get(this.hostid).name} is hosting. Do \`\`.join\`\` to join.`);
 
     }
     onStart(user) {
@@ -67,7 +67,7 @@ exports.commands = {
            room.game = new hostGame(room, target[0]);
            officiallog(Users.get(target).name + " hosted official.");
            room.game.official = true;
-           return;
+           return
         }
         if (queue.indexOf(target[0]) > -1) {
             queue.pop(target[0]);
@@ -98,7 +98,7 @@ exports.commands = {
             msg += 'Hostqueue: __' + Users.get(queue[0]).name + '__';
         }
         else {
-            msg += 'Hostqueue: ' + queue.join(', ');
+            msg += 'Hostqueue: ' + queue.map(str => '__' + Users.get(str).name + '__').join(', ');
         }
         this.room.send(null, msg);
     },
