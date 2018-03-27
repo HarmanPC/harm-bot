@@ -17,7 +17,7 @@ class hostGame extends Rooms.botGame {
         this.allowJoins = true;
         this.topic = '';
 
-        this.sendRoom(`Debateinfo! ${Users.get(this.hostid).name} is hosting. Do \`\`.join\`\` to join.`);
+        this.sendRoom(`${Users.get(this.hostid).name} is hosting. Do \`\`.join\`\` to join.`);
 
     }
     onStart(user) {
@@ -57,17 +57,30 @@ exports.commands = {
         if (!room || !target || !user.hasBotRank('+')) return false;
         target = target.split(',');
         if (!room.users.has(toId(target[0]))) return this.room.send(null,'The user "' + Users.get(target).name + '" is not in the room.');
-        if (room.game && room.game.gameId == 'host') return this.room.send(null, Users.get(room.game.hostid).name + ' is hosting.');
-        if (room.game && room.game.gameId == 'debate') return this.room.send(null,'There is already a debate going on in this room! (' + room.game.type + ')');
+        if (room.game && room.game.gameId == 'host') {
+            this.room.send(null, Users.get(target[0]).name + ' was added to hostqueue.');
+            queue.push(target[0]);
+            return;
+        }
+        if (room.game && room.game.gameId == 'debate') return this.room.send(null, 'There is already a debate going on in this room! (' + room.game.type + ')');
         if (toId(target[1]) === 'official') {
            room.game = new hostGame(room, target[0]);
            officiallog(Users.get(target).name + " hosted official.");
            room.game.official = true;
            return;
         }
-        this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`); 
+        if (queue.indexOf(target[0]) > -1) {
+            queue.pop(target[0]);
+        }
+        this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target[0] + ', host'}`); 
         room.game = new hostGame(room, target[0]);
         hostlog(Users.get(target[0]).name + " hosted.");
+    },
+    dehost: function (target, room, user) {
+        if (!user.hasBotRank('+') || !room) return false;
+        if (!queue.indexOf(target) > -1) return this.room.send(null, Users.get(target).name + ' is not in the hostqueue.');
+        queue.pop(target);
+        this.room.send(null, Users.get(target).name + ' has been removed from hostqueue.');
     },
     subhost: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== 'host' || !target || !user.hasBotRank('+')) return false;
@@ -77,19 +90,27 @@ exports.commands = {
         hostlog(Users.get(target).name + " subhosted " + Users.get(room.game.hostid).name + "'s host.");
         room.game.hostid = toId(target);
     },
+    hostqueue: function (target, room, user) {
+        if (!room || !user.hasBotRank('+')) return false;
+        if (!queue.length) return this.room.send(null, 'Hostqueue is empty.');
+        let msg = 'Hostqueue: ' + queue.join(', ').map(str => {
+            '__' + Users.get(str).name + '__';
+        });
+        this.room.send(null, msg);
+    },
     settopic: function (target, room, user) {
-        if (!user.hasBotRank('host') || !room.game || !room.game.gameId === "host" || !target) return false;
+        if (!user.hasBotRank('host') || !room || !room.game || !room.game.gameId === "host" || !target) return false;
         room.game.topic = target;
         this.room.send(null, 'The topic has been set to: ' + target);
     },
     topic: function (target, room, user) {
-        if (!user.hasBotRank('host') || !room.game || !room.game.gameId === "host" ) return false;
+        if (!user.hasBotRank('host') || !room || !room.game || !room.game.gameId === "host" ) return false;
         if (!room.game.topic) return this.room.send(null, 'There is no topic.');
         this.room.send(null, 'Topic is: ' + room.game.topic);
     },
     parts:'participations',
     participations: function (target, room, user) {
-        if (!user.hasBotRank('+') || !target) return false;
+        if (!user.hasBotRank('+') || !room || !target) return false;
         target = target.split(',');
         if (target.length == 1) {
             this.room.send(null,`/wall Participation points awarded to ${target[0]}.`);
@@ -100,8 +121,12 @@ exports.commands = {
             for (let i = 0; i <= target.length - 1; i++) {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
             }
-            this.room.send(null,`/wall Participation points awarded to ${target.join(',')}.`);
-            officiallog(`Participation points awarded to ${target.join(',')}.`);
+            this.room.send(null,'/wall Participation points awarded to ' + target.join(', ').map(str => {
+                Users.get(str).name;
+                }) + '.');
+            officiallog('Participation points awarded to ' +  target.join(', ').map(str => {
+                Users.get(str).name;
+                }) + '.');
         }
     },
     win: function (target, room, user) {
@@ -119,21 +144,25 @@ exports.commands = {
                 Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
             }
             this.room.send(null, '/wall The winners are ' + target.join(', ') + '! Thanks for hosting.');
-            officiallog('The official winners were ' + target.join(', ') + '.');
-            hostlog('The official winners were ' + target.join(', ') + '.');
+            officiallog('The official winners were ' + target.join(', ').map(str => {
+                Users.get(str).name;
+                }) + '.');
+            hostlog('The official winners were ' + target.join(', ').map(str => {
+                Users.get(str).name;
+                }) + '.');
         }
         room.game.onEnd();
     },
     mvp:'mostvaluableplayer',
     mostvaluableplayer: function (target, room, user) {
-    if (!room ||  !user.hasBotRank('+')) return false;
+    if (!room ||  !user.hasBotRank('+') || !room) return false;
     let winner = toId(target);
     this.room.send(null,`/wall MVP points awarded to ${Users.get(winner).name}!`);
     officiallog(`MVP points awarded to ${Users.get(winner).name}!`);
     Leaderboard.onWin('t', this.room, winner, 4).write();
     },
     hostpoints: function (target, room, user) {
-        if (!user.hasBotRank('+') || !target) return false;
+        if (!user.hasBotRank('+') || !target || !room) return false;
         this.room.send(null,`/wall Host points were awarded to ${Users.get(target).name}.`);
         Leaderboard.onWin('t', this.room, toId(target), 6).write();
         officiallog('The host was ' + Users.get(target).name + '.');
@@ -193,3 +222,4 @@ exports.commands = {
 /*globals hostlog*/
 /*globals Tools*/
 /*globals fs*/
+/*globals queue*/

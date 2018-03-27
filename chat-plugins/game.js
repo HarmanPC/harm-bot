@@ -4,7 +4,7 @@ exports.commands = {
     'j': 'join',
     join: function (target, room, user) {
         if (!room || !room.game) return false;
-        if (room.game.userHost === user.userid) return user.sendTo('You can\'t join your own game..');
+        if (room.game.userHost === user.userid) return user.sendTo('You can\'t join your own game.');
         if (room.game.onJoin) room.game.onJoin(user);
     },
     leave: function (target, room, user) {
@@ -16,7 +16,7 @@ exports.commands = {
         if (!room || !room.game || !user.hasBotRank('host')) return false;
         if (room.game.state == 'signups') {
                 if (room.game.onLeave) room.game.onLeave(Users.get(target));
-                this.room.send(null, `${Users.get(target).name} is removed from playerlist`);
+                this.room.send(null, `${Users.get(target).name} is removed from playerlist.`);
         }
         else if (room.game.state == 'started') {
                 room.game.state = 'signups';
@@ -30,7 +30,7 @@ exports.commands = {
         if (!room || !room.game || !user.hasBotRank('host')) return false;
         if (room.game.state == 'signups') {
                 if (room.game.onJoin) room.game.onJoin(Users.get(target));
-                this.room.send(null, `${Users.get(target).name} is added in playerlist`);
+                this.room.send(null, `${Users.get(target).name} is added in playerlist.`);
         }
         else if (room.game.state == 'started') {
                 room.game.state = 'signups';

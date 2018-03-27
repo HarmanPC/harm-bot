@@ -194,8 +194,8 @@ exports.commands = {
     },
 	checkdebate: function (target, room, user){
 		if (!room || !user.hasBotRank('+')) return false;
-        if (room.game && room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, Users.get(room.game.hostid).name + " is hosting official Debate.");
-		if (room.game && room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, Users.get(room.game.hostid).name + " is hosting a Debate.");
+        if (room.game && room.game.gameId === 'host' && room.game.official == true) return this.room.send(null, Users.get(room.game.hostid).name + " is hosting official Debate." + room.game.topic ? " Topic: " + room.game.topic : "");
+		if (room.game && room.game.gameId === 'host' && room.game.official == false) return this.room.send(null, Users.get(room.game.hostid).name + " is hosting a Debate." + room.game.topic ? " Topic: " + room.game.topic : "");
 		if (room.game && room.game.gameId === 'debate') return this.room.send(null, `A scripted Debate is in progress. (${room.game.type})`);
 		this.room.send(null, `No Debate is going on right now.`);
 	},
@@ -212,7 +212,7 @@ exports.commands = {
         	this.send("Added! (__" + question + "__)"); 
         }
         else {
-        	this.room.send(null,"Added! (__" + question + "__)"); 
+        	this.room.send(null, "Added! (__" + question + "__)"); 
         }
     },
     delq:'deletequestion',
@@ -226,12 +226,12 @@ exports.commands = {
         	this.send("Deleted! (__" + question + "__)"); 
         }
         else {
-        	this.room.send(null,"Deleted! (__" + question + "__)"); 
+        	this.room.send(null, "Deleted! (__" + question + "__)"); 
         }
     },
     debateqs:'debatequestions',
     debatequestions: function (target, room, user) {
-        if (!user.hasBotRank("+")) return false;
+        if (!user.hasBotRank("+") || !room) return false;
         if (DebateFile.isEmpty()) return this.room.send(null, "There are no questions.");
         let questions = DebateFile.allQuestions();
         
@@ -240,7 +240,7 @@ exports.commands = {
     },
 	randquestion:'topic',
 	randtopic: function (target, room, user) {
-		if (!user.hasBotRank('host')) return false;
+		if (!user.hasBotRank('host') || !room) return false;
 		let question = DebateFile.getQuestion();
 		this.room.send(null, question.question.trim() + "?");
 	},

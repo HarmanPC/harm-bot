@@ -138,6 +138,8 @@ global.Commands = require("./commands.js").commands;
 global.Users = require("./users.js");
 global.Rooms = require("./rooms.js");
 
+global.queue = [];
+
 function loadChatPlugins() {
     let loaded = [];
     let failed = [];
