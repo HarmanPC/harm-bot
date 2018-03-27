@@ -93,9 +93,15 @@ exports.commands = {
     hostqueue: function (target, room, user) {
         if (!room || !user.hasBotRank('+')) return false;
         if (!queue.length) return this.room.send(null, 'Hostqueue is empty.');
-        let msg = 'Hostqueue: ' + queue.join(', ').map(str => {
-            '__' + Users.get(str).name + '__';
-        });
+        let msg;
+        if (queue.length == 1) {
+            msg += 'Hostqueue: __' + Users.get(queue).name + '__';
+        }
+        else { 
+            msg += 'Hostqueue: ' + queue.join(', ').map(str => {
+                '__' + Users.get(str).name + '__';
+            });
+        }
         this.room.send(null, msg);
     },
     settopic: function (target, room, user) {
