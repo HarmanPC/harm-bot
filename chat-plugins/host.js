@@ -78,7 +78,7 @@ exports.commands = {
     },
     dehost: function (target, room, user) {
         if (!user.hasBotRank('+') || !room) return false;
-        if (!queue.indexOf(target) > -1) return this.room.send(null, Users.get(target).name + ' is not in the hostqueue.');
+        if (!(queue.indexOf(target) > -1)) return this.room.send(null, Users.get(target).name + ' is not in the hostqueue.');
         queue.pop(target);
         this.room.send(null, Users.get(target).name + ' has been removed from hostqueue.');
     },
@@ -93,11 +93,11 @@ exports.commands = {
     hostqueue: function (target, room, user) {
         if (!room || !user.hasBotRank('+')) return false;
         if (!queue.length) return this.room.send(null, 'Hostqueue is empty.');
-        let msg;
+        let msg = '';
         if (queue.length == 1) {
-            msg += 'Hostqueue: __' + Users.get(queue).name + '__';
+            msg += 'Hostqueue: __' + Users.get(queue[0]).name + '__';
         }
-        else { 
+        else {
             msg += 'Hostqueue: ' + queue.join(', ').map(str => {
                 '__' + Users.get(str).name + '__';
             });
