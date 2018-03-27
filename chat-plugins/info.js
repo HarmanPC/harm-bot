@@ -93,6 +93,7 @@ exports.commands = {
     },
     suggest: 'submit',
     submit: function (target, room, user) {
+        if (!room || !target) return false;
         fs.appendFile('config/suggestions.txt', 'Suggested by ' + user.name + ': ' + target + '\n\n');
         user.sendTo('Your suggestion: "' + target + '" has been submitted.');
     },
