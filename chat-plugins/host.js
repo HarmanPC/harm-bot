@@ -23,7 +23,7 @@ class hostGame extends Rooms.botGame {
     onStart(user) {
         if (this.state !== "signups") return false;
         hostlog(Users.get(this.hostid).name + "'s debate started.");
-        hostlog(this.postPlayerList());
+        hostlog('Players (' + this.pl.length + '): ' +  this.pl.join(', '));
         this.state = 'started';
         this.sendRoom(`Signups are now closed.`);
         this.startingPlayers = this.userList.length;
@@ -56,7 +56,7 @@ exports.commands = {
     host: function (target, room, user) {
         if (!room || !target || !user.hasBotRank('+')) return false;
         target = target.split(',');
-        if (!room.users.has(toId(target[0]))) return this.room.send(null, 'The user "' + Users.get(target).name + '" is not in the room.');
+        if (!room.users.has(toId(target[0]))) return this.room.send(null, 'The user "' + Users.get(target[0]).name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') {
             this.room.send(null, Users.get(target[0]).name + ' was added to hostqueue.');
             queue.push(target[0]);
@@ -67,7 +67,7 @@ exports.commands = {
            room.game = new hostGame(room, target[0]);
            officiallog(Users.get(target).name + " hosted official.");
            room.game.official = true;
-           return
+           return;
         }
         if (queue.indexOf(target[0]) > -1) {
             queue.pop(target[0]);
@@ -93,13 +93,7 @@ exports.commands = {
     hostqueue: function (target, room, user) {
         if (!room || !user.hasBotRank('+')) return false;
         if (!queue.length) return this.room.send(null, 'Hostqueue is empty.');
-        let msg = '';
-        if (queue.length == 1) {
-            msg += 'Hostqueue: __' + Users.get(queue[0]).name + '__';
-        }
-        else {
-            msg += 'Hostqueue: ' + queue.map(str => '__' + Users.get(str).name + '__').join(', ');
-        }
+        let msg = 'Hostqueue: ' + queue.map(str => '__' + Users.get(str).name + '__').join(', ');
         this.room.send(null, msg);
     },
     settopic: function (target, room, user) {

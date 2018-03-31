@@ -188,13 +188,13 @@ exports.commands = {
     userstats: function (target, room, user) {
         if (!user.hasBotRank('%')) return false;
         target = target.split(',');
-        const theRoom = target[0];
+        let theRoom = target[0];
         const theUser = target[1];
         if (!theRoom.startsWith('groupchat')) {
             theRoom = toId(theRoom);
         }
         
-        runSearch("userstats", room.id, toId(target)).then(data => {
+        runSearch("userstats", theRoom, toId(theUser)).then(data => {
             Graph(data, {
                 maxBars: 40,
                 title: "User statistics for '" + Users.get(theUser).name + "' in " + theRoom,
@@ -215,13 +215,13 @@ exports.commands = {
     usertimezone: function (target, room, user) {
        if (!user.hasBotRank('%')) return false;
         target = target.split(',');
-        const theRoom = target[0];
+        let theRoom = target[0];
         const theUser = target[1];
         if (!theRoom.startsWith('groupchat')) {
             theRoom = toId(theRoom);
         }
 
-        runSearch("timezone", theRoom, theUser).then(data => {
+        runSearch("timezone", theRoom, toId(theUser)).then(data => {
             Graph(data, {
                 maxBars: 40,
                 title: "Timezone statistics for '" + Users.get(theUser).name + "' in " + theRoom,
@@ -242,7 +242,7 @@ exports.commands = {
     roomstats: function (target, room, user) {
         if (!user.hasBotRank('%')) return false;
         target = target.split(',');
-        const theRoom = target[0];
+        let theRoom = target[0];
         const stuff = target[1];
         if (!theRoom.startsWith('groupchat')) {
             theRoom = toId(theRoom);

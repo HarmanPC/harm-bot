@@ -22,11 +22,6 @@ class DebateGame extends Rooms.botGame {
         this.playerObject = DebateGamePlayer;
 		this.args = arg.split(',');
 		this.type = this.args[0];
-		if (this.args[0].toLowerCase() !== '1v1' && this.args[0].toLowerCase() !== 'teams') {
-			this.sendRoom('Invalid mode.');
-			this.destroy();
-			return;
-		}
         if (this.args[0].toLowerCase() == "1v1") {
 			if (this.args[1].split("vs")[0].trim() == this.args[1].split("vs")[1].trim()) {
 				this.sendRoom('Both players are same.');
@@ -187,7 +182,6 @@ exports.commands = {
 	debate: function (target, room, user) {
         if (!room || !user.hasBotRank("+")) return false;
 		if (!target) return this.room.send(null, 'Usage: ``.debate [casual/teams/1v1], [Time per round / sets default if left blank], [Topic / sets random topic from .debateqs]``');
-        if (room.game && room.game.gameId !== 'host' && !room.game.type) return this.room.send(null, "There is already a Debate going on in this room!");
         if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a Debate going on in this room! (" + room.game.type + ")");
 		room.game = new DebateGame(room, target);
 		debatelog('Scripted debate started (' + room.game.type + ')');
