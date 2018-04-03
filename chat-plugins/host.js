@@ -124,8 +124,8 @@ exports.commands = {
             Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
         }
         this.room.send(null, '/wall The winner' + target.length < 2 ? ' is' : 's are ' + target.map(u => Users.get(u).name).join(', ') + '! Thanks for hosting.');
-        officiallog('The official winners were ' + target.join(', ') + '.');
-        hostlog('The official winners were ' + target.join(', ') + '.');
+        officiallog('The official winner' + target.length < 2 ? ' is ' : ' were ' + target.map(u => Users.get(u).name).join(', ') + '.');
+        hostlog('The official winner' + target.length < 2 ? 'is ' : ' were ' + target.map(u => Users.get(u).name).join(', ') + '.');
         room.game.onEnd();
     },
     mvp:'mostvaluableplayer',
