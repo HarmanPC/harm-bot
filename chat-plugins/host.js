@@ -23,7 +23,7 @@ class hostGame extends Rooms.botGame {
     onStart(user) {
         if (this.state !== "signups") return false;
         hostlog(Users.get(this.hostid).name + "'s debate started.");
-        hostlog('Players (' + this.pl.length + '): ' +  this.pl.join(', '));
+        hostlog('Players (' + this.startingPlayers + '): ' +  this.pl.join(', '));
         this.state = 'started';
         this.sendRoom(`Signups are now closed.`);
         this.startingPlayers = this.userList.length;
@@ -110,37 +110,22 @@ exports.commands = {
     participations: function (target, room, user) {
         if (!user.hasBotRank('+') || !room || !target) return false;
         target = target.split(',');
-        if (target.length == 1) {
-            this.room.send(null,`/wall Participation points awarded to ${target[0]}.`);
-            Leaderboard.onWin('t', this.room, toId(target[0]), 4).write();
-            officiallog(`Participation points awarded to ${target[0]}.`);
+        for (let i = 0; i <= target.length - 1; i++) {
+            Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
         }
-        else if (target.length > 1) {
-            for (let i = 0; i <= target.length - 1; i++) {
-                Leaderboard.onWin('t', this.room, toId(target[i]), 4).write();
-            }
-            this.room.send(null,'/wall Participation points awarded to ' + target.join(', ') + '.');
-            officiallog('Participation points awarded to ' +  target.join(', ') + '.');
-        }
+        this.room.send(null,'/wall Participation points awarded to ' + target.map(u => Users.get(u).name).join(', ') + '.');
+        officiallog('Participation points awarded to ' +  target.map(u => Users.get(u).name).join(', ') + '.');
     },
     win: function (target, room, user) {
         if (!user.hasBotRank('+') || !room || !room.game || !target) return false;
         //if (!room.game.official) return this.room.send(null,'This host isn\'t official.');
         target = target.split(',');
-        if (target.length < 2) {
-            this.room.send(null,`/wall The winner is ${target[0]}! Thanks for hosting.`);
-            Leaderboard.onWin('t', this.room, toId(target[0]), 10).write();
-            officiallog('The official winner was ' + Users.get(target[0]).name + '.');
-            hostlog('The official winner was ' + Users.get(target[0]).name + '.');
+        for (let i=0; i<=target.length - 1; i++) {
+            Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
         }
-        else if (target.length > 1) {
-            for (let i=0; i<=target.length - 1; i++) {
-                Leaderboard.onWin('t', this.room, toId(target[i]), 10).write();
-            }
-            this.room.send(null, '/wall The winners are ' + target.join(', ') + '! Thanks for hosting.');
-            officiallog('The official winners were ' + target.join(', ') + '.');
-            hostlog('The official winners were ' + target.join(', ') + '.');
-        }
+        this.room.send(null, '/wall The winner' + target.length < 2 ? ' is' : 's are ' + target.map(u => Users.get(u).name).join(', ') + '! Thanks for hosting.');
+        officiallog('The official winners were ' + target.join(', ') + '.');
+        hostlog('The official winners were ' + target.join(', ') + '.');
         room.game.onEnd();
     },
     mvp:'mostvaluableplayer',
