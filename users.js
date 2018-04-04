@@ -17,16 +17,16 @@ class User {
         this.globalRank = " ";
         this.isStaff = Config.ranks[this.botRank] >= 2 || this.isDev();
     }
-    
+
     getRank(roomid){
         return this.ranks.get(roomid) || " ";
     }
-    
+
     updateGlobalRank(rank) {
         this.globalRank = rank;
         this.isStaff = Config.ranks[this.botRank] >= 2 || Config.ranks[this.globalRank] >= 2 || this.isDev();
     }
-    
+
     update(room, name) {
         if (name.charAt(0) in Config.ranks) {
             this.ranks.set(room.id || toId(room, true), name.charAt(0));
@@ -35,21 +35,21 @@ class User {
         Plugins.mail.receive(this);
         Users.seen.set(this.userid, [Date.now(), room.name]);
     }
-    
+
     onLeave(room) {
         this.ranks.delete(room.id);
         Users.seen.set(this.userid, [Date.now(), room.name]);
     }
-    
+
     botPromote(rank) {
         this.botRank = rank;
         Db("ranks").set(this.userid, rank);
     }
-    
+
     sendTo(text) {
         return send("|/pm " + this.userid + ", " + text, this.userid, this.isDev());
     }
-    
+
     can(action, targetRoom, targetUser, details) {
         if (this.isDev()) return true;
         if (action === "promote") {
@@ -91,7 +91,7 @@ class User {
         if (!this.hasRank(targetRoom, commandRank)) return false;
         return true;
     }
-    
+
     hasRank(room, rank) {
         if(rank === "off" && !this.isDev()) return false;
         if(rank === "on") return true;
@@ -99,13 +99,13 @@ class User {
         if (((Config.ranks[roomRank] || 0) >= Config.ranks[rank]) || this.hasBotRank(rank)) return true;
         return false;
     }
-    
+
     hasBotRank(rank) {
         if(this.isDev()) return true;
         if ((Config.ranks[this.botRank] || 0) >= Config.ranks[rank]) return true;
         return false;
     }
-    
+
     isDev() {
         return developers.includes(this.userid);
     }
@@ -139,7 +139,6 @@ let renameUser = Users.rename = function(oldId, newName) {
     tarUser.globalRank = " ";
     tarUser.isStaff = Config.ranks[tarUser.botRank] >= 2;
 };
-
 
 module.exports = Users;
 /*globals Monitor*/
