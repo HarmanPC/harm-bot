@@ -1,4 +1,5 @@
-// this is where all the standard game commands are put
+// this is where all the standard game commands are pu
+var time = 0;
 'use strict';
 exports.commands = {
     'j': 'join',
@@ -93,9 +94,11 @@ exports.commands = {
     },
     hangman: function (target, room, user) {
 		if (!room || !user.hasBotRank('+')) return false;
+		if ((Date.now() - time) < 9000000) return this.room.send(null, '2:30 hours must have been passed for the last Hangman to start a new Hangman.');
         let poke = Tools.shuffle(Object.keys(Tools.Words))[0];
         this.room.send(null, `/hangman create ${poke}, ${Tools.Words[poke]}`);
         this.room.send(null, '/wall Use ``/guess`` to guess.');
+        time = Date.now();
     },
 };
 /*globals Tools*/

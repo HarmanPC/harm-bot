@@ -41,93 +41,15 @@ catch (e) {
     console.log("Dependencies are not installed!");
     return runNpm("install");
 }
+let connection = null;
+let sendQueue = [];
+let dequeuing = false;
+let lastSent = 0;
+// globals 
 
-global.fs = require("fs");
-global.toId = function(text, id) {
-    if (!text || typeof text !== "string") return "";
-    if (id) return text.toLowerCase().replace(/[^a-z0-9\-]/g, "");
-    return text.toLowerCase().replace(/[^a-z0-9]/g, "");
-};
-
-global.removeCommand = function(text) {
-    return text.replace(/^\//i, "//").replace(/^\!/i, " !").replace(/^[\>]{2,}/i, ">");
-};
-
-global.getEST = function(date) {
-    function isDst(tarDate) {
-        let datee = new Date(tarDate);
-        let Month = datee.getMonth() + 1;
-        let Day = datee.getDate() + 1;
-        let DayofWeek = datee.getDay();
-        if (Month > 11 || Month < 3) {
-            return false;
-        }
-        if (Month === 3) {
-            if (Day - DayofWeek > 7) {
-                return true;
-            }
-            return false;
-        }
-        if (Month === 11) {
-            if (Day - DayofWeek > 0) {
-                return true;
-            }
-            return false;
-        }
-        return true;
-    }
-    let d = (date ? date : Date.now()) + (new Date().getTimezoneOffset() * 60 * 1000) - (1000 * 60 * 60 * 5);
-    if (isDst(d)) d += 3600000;
-    return new Date(d).toLocaleString();
-};
-
-if (!fs.existsSync("./config/config.js")) {
-	console.log("config.js not found! - Creating with default settings...");
-	fs.writeFileSync("./config/config.js", fs.readFileSync('./config/config-example.js'));
-}
-
-global.Config = require("./config/config.js");
-if (!Config.info.server || !Config.info.serverid || !Config.info.port) {
-    log("error", "You need to fill out the config file!");
-}
-if (Config.defaultCharacter.length === 0) {
-    Config.defaultCharacter.push(";");
-}
-
-global.log = function(item, text) {
-    if (!Config.logging || (Config.logging !== true && (typeof Config.logging && !Config.logging.includes(item)))) return false;
-    let d = getEST();
-    let fontColours = {
-        monitor: "red",
-        ok: "green",
-        error: "red",
-        ">>": "yellow",
-        "<<": "yellow",
-        "join": "magenta",
-        "left": "magenta",
-        "debate": "green"
-    };
-    console.log("[" + d + "] " + item.toUpperCase()[fontColours[item] || "blue"] + "        ".slice(item.length) + text);
-};
-
-//get the database
 global.Db = require("origindb")("config/database-" + Config.info.serverid);
-
-
-// check for bot auth;
-if (!Object.keys(Db("ranks").object()).length) {
-    if (process.argv[2]) {
-        Db("ranks").set(toId(process.argv.slice(2).join("")), "~");
-        log("monitor", "Promoted " + process.argv.slice(2).join("").yellow + " to Bot Admin.");
-    }
-    else {
-        console.log("Please include the name of the bot admin. `node app.js [username]`");
-        process.exit(-1);
-    }
-}
-
-// globals
-
+global.fs = require("fs");
+global.Config = require("./config/config.js");
 global.Events = require("./event-listeners.js");
 global.Parse = require("./parser.js").parse;
 global.Tools = require("./tools.js").Tools;
@@ -137,57 +59,7 @@ global.commandParser = require("./command-parser.js").commandParser;
 global.Commands = require("./commands.js").commands;
 global.Users = require("./users.js");
 global.Rooms = require("./rooms.js");
-
 global.queue = [];
-
-function loadChatPlugins() {
-    let loaded = [];
-    let failed = [];
-    fs.readdirSync("./chat-plugins/").forEach(f => {
-        try {
-            let plugin = require("./chat-plugins/" + f);
-            if (plugin.commands) Object.assign(Commands, plugin.commands);
-            if (plugin.game) {
-                Monitor.games[plugin.game] = plugin.game;
-                if (plugin.aliases) plugin.aliases.forEach(alias => Monitor.games[alias] = plugin.game);
-            }                
-            loaded.push(f);
-        }
-        catch (e) {
-            console.log(e.stack);
-            failed.push(f);
-        }
-    });
-    if (loaded.length) {
-        log("info", "Loaded command files: " + loaded.join(", "));
-    }
-    if (failed.length) {
-        log("error", "Failed to load: " + failed.join(", "));
-    }
-}
-loadChatPlugins();
-
-//globals
-
-if (Config.watchConfig) {
-    fs.watchFile(path.resolve(__dirname, "config/config.js"), (curr, prev) => {
-        if (curr.mtime <= prev.mtime) return;
-        try {
-            delete require.cache[require.resolve("./config/config.js")];
-            global.Config = require('./config/config.js');
-            log("ok", 'Reloaded config/config.js');
-        }
-        catch (e) {}
-    });
-}
-
-log("ok", "starting server");
-let WebSocketClient = require("websocket").client;
-
-let connection = null;
-let sendQueue = [];
-let dequeuing = false;
-let lastSent = 0;
 
 function dequeue() {
     if (sendQueue.length > 0) {
@@ -196,6 +68,8 @@ function dequeue() {
         send(tempText[0], tempText[1], false, true);
     }
 }
+
+// global functions
 
 global.send = function(text, user, priority, bypass) {
     if (!connection.connected || !text) return false;
@@ -259,7 +133,135 @@ global.officiallog = function(logMessage) {
     if (!logMessage) return false;
     fs.appendFile('config/officiallogs.txt', `[${getEST()}] ${logMessage}\n\n`);
 };
-global.connect = function(retry) {
+
+global.toId = function(text, id) {
+    if (!text || typeof text !== "string") return "";
+    if (id) return text.toLowerCase().replace(/[^a-z0-9\-]/g, "");
+    return text.toLowerCase().replace(/[^a-z0-9]/g, "");
+};
+
+global.removeCommand = function(text) {
+    return text.replace(/^\//i, "//").replace(/^\!/i, " !").replace(/^[\>]{2,}/i, ">");
+};
+
+global.getEST = function(date) {
+    function isDst(tarDate) {
+        let datee = new Date(tarDate);
+        let Month = datee.getMonth() + 1;
+        let Day = datee.getDate() + 1;
+        let DayofWeek = datee.getDay();
+        if (Month > 11 || Month < 3) {
+            return false;
+        }
+        if (Month === 3) {
+            if (Day - DayofWeek > 7) {
+                return true;
+            }
+            return false;
+        }
+        if (Month === 11) {
+            if (Day - DayofWeek > 0) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+    let d = (date ? date : Date.now()) + (new Date().getTimezoneOffset() * 60 * 1000) - (1000 * 60 * 60 * 5);
+    if (isDst(d)) d += 3600000;
+    return new Date(d).toLocaleString();
+};
+
+global.random = function (num) {
+    if (!num) return;
+    if (isNaN(Number(num))) return;
+    let response = Math.floor(Math.random() * num) + 1;
+    return response;
+};
+
+global.log = function(item, text) {
+    if (!Config.logging || (Config.logging !== true && (typeof Config.logging && !Config.logging.includes(item)))) return false;
+    let d = getEST();
+    let fontColours = {
+        monitor: "red",
+        ok: "green",
+        error: "red",
+        ">>": "yellow",
+        "<<": "yellow",
+        "join": "magenta",
+        "left": "magenta",
+        "debate": "green"
+    };
+    console.log("[" + d + "] " + item.toUpperCase()[fontColours[item] || "blue"] + "        ".slice(item.length) + text);
+};
+
+if (!fs.existsSync("./config/config.js")) {
+	console.log("config.js not found! - Creating with default settings...");
+	fs.writeFileSync("./config/config.js", fs.readFileSync('./config/config-example.js'));
+}
+
+if (!Config.info.server || !Config.info.serverid || !Config.info.port) {
+    log("error", "You need to fill out the config file!");
+}
+if (Config.defaultCharacter.length === 0) {
+    Config.defaultCharacter.push(";");
+}
+
+// check for bot auth;
+if (!Object.keys(Db("ranks").object()).length) {
+    if (process.argv[2]) {
+        Db("ranks").set(toId(process.argv.slice(2).join("")), "~");
+        log("monitor", "Promoted " + process.argv.slice(2).join("").yellow + " to Bot Admin.");
+    }
+    else {
+        console.log("Please include the name of the bot admin. `node app.js [username]`");
+        process.exit(-1);
+    }
+}
+
+function loadChatPlugins() {
+    let loaded = [];
+    let failed = [];
+    fs.readdirSync("./chat-plugins/").forEach(f => {
+        try {
+            let plugin = require("./chat-plugins/" + f);
+            if (plugin.commands) Object.assign(Commands, plugin.commands);
+            if (plugin.game) {
+                Monitor.games[plugin.game] = plugin.game;
+                if (plugin.aliases) plugin.aliases.forEach(alias => Monitor.games[alias] = plugin.game);
+            }                
+            loaded.push(f);
+        }
+        catch (e) {
+            console.log(e.stack);
+            failed.push(f);
+        }
+    });
+    if (loaded.length) {
+        log("info", "Loaded command files: " + loaded.join(", "));
+    }
+    if (failed.length) {
+        log("error", "Failed to load: " + failed.join(", "));
+    }
+}
+loadChatPlugins();
+
+if (Config.watchConfig) {
+    fs.watchFile(path.resolve(__dirname, "config/config.js"), (curr, prev) => {
+        if (curr.mtime <= prev.mtime) return;
+        try {
+            delete require.cache[require.resolve("./config/config.js")];
+            global.Config = require('./config/config.js');
+            log("ok", 'Reloaded config/config.js');
+        }
+        catch (e) {}
+    });
+}
+
+log("ok", "starting server");
+let WebSocketClient = require("websocket").client;
+
+let connect = function(retry) {
     if (retry) {
         log("info", "retrying...");
     }

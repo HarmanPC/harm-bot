@@ -70,7 +70,7 @@ exports.commands = {
            return;
         }
         if (queue.indexOf(target[0]) > -1) {
-            queue.pop(target[0]);
+            queue.splice(target[0], 1);
         }
         this.parse(`${Users.get(toId(target)).hasBotRank('+') ? '/kek' : '/promote ' + target[0] + ', host'}`); 
         room.game = new hostGame(room, target[0]);
