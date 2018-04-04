@@ -46,10 +46,9 @@ let sendQueue = [];
 let dequeuing = false;
 let lastSent = 0;
 // globals 
-
+global.Config = require("./config/config.js");
 global.Db = require("origindb")("config/database-" + Config.info.serverid);
 global.fs = require("fs");
-global.Config = require("./config/config.js");
 global.Events = require("./event-listeners.js");
 global.Parse = require("./parser.js").parse;
 global.Tools = require("./tools.js").Tools;
