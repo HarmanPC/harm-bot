@@ -10,31 +10,28 @@ class MainLeaderboard extends LEADERBOARD {
     constructor(file) {
         super(file);
     }
-    
+
     getGames() {
         return Object.keys(Monitor.games).filter(g => Monitor.games[g] === g);
     }
-    
+
     onConfig(room, game, points) {
         if (game === "constructor" || !(game in Monitor.games) || Monitor.games[game] !== game) return "Invalid game. Valid games are - " + this.getGames().join(", ") + ".";
         points = parseInt(points);
         if (!points || points < 1) return "Invalid point amount.";
-        
         if (!this.settings[room.id]) this.settings[room.id] = {};
         this.settings[room.id][game] = points;
         return this;
     }
-    
+
     getWin(room, game) {
         if (!this.settings[room.id]) this.settings[room.id] = {};
         let points = this.settings[room.id][game] || DEFAULT_WIN_AMOUNT;
-        
         return points;
     }
-    
+
     onWin(game, room, userid, multiplier) {
         let points = this.getWin(room, game);
-        
         return this.givePoints(room, userid, points * (Number(multiplier) || 1));
     }
 }

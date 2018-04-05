@@ -247,7 +247,7 @@ exports.commands = {
 				console.log(err);
 			}
 		});
-	}
+	},
 };
 /*globals Tools*/
 /*globals Users*/
