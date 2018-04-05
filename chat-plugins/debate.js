@@ -7,7 +7,7 @@ const DebateManger = require ('../manager.js');
 const DebateFile = new DebateManger(Debate_FILE);
 
 class DebateGame extends Rooms.botGame {
-	constructor (room, arg, arg2) {
+	constructor (room, type, topic, time) {
         super(room);
         
         this.gameId = "debate";
@@ -18,7 +18,7 @@ class DebateGame extends Rooms.botGame {
         this.pl;
 
         this.state = "signups";
-		this.args = [arg, arg2];
+		this.args = [type, topic, time];
         this.playerObject = DebateGamePlayer;
 		this.type = this.args[0];
         if (this.args[0].toLowerCase() == "1v1") {
@@ -179,7 +179,7 @@ exports.commands = {
 		if ((!target[0] || !target[1]) || (!(target[0] === "1v1" && target[0] === "teams"))) return this.room.send(null, 'To start a debate use ``.debate [casual/teams/1v1], [Time per round / sets default if left blank], [Topic / sets random topic from .debateqs]``');
         if (room.game && room.game.gameId !== 'host' && room.game.type) return this.room.send(null, "There is already a Debate going on in this room! (" + room.game.type + ")");
         if (target[0] == "1v1" && target[0].split("vs")[0].trim() == target[1].split("vs")[1].trim()) return this.room.send(null, 'Both players are same.');
-		room.game = new DebateGame(room, target[0], target[1]);
+		room.game = new DebateGame(room, target[0], target[1], target[2]);
 		debatelog('Scripted debate started (' + room.game.type + ')');
     },
 	checkdebate: function (target, room, user){
