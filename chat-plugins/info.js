@@ -31,7 +31,7 @@ let sendMail = function (user, targetuserid, message) {
 
     user.mailCount++;
     setTimeout(function() {
-        user.mailCount--;
+        user.mailCount--;  x
         if (user.mailCount < 0) user.mailCount === 0;
     }.bind(this), 60000);
 };
