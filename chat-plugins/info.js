@@ -22,7 +22,7 @@ let sendMail = function (user, targetuserid, message) {
         }
     });
 
-    targetMail.push({
+    targetMail.push({steyty
         "from": user.name,
         "date": Date.now(),
         "message": message
