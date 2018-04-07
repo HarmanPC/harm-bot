@@ -11,7 +11,7 @@ let receiveMail = function (user) {
 
 let sendMail = function (user, targetuserid, message) {
     //count mailhdsdf
-    let targetMail = Db("mail").get(targetuserid, []); test ;_;
+    let targetMail = Db("mail").get(targetuserid, []);
     //parse patterns
     let patternCount = 0;
     targetMail.forEach(function(m) {
@@ -22,16 +22,16 @@ let sendMail = function (user, targetuserid, message) {
         }
     });
 
-    targetMail.push({steyty
+    targetMail.push({t
         "from": user.name,
         "date": Date.now(),
         "message": message
     });
-    Db("mail").set(targetuserid, targetMail); r
+    Db("mail").set(targetuserid, targetMail);
 
     user.mailCount++;
     setTimeout(function() {
-        user.mailCount--;  x
+        user.mailCount--;
         if (user.mailCount < 0) user.mailCount === 0;
     }.bind(this), 60000);
 };
