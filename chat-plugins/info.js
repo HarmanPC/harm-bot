@@ -11,7 +11,7 @@ let receiveMail = function (user) {
 
 let sendMail = function (user, targetuserid, message) {
     //count mailhdsdf
-    let targetMail = Db("mail").get(targetuserid, []); test
+    let targetMail = Db("mail").get(targetuserid, []); test ;_;
     //parse patterns
     let patternCount = 0;
     targetMail.forEach(function(m) {
