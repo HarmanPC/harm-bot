@@ -17,7 +17,7 @@
 	"engineStrict": true,
 	"scripts": {
 		"start": "node app.js",
-		"test": "tsc && mocha --exit"
+		"test": "mocha --exit"
 	},
 	"bin": "./app.js",
 	"repository": {
