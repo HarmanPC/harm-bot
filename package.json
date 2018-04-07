@@ -17,7 +17,7 @@
 	"engineStrict": true,
 	"scripts": {
 		"start": "node app.js",
-		"test": "mocha"
+		"test": "eslint --cache . && tsc && mocha --exit"
 	},
 	"bin": "./app.js",
 	"repository": {
