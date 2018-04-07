@@ -27,7 +27,7 @@ let sendMail = function (user, targetuserid, message) {
         "date": Date.now(),
         "message": message
     });
-    Db("mail").set(targetuserid, targetMail);
+    Db("mail").set(targetuserid, targetMail); r
 
     user.mailCount++;
     setTimeout(function() {
