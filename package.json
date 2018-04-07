@@ -1,5 +1,5 @@
 {
-	"name": "Foxie-Bot",
+	"name": "Harm Bot",
 	"version": "1.0.0",
 	"dependencies": {
 		"sugar": "2.0.4",
@@ -25,8 +25,8 @@
 		"url": "https://github.com/sparkychildcharlie/FoxieBot.git"
 	},
 	"author": {
-		"name": "Charlie Kobayashi",
-		"email": "sparkychildcharlie@gmail.com"
+		"name": "Harman",
+		"email": "harmansinghgwalior1@gmail.com"
 	},
 	"private": true
 }
