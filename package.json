@@ -1,5 +1,5 @@
 {
-	"name": "Harm Bot",
+	"name": "Harm-Bot",
 	"version": "1.0.0",
 	"dependencies": {
 		"sugar": "2.0.4",
@@ -22,7 +22,7 @@
 	"bin": "./app.js",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/sparkychildcharlie/FoxieBot.git"
+		"url": "https://github.com/harmanpc/harm-bot.git"
 	},
 	"author": {
 		"name": "Harman",
