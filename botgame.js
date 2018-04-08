@@ -12,7 +12,7 @@ class botGame {
         this.state = null;
         this.answerCommand = "standard";
         this.allowRenames = true;
-        
+
         this.playerType = null;
     }
     
@@ -28,19 +28,18 @@ class botGame {
         this.users[newId].rename(newName);
         if (this.currentPlayer && this.currentPlayer === oldId) this.currentPlayer = newId;
     }
-    
+
     sendRoom(message) {
         this.room.send(null, `${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""}${message}`);
     }
-    
+
     onJoin(user) {
         if (!this.allowJoins) return;
         if (this.userList.includes(user.userid)) return user.sendTo("You have already joined!");
         this.users[user.userid] = this.playerObject ? new this.playerObject(user, this) : new botGamePlayer(user, this);
         this.userList.push(user.userid);
-        user.sendTo("You have joined the debate.");
     }
-    
+
     onLeave(user) {
         if (!this.allowJoins || !this.userList.includes(user.userid)) return;
         delete this.users[user.userid];
@@ -48,7 +47,7 @@ class botGame {
         user.sendTo('You have left the debate.');
         return true;
     }
-    
+
     buildPlayerList() {
         return {count: this.userList.length, players: this.userList.sort().map(u => this.users[u].name).join(", ")};
     }
@@ -76,18 +75,18 @@ class botGame {
     
     runAutoStart(seconds) {
         if (!('onStart' in this) || this.state !== 'signups') return; // the game does not start
-        
+
         // validate input
         const int = parseInt(seconds);
         if ((!int || int < 0) && seconds !== 'off') return false;
 
         if (this.autoStartTimer) clearTimeout(this.autoStartTimer);
         if (seconds === 'off') return this.sendRoom('The autostart timer has been turned off.');
-        
+
         this.autoStartTimer = setTimeout(() => {
             this.onStart(); // we will assume that it will not try to start 2 games at the same time.
         }, seconds * 1000);
-        
+
         this.sendRoom("The debate will automatically start in " + seconds + " seconds.");
     }
 }
@@ -97,7 +96,7 @@ class botGamePlayer {
         this.name = user.name;
         this.userid = user.userid;
         this.user = user;
-        
+
         this.game = game;
     }
     

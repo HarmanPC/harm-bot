@@ -7,10 +7,12 @@ exports.commands = {
         if (!room || !room.game) return false;
         if (room.game.userHost === user.userid) return user.sendTo('You can\'t join your own game.');
         if (room.game.onJoin) room.game.onJoin(user);
+        user.sendTo("You have joined the debate.");
     },
     leave: function (target, room, user) {
         if (!room || !room.game) return false;
         if (room.game.onLeave) room.game.onLeave(user);
+        user.sendTo("You have left the debate.");
     },
     rpl: "removeplayer",
     removeplayer: function(target, room, user) {
