@@ -1,6 +1,9 @@
 'use strict';
 let Rooms = {};
 let rooms = Rooms.rooms = new Map();
+const ranks = Config.ranks;
+const dbs = Db("settings");
+const dbb = Db("blacklist");
 
 class Room {
     constructor(roomname) {
@@ -8,10 +11,10 @@ class Room {
         this.users = new Map();
         this.name = roomname;
         this.warnings = {};
-        this.commandCharacter = Db("settings").get([this.id, "rch"], Config.defaultCharacter.slice(0));
-        this.blacklist = Db("blacklist").get(this.id, {});
+        this.commandCharacter = dbs.get([this.id, "rch"], Config.defaultCharacter.slice(0));
+        this.blacklist = dbs.get(this.id, {});
         this.userData = {};
-        this.isPrivate = Db("settings").get([this.id, "isPrivate"], false);
+        this.isPrivate = dbs.get([this.id, "isPrivate"], false);
         this.init();
     }
 
@@ -36,12 +39,12 @@ class Room {
 
     blacklistUser(userid) {
         this.blacklist[userid] = 1;
-        Db("blacklist").set(this.id, this.blacklist);
+        dbb.set(this.id, this.blacklist);
     }
 
     unblacklistUser(userid) {
         delete this.blacklist[userid];
-        Db("blacklist").set(this.id, this.blacklist);
+        dbb.set(this.id, this.blacklist);
     }
 
     userIsBlacklisted(userid) {
@@ -51,12 +54,12 @@ class Room {
 
     addCommandCharacter(char) {
         this.commandCharacter.push(char);
-        Db("settings").set([this.id, "rch"], this.commandCharacter);
+        dbs.set([this.id, "rch"], this.commandCharacter);
     }
 
     removeCommandCharacter(char) {
         this.commandCharacter.splice(this.commandCharacter.indexOf(char), 1);
-        Db("settings").set([this.id, "rch"], this.commandCharacter);
+        dbs.set([this.id, "rch"], this.commandCharacter);
     }
 
     buildUserList(list) {
@@ -98,10 +101,17 @@ class Room {
         send((this.id === "lobby" ? "" : this.id) + "|" + message, userid, priority);
     }
 
+    post(thing) {
+        try {
+            this.send(null, thing);
+        }
+        catch (e) {}
+    }
+
     moderate(user, msg) {
         let botsRank = Users.get(toId(Monitor.username)).getRank(this.id);
         let userRank = user.getRank(this.id);
-        if (user.userid === toId(Monitor.username) || Config.ranks[botsRank] < 2 || Config.ranks[botsRank] <= Config.ranks[userRank]) return false;
+        if (user.userid === toId(Monitor.username) ||ranks[botsRank] < 2 || ranks[botsRank] <= ranks[userRank]) return false;
         msg = msg.trim().replace(/[ \u0000\u200B-\u200F]+/g, ' '); // removes extra spaces and null characters so messages that should trigger stretching do so
 
         if (!this.userData[user.userid]) {
@@ -144,7 +154,7 @@ class Room {
         function shouldModerate(uRank, mRank) {
             if (mRank === "on") return true;
             if (mRank === "off") return false;
-            if (Config.ranks[uRank] > Config.ranks[mRank]) return false;
+            if (ranks[uRank] > ranks[mRank]) return false;
             return true;
         }
         let applyModeration = {
@@ -153,8 +163,7 @@ class Room {
         };
         let moderateAll = false;
         Object.keys(Config.modSettings).forEach(aspect => {
-            minModRank = Db("settings").get([this.id, "moderation", aspect], "+");
-           // if (room.game == true) return false;
+            minModRank = dbs.get([this.id, "moderation", aspect], "+");
             if (shouldModerate(userRank, minModRank) || moderateAll) {
                 switch (aspect) {
                     case "caps":
@@ -228,7 +237,7 @@ class Room {
                         }
                         break;
                     case "bannedwords":
-                        let bannedWords = Db("settings").get([this.id, "bannedWords"], {});
+                        let bannedWords = dbs.get([this.id, "bannedWords"], {});
                         if (Object.keys(bannedWords).length) {
                             let tMsg = msg.toLowerCase();
                             let maxPoints = 0;
@@ -248,15 +257,6 @@ class Room {
                             if (maxPoints > 0) {
                                 applyModeration.points += maxPoints;
                                 applyModeration.reasons.push("banned phrase");
-                            }
-                        }
-                        break;
-                    case "bold":
-                        msg = msg.split('');
-                        if (msg[msg.length -2] && msg[msg.length -1] == '*') {
-                            if (msg[0] && msg[1] == '*') {
-                                applyModeration.points += 1.5;
-                                applyModeration.reasons.push("bold");
                             }
                         }
                         break;
@@ -299,7 +299,7 @@ let getRoom = Rooms.get = function(room) {
     return rooms.get(roomid);
 };
 
-let deleteRoom = Rooms.delete = function(room, keepAutojoin) {
+Rooms.delete = function(room, keepAutojoin) {
     let roomid = toId(room, true);
     getRoom(roomid).end();
     rooms.delete(roomid);

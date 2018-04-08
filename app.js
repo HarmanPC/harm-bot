@@ -69,7 +69,6 @@ function dequeue() {
 }
 
 // global functions
-
 global.send = function(text, user, priority, bypass) {
     if (!connection.connected || !text) return false;
     if (!user) {
@@ -174,7 +173,7 @@ global.getEST = function(date) {
 global.random = function (num) {
     if (!num) return;
     if (isNaN(Number(num))) return;
-    let response = Math.floor(Math.random() * num) + 1;
+    let response = Math.floor(Math.random() * num);
     return response;
 };
 

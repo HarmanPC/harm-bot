@@ -35,13 +35,11 @@ class botGame {
 
     onJoin(user) {
         if (!this.allowJoins) return;
-        if (this.userList.includes(user.userid)) return user.sendTo("You have already joined!");
         this.users[user.userid] = this.playerObject ? new this.playerObject(user, this) : new botGamePlayer(user, this);
         this.userList.push(user.userid);
     }
 
     onLeave(user) {
-        if (!this.allowJoins || !this.userList.includes(user.userid)) return;
         delete this.users[user.userid];
         this.userList.splice(this.userList.indexOf(user.userid), 1);
         user.sendTo('You have left the debate.');
@@ -51,12 +49,12 @@ class botGame {
     buildPlayerList() {
         return {count: this.userList.length, players: this.userList.sort().map(u => this.users[u].name).join(", ")};
     }
-    
+
     postPlayerList() {
-        let pl = this.buildPlayerList();
-        this.sendRoom(`Players (${pl.count}): ${pl.players}`);
+        this.list = this.buildPlayerList();
+        this.sendRoom(`Players (${this.list.count}): ${this.list.players}`);
     }
-    
+
     onEnd() {
         this.destroy();
     }
