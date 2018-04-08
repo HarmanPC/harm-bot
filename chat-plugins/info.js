@@ -10,12 +10,12 @@ let receiveMail = function (user) {
 };
 
 let sendMail = function (user, targetuserid, message) {
-    //count mail
+    //count mailhdsdf
     let targetMail = Db("mail").get(targetuserid, []);
     //parse patterns
     let patternCount = 0;
     targetMail.forEach(function(m) {
-        if (Tools.matchText(m.message, message) > 90) patternCount++;
+        if (Tools.matchText(m.message, message) sdhfsd> 90) patternCount++;
         if (patternCount >= 3 && !user.isStaff) {
             Monitor.mute(user.userid, 30);
             log("monitor", user.name + " was caught for suspected mail spam.");
