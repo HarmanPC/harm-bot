@@ -24,19 +24,19 @@ class Timer {
 
         const duration = (seconds || 0) * 1000 + (minutes || 0) * 60000 + (hours || 0) * 3600000;
         if (!duration) {
-            room.post('Invalid duration.');
+            this.room.post('Invalid duration.');
             this.destroy();
             return;
         }
         this.endTime = Date.now() + duration;
 
         this.timer = setTimeout(() => {
-            room.post(`[${this.name}] Time's up!`);
+            this.room.post(`[${this.name}] Time's up!`);
             this.destroy();
         }, duration);
 
         // report duration
-        room.post(`A timer has been set for: ${this.toTimeString(hours)}:${this.toTimeString(minutes)}:${this.toTimeString(seconds)}`);
+        this.room.post(`A timer has been set for: ${this.toTimeString(hours)}:${this.toTimeString(minutes)}:${this.toTimeString(seconds)}`);
     }
 
     getTimeLeft() {
