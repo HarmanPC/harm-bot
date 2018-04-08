@@ -39,13 +39,13 @@ exports.commands = {
         let join = room.game.onJoin(target);
         if (state == 'signups') {
                 join;
-                this.room.send(null, `${target.name} is added in playerlist.`);
+                room.post(`${target.name} is added in playerlist.`);
         }
         else if (state == 'started') {
                 state = 'signups';
                 join;
                 state = 'started';
-                this.room.send(null, `${target.name} is added in playerlist.`);
+                room.post(`${target.name} is added in playerlist.`);
         }
     },
     sub: "replace",
@@ -93,7 +93,7 @@ exports.commands = {
     /*win: function (target, room, user){
         if (!room.game || room.game.gameId !== 'host' || !room || !user.hasBotRank('host')) return;
         let targets = target.split(',');
-        this.room.send(null, `${targets.length > 1 ? 'The winners are ' + targets.join(', ') : 'The winner is ' + Users.get(targets[0]).name}! Thanks for hosting.`);
+        room.post(`${targets.length > 1 ? 'The winners are ' + targets.join(', ') : 'The winner is ' + Users.get(targets[0]).name}! Thanks for hosting.`);
         hostlog(`${targets.length > 1 ? 'The winners were ' + targets.join(', ') : 'The winner was ' + Users.get(targets[0]).name}, in ${Users.get(room.game.hostid).name}'s host.`);
         room.game.onEnd();
         this.parse(`/promote ${user.userid}, deauth`);
@@ -103,7 +103,7 @@ exports.commands = {
         hostlog(Users.get(room.game.hostid).name + "'s host ended.");
         this.parse(`/promote ${room.game.hostid}, deauth`);
         room.game.onEnd();
-        this.room.send(null, 'Thanks for hosting!');
+        room.post('Thanks for hosting!');
     },
     hangman: function (target, room, user) {
 		if (!room || !user.hasBotRank('+')) return;
