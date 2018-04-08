@@ -56,19 +56,18 @@ exports.commands = {
         if (!room || !target || !user.hasBotRank('+')) return false;
         target = target.split(',');
         const person = Users.get(target[0]);
-        let debate = room.game;
 
         if (!room.users.has(person.id)) return room.post('The user "' + person.name + '" is not in the room.');
-        if (debate && debate.gameId == 'host') {
+        if (room.game && room.game.gameId == 'host') {
             room.post(person.name + ' was added to hostqueue.');
             queue.push(person.id);
             return;
         }
-        if (debate && debate.gameId == 'debate') return room.post('There is already a debate going on in this room! (' + debate.type + ')');
+        if (room.game && room.game.gameId == 'debate') return room.post('There is already a debate going on in this room! (' + room.game.type + ')');
         if (toId(target[1]) === 'official') {
-           debate = new hostGame(room, person.id);
+           room.game =  new hostGame(room, person.id);
            officiallog(person.name + " hosted official.");
-           debate.official = true;
+           room.game.official = true;
            return;
         }
         if (queue.indexOf(person.id) > -1) {
@@ -76,7 +75,7 @@ exports.commands = {
         }
 
         this.parse(`${person.hasBotRank('+') ? '/kek' : '/promote ' + person.id + ', host'}`);
-        debate = new hostGame(room, person.id);
+        room.game = new hostGame(room, person.id);
         hostlog(person.name + " hosted.");
     },
     dehost: function (target, room, user) {

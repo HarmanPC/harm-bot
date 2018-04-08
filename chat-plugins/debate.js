@@ -43,7 +43,7 @@ class DebateGame extends Rooms.botGame {
 		if ((this.userList.length < 2 || this.state !== "signups")) return;
  		this.state = "started";
 		this.allowJoins = false;
-    	//debatelog(`Players (${this.userList.length}): ${this.pl.join(", ")}`);
+    	debatelog(`Players (${this.userList.length}): ${this.players.join(", ")}`);
 
     	this.startingPlayers = this.userList.length;
 
@@ -169,8 +169,8 @@ exports.commands = {
         if (!room || !user.hasBotRank("+")) return false;
 		const everything = target.split(',').map(u => toId(u));
 		const type = everything[0];
-		//if ((!type || !stuff) || (!(type === "1v1" && type === "teams"))) return;
-        //if (room.game && room.game.gameId !== 'host' && room.game.type) return room.post("There is already a Debate going on in this room! (" + debate.type + ")");
+		if ((!type) || (!(type === "1v1" && type === "teams"))) return;
+        if (room.game && room.game.gameId !== 'host' && room.game.type) return room.post("There is already a Debate going on in this room! (" + room.game.type + ")");
 
         if (type == "1v1") {
         	const pl = everything[1];
@@ -185,7 +185,7 @@ exports.commands = {
         	const topic = everything[2];
         	room.game = new DebateGame(room, type, time, topic);
         }
-		//debatelog('Scripted debate started (' + debate.type + ')');
+		debatelog('Scripted debate started (' + room.game.type + ')');
     },
 	checkdebate: function (target, room, user){
 		if (!room || !user.hasBotRank('+')) return false;

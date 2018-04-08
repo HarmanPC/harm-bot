@@ -36,7 +36,7 @@ exports.commands = {
         if (!room || !room.game || !user.hasBotRank('host')) return;
         target = Users.get(target);
         let state = room.game.state;
-        let join = room.game.onJoin(target);
+        const join = room.game.onJoin(target);
         if (state == 'signups') {
                 join;
                 room.post(`${target.name} is added in playerlist.`);
@@ -52,16 +52,15 @@ exports.commands = {
     replace: function (target, room, user) {
         if (!room || !room.game || room.game.gameId !== "host" || !user.hasBotRank('host')) return;
         if (!target) return room.post("Usage ``" + room.commandCharacter[0] + "sub [old player], [new player]``");
-        let debate = room.game;
 
         target = target.split(",").map(u => Users.get(u));
         if (target.length !== 2) return room.post("Usage ``" + room.commandCharacter[0] + "sub [old player], [new player]``");
 
         if (!room.users.has(target[1].id)) room.post("The new player is not in the room.");
-        if (target[1].id === debate.hostid) return room.post("You cannot add the host into the game.");
+        if (target[1].id === room.game.hostid) return room.post("You cannot add the host into the game.");
 
-        debate.onJoin(target[1]);
-        debate.onLeave(target[0]);
+        room.game.onJoin(target[1]);
+        room.game.onLeave(target[0]);
         room.post(target[1].name + ' has joined the game.');
     },
     pl: 'players',
@@ -79,15 +78,14 @@ exports.commands = {
     },
     end: function (target, room, user) {
         if (!room || !room.game || !user.hasBotRank('+')) return;
-        let debate = room.game;
-        if (debate.hostid) {
-            hostlog(Users.get(debate.hostid).name + "'s host ended.");
-            this.parse(`/promote ${debate.hostid}, deauth`);
+        if (room.game.hostid) {
+            hostlog(Users.get(room.game.hostid).name + "'s host ended.");
+            this.parse(`/promote ${room.game.hostid}, deauth`);
         }
         else {
-            debatelog("The debate was forcibly ended. (" + debate.type + ")");
+            debatelog("The debate was forcibly ended. (" + room.game.type + ")");
         }
-        debate.destroy();
+        room.game.destroy();
         room.post("The debate has been ended.");
     },
     /*win: function (target, room, user){
