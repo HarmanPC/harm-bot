@@ -3,49 +3,47 @@ var time = 0;
 exports.commands = {
     'j': 'join',
     join: function (target, room, user) {
-        let debate = room.game;
-        if (!room || !debate) return;
-        if (user.hasBotRank('host')) return user.sendTo('You can\'t join your own game.');
-        if (debate.userList.includes(user.userid)) return user.sendTo("You have already joined!");
-        debate.onJoin(user);
+        if (!room || !room.game) return;
+        if (room.game.hostid === user.userid) return user.sendTo('You can\'t join your own game.');
+        if (room.game.userList.includes(user.userid)) return user.sendTo("You have already joined!");
+        room.game.onJoin(user);
         user.sendTo("You have joined the debate.");
     },
     leave: function (target, room, user) {
-        let debate = room.game;
-        if (!room || !debate || !debate.allowJoins || !debate.userList.includes(user.userid)) return;
-        debate.onLeave(user);
+        if (!room || !room.game || !room.game.allowJoins || !room.game.userList.includes(user.userid)) return;
+        room.game.onLeave(user);
         user.sendTo("You have left the debate.");
     },
     rpl: "removeplayer",
     removeplayer: function(target, room, user) {
         if (!room || !room.game || !user.hasBotRank('host')) return;
-        let state = room.game.state;
-        let leave = room.game.onLeave;
         target = Users.get(target);
+        let state = room.game.state;
+        let leave = room.game.onLeave(target);
         if (state == 'signups') {
-                leave(target);
-                this.room.send(null, `${target.name} is removed from playerlist.`);
+                leave;
+                room.post(`${target.name} is removed from playerlist.`);
         }
         else if (state == 'started') {
                 state = 'signups';
-                leave(target);
+                leave;
                 state = 'started';
-                this.room.send(null, `${target.name} is removed from playerlist.`);
+                room.post(`${target.name} is removed from playerlist.`);
         }
     },
     apl:'addplayer',
     addplayer: function (target, room, user) {
         if (!room || !room.game || !user.hasBotRank('host')) return;
-        let state = room.game.state;
-        let join = room.game.onJoin;
         target = Users.get(target);
+        let state = room.game.state;
+        let join = room.game.onJoin(target);
         if (state == 'signups') {
-                join(target);
+                join;
                 this.room.send(null, `${target.name} is added in playerlist.`);
         }
         else if (state == 'started') {
                 state = 'signups';
-                join(target);
+                join;
                 state = 'started';
                 this.room.send(null, `${target.name} is added in playerlist.`);
         }

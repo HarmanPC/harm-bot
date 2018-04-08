@@ -15,7 +15,7 @@ class botGame {
 
         this.playerType = null;
     }
-    
+
     onRename(oldId, newName) {
         if (!this.allowRenames) return false;
         if (!this.userList.includes(oldId)) return false;
@@ -42,7 +42,6 @@ class botGame {
     onLeave(user) {
         delete this.users[user.userid];
         this.userList.splice(this.userList.indexOf(user.userid), 1);
-        user.sendTo('You have left the debate.');
         return true;
     }
 
@@ -58,7 +57,7 @@ class botGame {
     onEnd() {
         this.destroy();
     }
-    
+
     destroy() {
         if (this.timer) {
             clearTimeout(this.timer);
@@ -70,7 +69,7 @@ class botGame {
         }
         delete this.room.game;
     }
-    
+
     runAutoStart(seconds) {
         if (!('onStart' in this) || this.state !== 'signups') return; // the game does not start
 
