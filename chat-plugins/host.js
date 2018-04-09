@@ -1,7 +1,7 @@
 "use strict";
 exports.game = 'host';
 
-class hostGame extends Rooms.botGame {
+class hostGame extends Rooms.Debates {
     constructor(room, target) {
         super(room);
 
