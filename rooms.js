@@ -309,7 +309,7 @@ Rooms.delete = function(room, keepAutojoin) {
         Db.save();
     }
 };
-Rooms.botGame = require("./botgame.js").game;
-Rooms.botGamePlayer = require("./botgame.js").player;
+Rooms.Debates = require("./debates.js").debate;
+Rooms.DebatePlayer = require("./debates.js").player;
 
 module.exports = Rooms;

@@ -7,7 +7,7 @@ const DebateManger = require ('../manager.js');
 const DebateFile = new DebateManger(Debate_FILE);
 exports.game = "debate";
 
-class DebateGame extends Rooms.botGame {
+class DebateGame extends Rooms.Debates {
 	constructor (room, type, pl_time, topic_time, topic_nothing) { // _ means OR
         super(room);
 
@@ -158,7 +158,7 @@ class DebateGame extends Rooms.botGame {
 	}
 }
 
-class DebateGamePlayer extends Rooms.botGamePlayer {
+class DebateGamePlayer extends Rooms.DebatePlayer {
     constructor (user, game) {
         super(user, game);
     }

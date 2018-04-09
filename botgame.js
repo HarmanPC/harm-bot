@@ -1,6 +1,6 @@
 'use strict';
 
-class botGame {
+class Debates {
     constructor(room) {
         this.room = room;
         this.users = {};
@@ -30,7 +30,7 @@ class botGame {
     }
 
     sendRoom(message) {
-        this.room.send(null, `${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""}${message}`);
+        this.room.post(`${Users.get(Monitor.username).hasRank(this.room, "%") ? "/wall " : ""}${message}`);
     }
 
     onJoin(user) {
@@ -88,7 +88,7 @@ class botGame {
     }
 }
 
-class botGamePlayer {
+class DebatePlayer {
     constructor(user, game) {
         this.name = user.name;
         this.userid = user.userid;
@@ -96,7 +96,7 @@ class botGamePlayer {
 
         this.game = game;
     }
-    
+
     rename(name) {
         this.userid = toId(name);
         this.user = Users.get(this.userid);
@@ -105,6 +105,6 @@ class botGamePlayer {
 }
 
 module.exports = {
-    game: botGame,
-    player: botGamePlayer,
+    debate: Debates,
+    player: DebatePlayer,
 };
