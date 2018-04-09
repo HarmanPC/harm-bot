@@ -65,7 +65,7 @@ exports.commands = {
             room.countdown.destroy();
             return;
         }
-        if (room.countdown) return this.room.send(null,room.countdown.getTimeLeft());
+        if (room.countdown) return room.post(room.countdown.getTimeLeft());
         if (target <= 0) return room.post('Invalid Duration.');
         room.countdown = new Timer(room, user, target);
     },
