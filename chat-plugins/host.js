@@ -22,7 +22,7 @@ class hostGame extends Rooms.botGame {
     onStart(user) {
         if (this.state !== "signups") return false;
         hostlog(Users.get(this.hostid).name + "'s debate started.");
-        hostlog('Players (' + this.startingPlayers + '): ' +  this.pl.join(', '));
+        hostlog('Players (' + this.startingPlayers + '): ' +  this.players.join(', '));
         this.state = 'started';
         this.sendRoom(`Signups are now closed.`);
         this.startingPlayers = this.userList.length;
