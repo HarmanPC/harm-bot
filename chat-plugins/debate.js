@@ -167,7 +167,7 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 exports.commands = {
 	debate: function (target, room, user) {
         if (!room || !user.hasBotRank("+")) return false;
-        const errMsg = "		Please use the following way to start a debate.\n\n\n" +
+        const errMsg = "      Please use the following way to start a debate.\n\n\n" +
         	"For 1v1: \n" +
 			".debate 1v1, [Player1 vs Player2], [Time / Default is 5], [Topic / default is random from database]\n\n" +
 			"For Teams: \n" +
