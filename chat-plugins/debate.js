@@ -167,9 +167,14 @@ class DebateGamePlayer extends Rooms.botGamePlayer {
 exports.commands = {
 	debate: function (target, room, user) {
         if (!room || !user.hasBotRank("+")) return false;
+        const errMsg = "		Please use the following way to start a debate.\n\n\n" +
+        	"For 1v1: \n" +
+			".debate 1v1, [Player1 vs Player2], [Time / Default is 5], [Topic / default is random from database]\n\n" +
+			"For Teams: \n" +
+			".debate Teams, [Time / default is 5], [Topic / Default is random from database]";
 		const everything = target.split(',').map(u => toId(u));
 		const type = toId(everything[0]);
-		if ((!type) || (!(type === "1v1" && type === "teams"))) return;
+		if ((!type || !everything[1] || !everything[2]) || (!(type === "1v1" && type === "teams"))) return room.post("!code " + errMsg);
         if (room.game && room.game.gameId !== 'host' && room.game.type) return room.post("There is already a Debate going on in this room! (" + room.game.type + ")");
 
         if (type == "1v1") {
