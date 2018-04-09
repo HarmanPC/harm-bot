@@ -59,7 +59,7 @@ class Timer {
 exports.commands = {
     timer: function (target, room, user) {
         if (!room || !user.hasBotRank('host')) return false;
-        if (target === 'end') {
+        if (typeof target == 'string' && target.toLowerCase() === 'end') {
             if (!room.countdown) return room.post('There is no timer running in this room.');
             room.post(room.countdown.getTimeLeft() + '. The timer has been ended.');
             room.countdown.destroy();
