@@ -11,8 +11,8 @@ class DebateGame extends Rooms.botGame {
 	constructor (room, type, pl_time, topic_time, topic_nothing) { // _ means OR
         super(room);
 
-        this.gameId = "debate";
         this.gameName = "Debate";
+        this.gameId = toId(this.gameName);
 
         this.answerCommand = "special";
         this.allowJoins = true;
@@ -34,7 +34,7 @@ class DebateGame extends Rooms.botGame {
 			this.onStart();
 		}
 		else {
-			this.args = [type, pl_time, Number(topic_time)];
+			this.args = [type, pl_time, topic_time];
 			this.sendRoom("Debateinfo! A Debate is starting. ``" + this.room.commandCharacter[0] + "join`` to join the Debate. (" + this.type + ")");
 		}
     }
@@ -168,7 +168,7 @@ exports.commands = {
 	debate: function (target, room, user) {
         if (!room || !user.hasBotRank("+")) return false;
 		const everything = target.split(',').map(u => toId(u));
-		const type = everything[0];
+		const type = toId(everything[0]);
 		if ((!type) || (!(type === "1v1" && type === "teams"))) return;
         if (room.game && room.game.gameId !== 'host' && room.game.type) return room.post("There is already a Debate going on in this room! (" + room.game.type + ")");
 
