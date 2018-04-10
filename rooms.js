@@ -285,7 +285,6 @@ class Room {
         }
     }
 }
-
 let addRoom = Rooms.add = function(room) {
     let roomid = toId(room, true);
     if (rooms.has(roomid)) return getRoom(room);
