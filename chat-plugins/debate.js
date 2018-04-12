@@ -20,6 +20,7 @@ class DebateGame extends Rooms.Debates {
         this.state = "signups";
         this.playerObject = DebateGamePlayer;
 		this.type = toId(type);
+		this.players = this.userList.sort().map(u => this.users[u].name);
 
         if (this.type == "1v1") {
         	this.args = [type, pl_time, Number(topic_time), topic_nothing];
@@ -51,8 +52,6 @@ class DebateGame extends Rooms.Debates {
     }
 
     postPlayerList() {
-        this.players = this.userList.sort().map(u => this.users[u].name);
-
         this.sendRoom(`Players (${this.userList.length}): ${this.players.join(", ")}`);
     }
 
@@ -174,7 +173,7 @@ exports.commands = {
 			".debate Teams, [Time / default is 5], [Topic / Default is random from database]";
 		const everything = target.split(',').map(u => toId(u));
 		const type = toId(everything[0]);
-		if ((!type || !everything[1] || !everything[2]) || (!(type === "1v1" && type === "teams"))) return room.post("!code " + errMsg);
+	//	if ((!type || !everything[1] || !everything[2]) || (!(type === "1v1" && type === "teams"))) return room.post("!code " + errMsg);
         if (room.game && room.game.gameId !== 'host' && room.game.type) return room.post("There is already a Debate going on in this room! (" + room.game.type + ")");
 
         if (type == "1v1") {

@@ -63,7 +63,6 @@ class Room {
     }
 
     buildUserList(list) {
-        //|users|2,+sparkyboTTT,#sparkychild
         list = list.split(",").slice(1);
         list.forEach(u => {
             this.users.set(toId(u), u.charAt(0));

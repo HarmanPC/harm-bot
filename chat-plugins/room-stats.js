@@ -268,9 +268,4 @@ exports.commands = {
         });
     }
 };
-/*globals Tools*/
-/*globals Rooms*/
-/*globals toId*/
-/*globals Events*/
-/*globals Users*/
-/*globals Monitor*/
+/*globals Tools Rooms toId Events Users Monitor*/

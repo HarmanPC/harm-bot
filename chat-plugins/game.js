@@ -112,7 +112,4 @@ exports.commands = {
         time = Date.now();
     },
 };
-/*globals Tools*/
-/*globals Users*/
-/*globals debatelog*/
-/*globals hostlog*/
+/*globals Tools Users debatelog hostlog*/

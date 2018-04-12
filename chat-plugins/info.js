@@ -112,13 +112,4 @@ exports.commands = {
 		});
 	}
 };
-/*globals Monitor*/
-/*globals Tools*/
-/*globals toId*/
-/*globals getEST*/
-/*globals Config*/
-/*globals Users*/
-/*globals Db*/
-/*globals Plugins*/
-/*globals log*/
-/*globals fs*/
+/* globals Monitor Tools toId getEST Config Users Db Plugins log fs*/

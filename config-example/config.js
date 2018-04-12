@@ -86,7 +86,7 @@ exports.permissions = {
     " ": new Object(),
     "host": {
         games: true,
-        promote: [" "],
+        promote: ["host", " "],
     },
     "+": {
         games: true,

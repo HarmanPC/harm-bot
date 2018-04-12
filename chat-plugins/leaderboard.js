@@ -107,8 +107,4 @@ exports.commands = {
         }
     },
 };
-/*globals Leaderboard*/
-/*globals Tools*/
-/*globals toId*/
-/*globals Monitor*/
-/*globals Config*/
+/*globals Leaderboard Tools toId Config*/

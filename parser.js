@@ -201,13 +201,3 @@ exports.parse = {
         req.end();
     },
 };
-/*globals toId*/
-/*globals log*/
-/*global send*/
-/*globals Monitor*/
-/*globals commandParser*/
-/*globals Rooms*/
-/*globals Config*/
-/*globals Users*/
-/*globals Db*/
-/*globals Events*/

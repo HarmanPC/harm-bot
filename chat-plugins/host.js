@@ -57,25 +57,25 @@ exports.commands = {
         target = target.split(',');
         const person = Users.get(target[0]);
 
-        if (!room.users.has(person.id)) return room.post('The user "' + person.name + '" is not in the room.');
+        if (!room.users.has(person.userid)) return room.post('The user "' + person.name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') {
             room.post(person.name + ' was added to hostqueue.');
-            queue.push(person.id);
+            queue.push(person.userid);
             return;
         }
         if (room.game && room.game.gameId == 'debate') return room.post('There is already a debate going on in this room! (' + room.game.type + ')');
         if (toId(target[1]) === 'official') {
-           room.game =  new hostGame(room, person.id);
+           room.game =  new hostGame(room, person.userid);
            officiallog(person.name + " hosted official.");
            room.game.official = true;
            return;
         }
-        if (queue.indexOf(person.id) > -1) {
-            queue.splice(person.id, 1);
+        if (queue.indexOf(person.userid) > -1) {
+            queue.splice(person.userid, 1);
         }
 
-        this.parse(`${person.hasBotRank('+') ? '/kek' : '/promote ' + person.id + ', host'}`);
-        room.game = new hostGame(room, person.id);
+        this.parse(`${person.hasBotRank('+') ? '/kek' : '/promote ' + person.userid + ', host'}`);
+        room.game = new hostGame(room, person.userid);
         hostlog(person.name + " hosted.");
     },
     dehost: function (target, room, user) {
@@ -197,12 +197,4 @@ exports.commands = {
 		});
     }
 };
-/*globals Leaderboard*/
-/*globals Users*/ 
-/*globals toId*/
-/*globals officiallog*/
-/*globals Rooms*/
-/*globals hostlog*/
-/*globals Tools*/
-/*globals fs*/
-/*globals queue*/
+/*globals Leaderboard Users toId officiallog Rooms hostlog Tools fs queue*/
