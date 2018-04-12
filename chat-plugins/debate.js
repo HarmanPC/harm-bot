@@ -90,7 +90,7 @@ class DebateGame extends Rooms.Debates {
 					}
 					this.loopTimeout(mode, time);
 				}
-			}, time || DEFAULT_TIME);
+			}, DEFAULT_TIME);
 		}
 	}
 
