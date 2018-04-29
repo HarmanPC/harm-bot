@@ -1,9 +1,25 @@
 'use strict';
-const tools = exports.Tools = {
-    toTitleCase: function(str) {
+
+class _Tools {
+    constructor() {
+        this.loaded = [];
+        this.failed = [];
+        this.Formats = require("./data/formats-data.js").BattleFormatsData;
+        this.Pokedex = require("./data/pokedex.js").BattlePokedex;
+        this.Movedex = require("./data/moves.js").BattleMovedex;
+        this.Abilities = require("./data/abilities.js").BattleAbilities;
+        this.Items = require("./data/items.js").BattleItems;
+        this.Words = Object.assign({},
+            this.arrayToObject(Object.keys(this.Pokedex).map(p => this.Pokedex[p].species), "Pokémon"),
+            this.arrayToObject(Object.keys(this.Movedex).map(p => this.Movedex[p].name), "Pokémon Move"),
+            this.arrayToObject(Object.keys(this.Abilities).map(p => this.Abilities[p].name), "Pokémon Ability"),
+            this.arrayToObject(Object.keys(this.Items).map(p => this.Items[p].name), "Pokémon Item")
+        );
+    }
+    toTitleCase(str) {
         return str.replace(/\b[a-z]/g, m => m.toUpperCase());
-    },
-    shuffle: function (array) {
+    }
+    shuffle(array) {
         let i = array.length;
 	    while (i) {
 		    let j = Math.floor(Math.random() * i);
@@ -12,8 +28,8 @@ const tools = exports.Tools = {
 		    array[j] = t;
 	    }
 	    return array;
-    },
-    getTimeAgo: function(time) {
+    }
+    getTimeAgo(time) {
         time = ~~((Date.now() - time) / 1000);
 
         let seconds = time % 60;
@@ -40,8 +56,8 @@ const tools = exports.Tools = {
         }
         if (!times.length) return '0 seconds';
         return times.join(', ');
-    },
-    uncacheTree: function(root) {
+    }
+    uncacheTree(root) {
         let uncache = [require.resolve(root)];
         do {
             let newuncache = [];
@@ -56,19 +72,24 @@ const tools = exports.Tools = {
             }
             uncache = newuncache;
         } while (uncache.length > 0);
-    },
-    reload: function() {
+    }
+    arrayToObject(array, value) {
+        let obj = {};
+        for (let i = 0; i < array.length; i++) {
+            obj[array[i]] = value;
+        }
+        return obj;
+    }
+    reload() {
         this.uncacheTree("./commands.js");
         try {
-            Commands = require("./commands.js").commands;
+            global.Commands = require("./commands.js").commands;
             log("ok", "Reloaded commands.js");
         }
         catch (e) {
             log("error", "Unable to load commands.js");
             return false;
         }
-        let loaded = [];
-        let failed = [];
         
         Monitor.games = {};
         fs.readdirSync('./chat-plugins/').forEach(f => {
@@ -82,78 +103,78 @@ const tools = exports.Tools = {
                     if (plugin.aliases) plugin.aliases.forEach(alias => Monitor.games[alias] = plugin.game);
                 }
                 
-                loaded.push(f);
+                this.loaded.push(f);
             }
             catch (e) {
-                failed.push(f);
+                this.failed.push(f);
                 console.log(e.stack);
             }
         });
-        if (loaded.length) {
-            log("info", "Loaded command files: " + loaded.join(", "));
+        if (this.loaded.length) {
+            log("info", "Loaded command files: " + this.loaded.join(", "));
         }
-        if (failed.length) {
-            log("error", "Failed to load: " + failed.join(", "));
+        if (this.failed.length) {
+            log("error", "Failed to load: " + this.failed.join(", "));
             return false;
         }
         return true;
-    },
-    matchText: function(str1, str2) {
-        function matchStrings(first, second) {
-            // Calculates the similarity between two strings  
-            // taken from: http://phpjs.org/functions/similar_text
-
-            if (first === null || second === null || typeof first === 'undefined' || typeof second === 'undefined') {
-                return 0;
-            }
-
-            first += '';
-            second += '';
-
-            let pos1 = 0,
-                pos2 = 0,
-                max = 0,
-                firstLength = first.length,
-                secondLength = second.length,
-                p, q, l, sum;
-
-            max = 0;
-
-            for (p = 0; p < firstLength; p++) {
-                for (q = 0; q < secondLength; q++) {
-                    for (l = 0;
-                        (p + l < firstLength) && (q + l < secondLength) && (first.charAt(p + l) === second.charAt(q + l)); l++);
-                    if (l > max) {
-                        max = l;
-                        pos1 = p;
-                        pos2 = q;
-                    }
-                }
-            }
-
-            sum = max;
-
-            if (sum) {
-                if (pos1 && pos2) {
-                    sum += matchStrings(first.substr(0, pos2), second.substr(0, pos2));
-                }
-
-                if ((pos1 + max < firstLength) && (pos2 + max < secondLength)) {
-                    sum += matchStrings(first.substr(pos1 + max, firstLength - pos1 - max), second.substr(pos2 + max, secondLength - pos2 - max));
-                }
-            }
-            return sum;
-        }
+    }
+    matchText(str1, str2) {
         if (!str1 || !str2) return 0;
         let length = str1.length > str2.length ? str1.length : str2.length;
-        let match = matchStrings(str1.toLowerCase(), str2.toLowerCase()) * 100;
+        let match = this.matchStrings(str1.toLowerCase(), str2.toLowerCase()) * 100;
         return match / length;
-    },
-    regexify: function(string) {
+    }
+    matchStrings(first, second) {
+        // Calculates the similarity between two strings  
+        // taken from: http://phpjs.org/functions/similar_text
+
+        if (first === null || second === null || typeof first === 'undefined' || typeof second === 'undefined') {
+            return 0;
+        }
+
+        first += '';
+        second += '';
+
+        let pos1 = 0,
+        pos2 = 0,
+        max = 0,
+        firstLength = first.length,
+        secondLength = second.length,
+        p, q, l, sum;
+
+        max = 0;
+
+        for (p = 0; p < firstLength; p++) {
+            for (q = 0; q < secondLength; q++) {
+                for (l = 0;
+                    (p + l < firstLength) && (q + l < secondLength) && (first.charAt(p + l) === second.charAt(q + l)); l++);
+                if (l > max) {
+                    max = l;
+                    pos1 = p;
+                    pos2 = q;
+                }
+            }
+        }
+
+        sum = max;
+
+        if (sum) {
+            if (pos1 && pos2) {
+                sum += this.matchStrings(first.substr(0, pos2), second.substr(0, pos2));
+            }
+
+            if ((pos1 + max < firstLength) && (pos2 + max < secondLength)) {
+                sum += this.matchStrings(first.substr(pos1 + max, firstLength - pos1 - max), second.substr(pos2 + max, secondLength - pos2 - max));
+            }
+        }
+        return sum;
+    }
+    regexify(string) {
         if (!string) return "";
         return string.split("").map(l => (/[a-zA-Z0-9\s]/i.test(l) ? l : "\\" + l)).join("");
-    },
-    uploadToHastebin: function(toUpload, callback) {
+    }
+    uploadToHastebin(toUpload, callback) {
         if (typeof callback !== 'function') return false;
         let reqOpts = {
             hostname: 'hastebin.com',
@@ -185,48 +206,8 @@ const tools = exports.Tools = {
         });
         req.write(toUpload);
         req.end();
-    },
-};
-
-function arrayToObject (array, value) {
-    let obj = {};
-    for (let i = 0; i < array.length; i++) {
-        obj[array[i]] = value;
     }
-    return obj;
 }
 
-// load the data modules
-require("./data-downloader")().then(() => {
-    tools.Formats = require("./data/formats-data.js").BattleFormatsData;
-    tools.Pokedex = require("./data/pokedex.js").BattlePokedex;
-    tools.Movedex = require("./data/moves.js").BattleMovedex;
-    tools.Abilities = require("./data/abilities.js").BattleAbilities;
-    tools.Items = require("./data/items.js").BattleItems;
-   // tools.Locations = require("./data/locations.js").locations;
-    
-    
-    tools.Words = Object.assign({},
-        arrayToObject(Object.keys(tools.Pokedex).map(p => tools.Pokedex[p].species), "Pokémon"),
-        arrayToObject(Object.keys(tools.Movedex).map(p => tools.Movedex[p].name), "Pokémon Move"),
-        arrayToObject(Object.keys(tools.Abilities).map(p => tools.Abilities[p].name), "Pokémon Ability"),
-        arrayToObject(Object.keys(tools.Items).map(p => tools.Items[p].name), "Pokémon Item")
-    );
-}).catch(e => log("error", e));
-
-try {
-    tools.Figures = require("./pd-tools/figures");
-} catch (e) {
-    const runDownload = require("./pd-tools/data-downloader");
-    log("error", "Unable to load figures. Running download script to pull data.  During this time, data commands may not work.");
-    
-    runDownload(300)
-        .then(count => {
-            tools.Figures = require("./pd-tools/figures");
-            console.log("Data loaded - " + count + " figures.");
-        })
-        .catch(err => console.log("Failed download: " + err));
-}
-/*globals log*/
-/*globals Commands*/
-/*globals Monitor*/
+exports.Tools = new _Tools();
+/*globals log Commands Monitor fs*/

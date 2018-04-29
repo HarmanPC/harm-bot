@@ -1,6 +1,4 @@
 'use strict';
-let Rooms = {};
-let rooms = Rooms.rooms = new Map();
 const ranks = Config.ranks;
 const dbs = Db("settings");
 const dbb = Db("blacklist");
@@ -96,6 +94,7 @@ class Room {
     }
 
     send(userid, message, priority) {
+        if (!message) return false;
         if (!userid) userid = Config.bot.name;
         send((this.id === "lobby" ? "" : this.id) + "|" + message, userid, priority);
     }
@@ -141,21 +140,21 @@ class Room {
 
         let minModRank;
 
-        function getModCommand(value) {
+        let getModCommand = (value) => {
             value = value - 1;
             let choices = [ "mute", "mute", "mute", "hourmute", "hourmute", "hourmute", "roomban"];
             if (value > 7) value = 7;
             let modCommand = choices[value];
             if (botsRank === "%" && modCommand === "roomban") return "hourmute";
             return modCommand;
-        }
+        };
 
-        function shouldModerate(uRank, mRank) {
+        let shouldModerate = (uRank, mRank) => {
             if (mRank === "on") return true;
             if (mRank === "off") return false;
             if (ranks[uRank] > ranks[mRank]) return false;
             return true;
-        }
+        };
         let applyModeration = {
             points: 0,
             reasons: []
@@ -198,16 +197,15 @@ class Room {
                         }
                         break;
                     case "spam":
-                        function arrayCount(array, search) {
+                        let arrayCount = (array, search) => {
                             let tarTimes = 0;
                             for (let arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
                                 if (array[arrayIndex] === search || Tools.matchText(array[arrayIndex], search) > 80 || (array[arrayIndex].indexOf(search) > -1 && search.length > 15) || (search.indexOf(array[arrayIndex]) > -1 && array[arrayIndex].length > 15))
                                     tarTimes++;
                             }
                             return tarTimes;
-                        }
-
-                        function spamLetterCount(string) {
+};
+                        let spamLetterCount = (string) => {
                             let foundLetters = [];
                             for (let lindex = 0; lindex < string.length; lindex++) {
                                 let tarLetter = string[lindex];
@@ -217,9 +215,9 @@ class Room {
                                 }
                             }
                             return foundLetters.length >= 2;
-                        }
+                        };
 
-                        function parseRandomLetterSpam(array) {
+                        let parseRandomLetterSpam = (array) => {
                             let tarTimes = 0;
                             for (let arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
                                 let spaceCount = array[arrayIndex].length - array[arrayIndex].replace(/\s/g, "").length;
@@ -228,7 +226,7 @@ class Room {
                                 if ((!/[eiou]/i.test(array[arrayIndex]) && spaceCount <= 1 && spamLetter) || (toId(array[arrayIndex]).length <= 3 && array[arrayIndex].length <= 3 && array[arrayIndex] !== "lol")) tarTimes++;
                             }
                             return tarTimes;
-                        }
+                        };
                         if (arrayCount(userData.posts, msg) >= 4 || parseRandomLetterSpam(userData.posts) >= 5) {
                             applyModeration.points += 3.5;
                             applyModeration.reasons.push("spam detected");
@@ -284,30 +282,35 @@ class Room {
         }
     }
 }
-let addRoom = Rooms.add = function(room) {
+class Rooms {
+constructor() {
+this.Debates = require("./debates.js").debate;
+this.DebatePlayer = require("./debates.js").player;
+this.rooms = new Map();
+
+}
+add(room) {
     let roomid = toId(room, true);
-    if (rooms.has(roomid)) return getRoom(room);
-    rooms.set(roomid, new Room(room));
+    if (this.rooms.has(roomid)) return this.get(room);
+    this.rooms.set(roomid, new Room(room));
     if (roomid !== "global") Db("autojoin").set(roomid, 1);
-};
+}
 
-let getRoom = Rooms.get = function(room) {
+get(room) {
     let roomid = toId(room, true);
-    if (!rooms.has(roomid)) addRoom(room);
-    return rooms.get(roomid);
-};
+    if (!this.rooms.has(roomid)) this.add(room);
+    return this.rooms.get(roomid);
+}
 
-Rooms.delete = function(room, keepAutojoin) {
+destroy(room, keepAutojoin) {
     let roomid = toId(room, true);
-    getRoom(roomid).end();
-    rooms.delete(roomid);
-    //console.log(roomid + ": " + rooms.has(roomid))
+    this.get(roomid).end();
+    this.rooms.delete(roomid);
     if (!keepAutojoin) {
         delete Db("autojoin").object()[roomid];
         Db.save();
     }
-};
-Rooms.Debates = require("./debates.js").debate;
-Rooms.DebatePlayer = require("./debates.js").player;
-
-module.exports = Rooms;
+}
+}
+module.exports = new Rooms();
+/* globals toId Db Tools Config send Monitor Users*/

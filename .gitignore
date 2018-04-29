@@ -5,7 +5,7 @@ package-lock.json
 crashlogs.txt
 /config/*
 
-
+/chat-plugins/private.js
 /pd-tools/figures.js
 
 .hg

@@ -6,7 +6,6 @@ class Context {
 		this.command = command;
 		this.target = target;
 		this.targetUser = this.getTargetUser();
-		this.canBroadcast = this.can(command, " ");
 		this.levelsDeep = levelsDeep;
 	}
 
@@ -20,23 +19,23 @@ class Context {
 	}
 
 	send(message, resend) {
-		if (!message) return; // huh? there's no message....
+		if (!message) return;
 		if (message.length > 300 && !["!", "/"].includes(message.charAt(0))) return this.splitSend(message);
-		
-		if (this.canBroadcast && this.room) {
+
+		if (this.room) {
 			this.room.send(this.user.userid, message, this.user.isDev() && !resend);
 		}
 		else {
 			this.user.sendTo(message);
 		}
 	}
-	
+
 	splitSend(message) {
 		let chunks = message.match(/(?:[^\s]{293,}?|.{1,292})(?:\s|$)/g);
-		
+
 		if (!chunks || !chunks.length) return false;
 		chunks = chunks.map(p => p.trim());
-		
+
 		for (let i = 0; i < chunks.length; i++) {
 			let chunk = chunks[i];
 			if (chunk.length > 292) {
@@ -55,7 +54,7 @@ class Context {
             if (this.user.isDev()) return true;
             return false;
         }
-        
+
         this.canBroadcast = this.user.can(command, this.room, this.targetUser, details);
         return this.canBroadcast;
     }
@@ -68,7 +67,7 @@ class Context {
 		success = !(success === false);
 		return success;
 	}
-	
+
 	parse(post) {
 		return commandParser(post.replace(/^\//i, this.room ? this.room.commandCharacter[0] : Config.defaultCharacter[0]), this.user, this.room, true, this.levelsDeep + 1);
 	}
@@ -82,13 +81,13 @@ exports.commandParser = function(message, user, room, bypassMonitor, levelsDeep)
 	let originalCommand = toId(message.split(" ")[0]);
 	let command = originalCommand;
 	let target = message.split(" ").slice(1).join(" ");
-	
+
 	// limit recursion to prevent endless loops alias and addcom.
 	if (!levelsDeep) levelsDeep = 0;
 	if (levelsDeep > 10) {
 		return log("error", "Message: " + message + "\n			  Too much recursion.");
 	}
-	
+
 	//get actual command
 	if (Commands[command]) {
 		if (typeof Commands[command] === "string") command = Commands[command];
@@ -129,13 +128,4 @@ exports.commandParser = function(message, user, room, bypassMonitor, levelsDeep)
 		return;
 	}
 };
-/*globals toId*/
-/*globals log*/
-/*global Plugins*/
-/*globals Monitor*/
-/*globals commandParser*/
-/*globals Commands*/
-/*globals Config*/
-/*globals Users*/
-/*globals Db*/
-/*globals getEST*/
+/*globals toId log Plugins Monitor commandParser Commands Config Users Db getEST*/

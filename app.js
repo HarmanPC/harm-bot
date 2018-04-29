@@ -45,7 +45,7 @@ let connection = null;
 let sendQueue = [];
 let dequeuing = false;
 let lastSent = 0;
-// globals 
+// globals
 global.Config = require("./config/config.js");
 global.Db = require("origindb")("config/database-" + Config.info.serverid);
 global.fs = require("fs");
@@ -56,10 +56,9 @@ global.Plugins = require("./plugins-parser").Plugins;
 global.Monitor = require("./monitor.js").Monitor;
 global.commandParser = require("./command-parser.js").commandParser;
 global.Commands = require("./commands.js").commands;
-global.Users = require("./users.js");
+global.Users = require("./users.js").Users;
 global.Rooms = require("./rooms.js");
 global.queue = [];
-
 function dequeue() {
     if (sendQueue.length > 0) {
         dequeuing = false;
@@ -116,7 +115,6 @@ global.clearQueue = function(user) {
     }
     sendQueue = newQueue;
 };
-
 global.debatelog = function(logMessage) {
     if (!logMessage) return false;
     fs.appendFile('config/debatelogs.txt', `[${getEST()}] ${logMessage}\n\n`);
@@ -320,14 +318,4 @@ let connect = function(retry) {
     ws.connect(conStr, Config.secprotocols);
 };
 connect();
-/*globals fs*/
-/*globals Config*/
-/*globals log*/
-/*globals Parse*/
-/*globals Rooms*/
-/*globals toId*/
-/*globals send*/
-/*globals Monitor*/
-/*globals Commands*/
-/*globals Db*/
-/*globals getEST*/
+/*globals fs Config log Parse Rooms toId send Monitor Commands Db getEST */

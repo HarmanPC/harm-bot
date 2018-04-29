@@ -137,11 +137,11 @@ exports.commands = {
     },
     mvp:'mostvaluableplayer',
     mostvaluableplayer: function (target, room, user) {
-    if (!room ||  !user.hasBotRank('+')) return false;
-    const winner = Users.get(target);
-    room.post(`/wall MVP points awarded to ${winner.name}!`);
-    officiallog(`MVP points awarded to ${winner.name}!`);
-    Leaderboard.onWin('t', this.room, winner.id, 4).write();
+        if (!room ||  !user.hasBotRank('+')) return false;
+        const winner = Users.get(target);
+        room.post(`/wall MVP points awarded to ${winner.name}!`);
+        officiallog(`MVP points awarded to ${winner.name}!`);
+        Leaderboard.onWin('t', this.room, winner.id, 4).write();
     },
     hostpoints: function (target, room, user) {
         if (!user.hasBotRank('+') || !target || !room) return false;

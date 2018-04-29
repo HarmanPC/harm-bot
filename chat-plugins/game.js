@@ -110,6 +110,6 @@ exports.commands = {
         room.post(`/hangman create ${poke}, ${Tools.Words[poke]}`);
         room.post('/wall Use ``/guess`` to guess.');
         time = Date.now();
-    },
+    }
 };
 /*globals Tools Users debatelog hostlog*/

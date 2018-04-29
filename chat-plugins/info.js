@@ -46,7 +46,6 @@ exports.commands = {
         if (!target) return this.send('Invalid username.');
         if (toId(target) == toId(Monitor.username)) return this.send(Monitor.username + ' was last seen sending you this message.');
         if (toId(target) == user.id) return this.send('Look at the person in mirror.');
-        this.can("set");
         target = toId(target);
         let lastSeen = Users.seen.get(target, null);
         if (!lastSeen) return this.send("'" + target + "' was never seen before.");
@@ -54,40 +53,38 @@ exports.commands = {
         this.send("'" + Users.get(target).name + "' was last seen " + Tools.getTimeAgo(lastSeen[0]) + " ago in " + seenRoom + ".");
     },
     uptime: function(target, room, user) {
-        this.can("set");
         let startTime = Date.now() - (process.uptime() * 1000);
-        this.send("The bot's uptime is: " + Tools.getTimeAgo(startTime));
+        user.send("The bot's uptime is: " + Tools.getTimeAgo(startTime));
     },
     guide: function(target, room, user) {
-        this.can("set");
         if (!Config.guide) return this.send('There is no guide.');
-        this.send('A guide on how to use ' + Monitor.username + ' can be found here: ' + Config.guide);
+        user.sendTo('A guide on how to use ' + Monitor.username + ' can be found here: ' + Config.guide);
     },
     git: function(target, room, user) {
-        this.can("set");
-        this.send(Monitor.username + "'s github repository: https://github.com/HarmanPC/harm-bot");
+        user.sendTo(Monitor.username + "'s github repository: https://github.com/HarmanPC/harm-bot");
     },
     time: function (target, room, user) {
-        this.can('debate');
+        if (!user.hasBotRank('+')) return user.sendTo('The EST time is: ' + getEST());
         this.send('The EST time is: ' + getEST());
     },
     mail: function(target, room, user) {
         if (room) return false;
         if (!target) return this.send('Usage .mail user, message');
-        let message = target.split(",").slice(1).join(",");
+        let [sendUser, ...message] = target.split(',');
         if (!message || message.length > 250) return this.parse("/help mail");
-        if(!user.mailCount) user.mailCount = 0;
+        if (!user.mailCount) user.mailCount = 0;
         if (user.mailCount > 5 && !user.isStaff) return false;
         try {
-            sendMail(user, this.targetUser.userid || this.targetUser, message.trim());
+            sendMail(user, toId(sendUser) || sendUser, message.trim());
         }
         catch (e) {
-            user.sendTo("ERROR: unable to send mail.");
-            user.sendTo('/W lady Monita,.mail Amice, Mail error: ' + e.message);
+            this.send("ERROR: unable to send mail.");
+            this.send('/W lady Monita, .mail harmanpc, Mail error: ' + e.message);
         }
-        user.sendTo("Swish, mail has been sent to " + (this.targetUser.name || this.targetUser));
+        this.send("Swish, mail has been sent to " + (Users.get(sendUser).name || sendUser));
     },
     checkmail: function(target, room, user) {
+        if (room) return false;
         let mail = receiveMail(user);
         if (!mail) return user.sendTo("You have no mail!");
     },
@@ -95,18 +92,18 @@ exports.commands = {
     submit: function (target, room, user) {
         if (room || !target) return false;
         fs.appendFile('config/suggestions.txt', 'Suggested by ' + user.name + ': ' + target + '\n\n');
-        user.sendTo('Your suggestion: "' + target + '" has been submitted.');
+        this.sendTo('Your suggestion: "' + target + '" has been submitted.');
     },
     suggestions: function (target, room, user) {
         if (!user.hasBotRank('%')) return false;
 		if (room) return user.sendTo('Please use this command in my PMs only.');
-		if (!fs.existsSync('./config/suggestions.txt')) return user.sendTo('The suggestions are empty.');
+		if (!fs.existsSync('./config/suggestions.txt')) return this.sendTo('The suggestions are empty.');
 		fs.readFile("./config/suggestions.txt", "utf-8", (err, data) => { 
 			if (!err) {
-				Tools.uploadToHastebin(data, link => user.sendTo("Suggestions: " + link));
+				Tools.uploadToHastebin(data, link => this.sendTo("Suggestions: " + link));
 			}
 			else {
-				user.sendTo('Error getting suggestions.');
+				this.send('Error getting suggestions.');
 				console.log(err);
 			}
 		});

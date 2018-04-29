@@ -1,14 +1,18 @@
 'use strict';
-let http = require("http");
-let url = require("url");
+const http = require("http");
+const url = require("url");
 
-exports.parse = {
-    connectionDetails:{
-        firstConnect: true,
-        globallyBanned: false,
-    },
-    actionUrl: url.parse("https://play.pokemonshowdown.com/~~" + Config.info.serverid + "/action.php"),
-    parseData: function(data) {
+class Parser {
+    constructor() {
+        this.actionUrl = url.parse("https://play.pokemonshowdown.com/~~" + Config.info.serverid + "/action.php");
+        this.connectionDetails = {
+            firstConnect: true,
+            globallyBanned: false
+        };
+    }
+
+    parseData(data) {
+        console.log(data);
         if (data.charAt(0) !== "a") return false;
         data = JSON.parse(data.slice(1));
         if (data instanceof Array) {
@@ -19,8 +23,8 @@ exports.parse = {
         else {
             this.receive(data);
         }
-    },
-    receive: function(entry) {
+    }
+    receive(entry) {
         if (!entry) return false;
         let roomid = "lobby";
         let initMessage = false;
@@ -31,8 +35,8 @@ exports.parse = {
                 this.parse(roomid, e);
             }
         });
-    },
-    parse: function(room, entry) {
+    }
+    parse(room, entry) {
         if (!room || !entry) return false;
         log("<<", ">" + room + entry);
         room = Rooms.get(room);
@@ -49,8 +53,7 @@ exports.parse = {
                 Monitor.username = parts[2];
                 if (toId(parts[2]).slice(0, 5) === "guest" || !this.connectionDetails.firstConnect) break;
                  Object.keys(Db("autojoin").object()).forEach(r => {
-                    if (!Rooms.rooms.has(r) || r === "groupchat-sniper-debate") 
-                    send("|/join " + r);
+                    if (!Rooms.rooms.has(r) || r === "groupchat-sniper-debate") send("|/join " + r);
                 });
                 this.connectionDetails.firstConnect = false;
                 break;
@@ -91,7 +94,7 @@ exports.parse = {
                     send("|/join " + message.slice(8));
                 }
                 commandParser(message, user, null, false);
-                if (!Config.defaultCharacter.includes(message.charAt(0)) && Config.pmMessage && !user.pmMessageSent) {
+                if (!user.isStaff && !Config.defaultCharacter.includes(message.charAt(0)) && Config.pmMessage && !user.pmMessageSent) {
                     user.pmMessageSent = true;
                     user.sendTo(Config.pmMessage);
                 }
@@ -114,13 +117,13 @@ exports.parse = {
                     log("monitor", "Banned from server (left room global).");
                     this.connectionDetails.globallyBanned = true;
                 }
-                if(this.connectionDetails.globallyBanned) break;
+                if (this.connectionDetails.globallyBanned) break;
                 log("left", room.name);
-                Rooms.delete(room.id);
+                Rooms.destroy(room.id);
                 break;
         }
-    },
-    login: function(nick, pass) {
+    }
+    login(nick, pass) {
         if (toId(nick) === toId(Monitor.username)) return send("|/trn " + nick);
         let id = this.challstr[0];
         let str = this.challstr[1];
@@ -199,6 +202,7 @@ exports.parse = {
 
         if (data) req.write(data);
         req.end();
-    },
-};
+    }
+}
+exports.parse = new Parser();
 /*globals log send toId commandParser Rooms Config Users Monitor Events Db*/

@@ -2,12 +2,6 @@
 
 const cache_db = require("./cache-db.js");
 
-const developers = ["amice","xnadrojx","harmanpc","hiimafk"];
-let Users = {};
-let users = Users.users = new Map();
-Users.seen = new cache_db();
-Users.seen.load("config/seen");
-
 class User {
     constructor(name) {
         this.name = (/[a-zA-Z0-9]/i.test(name.charAt(0)) ? name : name.slice(1));
@@ -47,13 +41,14 @@ class User {
     }
 
     sendTo(text) {
-        return send("|/pm " + this.userid + ", " + text, this.userid, this.isDev());
+        if (!text) return false;
+        return send("|/pm " + this.userid + ", " + text);
     }
 
     can(action, targetRoom, targetUser, details) {
         if (this.isDev()) return true;
         if (action === "promote") {
-            if(!targetUser) return false;
+            if (!targetUser) return false;
             let userRank = Config.permissions[this.botRank];
             let targetRank = targetUser.botRank || Db("ranks").get(toId(targetUser), " ");
             if (!userRank.promote) return false;
@@ -63,7 +58,7 @@ class User {
             return false;
         }
         if (["ban", "lock", "mute"].includes(action)) {
-            if(!targetUser) return false;
+            if (!targetUser) return false;
             let userRank = Config.permissions[this.botRank];
             let targetRank = targetUser.botRank || Db("ranks").get(toId(targetUser), " ");
             if (!userRank[action]) return false;
@@ -72,19 +67,12 @@ class User {
             }
             return false;
         }
-        if (action === "games") {
-            let userRank = Config.permissions[this.botRank];
-            if ("games" in userRank || this.hasRank(targetRoom, Db("settings").get([targetRoom.id, "games"], "#"))) {
-                return true;
-            }
-            return false;
-        }
         if (["set"].includes(action)) {
             if (!this.hasRank(targetRoom, "#")) return false;
             return true;
         }
-        if(["autoban", "banword"].includes(action)){
-            if(this.hasRank(targetRoom, targetRoom ? Db("settings").get([targetRoom.id, action], "#") : "#")) return true;
+        if (["autoban", "banword"].includes(action)){
+            if (this.hasRank(targetRoom, targetRoom ? Db("settings").get([targetRoom.id, action], "#") : "#")) return true;
             return false;
         }
         let commandRank = targetRoom ? Db("settings").get([targetRoom.id, action], (Config.customRank && Config.customRank[action] ? Config.customRank[action] : Config.defaultRank)) : Config.customRank && Config.customRank[action] ? Config.customRank[action] : Config.defaultRank;
@@ -93,57 +81,58 @@ class User {
     }
 
     hasRank(room, rank) {
-        if(rank === "off" && !this.isDev()) return false;
-        if(rank === "on") return true;
+        if (rank === "off" && !this.isDev()) return false;
+        if (rank === "on") return true;
         let roomRank = room ? this.getRank(room.id) : this.globalRank;
         if (((Config.ranks[roomRank] || 0) >= Config.ranks[rank]) || this.hasBotRank(rank)) return true;
         return false;
     }
 
     hasBotRank(rank) {
-        if(this.isDev()) return true;
+        if (this.isDev()) return true;
         if ((Config.ranks[this.botRank] || 0) >= Config.ranks[rank]) return true;
         return false;
     }
 
     isDev() {
-        return developers.includes(this.userid);
+        return Config.developers && Config.developers.includes(this.userid);
     }
 }
 
-let addUser = Users.add = function(username) {
-    let userid = toId(username);
-    if (users.has(userid)) return getUser(username);
-    users.set(userid, new User(username));
-    return users.get(userid);
-};
-
-let getUser = Users.get = function(username) {
-    let userid = toId(username);
-    if (!users.has(userid)) return addUser(username);
-    return users.get(userid);
-};
-
-let renameUser = Users.rename = function(oldId, newName) {
-    if (!Users.users.has(oldId)) return false; //already renamed
-    if (toId(oldId) !== toId(newName)) {
-        users.set(toId(newName), getUser(oldId));
-        Monitor.transferRecords(oldId, toId(newName));
-        users.delete(oldId);
+class _Users {
+    constructor() {
+        this.seen = new cache_db();
+        this.users = new Map();
+        this.seen.load("config/seen");
     }
-    let tarUser = getUser(newName);
-    //change attributes of the new user
-    tarUser.name = newName.slice(1);
-    tarUser.userid = toId(newName);
-    tarUser.botRank = Db("ranks").get(tarUser.userid, " ");
-    tarUser.globalRank = " ";
-    tarUser.isStaff = Config.ranks[tarUser.botRank] >= 2;
-};
+    add(username){
+        let userid = toId(username);
+        if (this.users.has(userid)) return this.get(username);
+        this.users.set(userid, new User(username));
+        return this.users.get(userid);
+    }
 
-module.exports = Users;
-/*globals Monitor*/
-/*globals Config*/
-/*globals toId*/
-/*globals Db*/
-/*globals Plugins*/
-/*globals send*/
+    get(username){
+        let userid = toId(username);
+        if (!this.users.has(userid)) return this.add(username);
+        return this.users.get(userid);
+    }
+
+    rename(oldId, newName){
+        if (!this.users.has(oldId)) return false; //already renamed
+        if (toId(oldId) !== toId(newName)) {
+            this.users.set(toId(newName), this.get(oldId));
+            Monitor.transferRecords(oldId, toId(newName));
+            this.users.delete(oldId);
+        }
+        let tarUser = this.get(newName);
+        //change attributes of the new user
+        tarUser.name = newName.slice(1);
+        tarUser.userid = toId(newName);
+        tarUser.botRank = Db("ranks").get(tarUser.userid, " ");
+        tarUser.globalRank = " ";
+        tarUser.isStaff = Config.ranks[tarUser.botRank] >= 2;
+    }
+}
+exports.Users = new _Users();
+/*globals Monitor Config toId Db Plugins send Users*/

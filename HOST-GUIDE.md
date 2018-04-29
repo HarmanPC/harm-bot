@@ -1,4 +1,4 @@
-# Hosting Guide
+# Hosting Guide (commands)
 
 `.players` - Shows the list of players.
 

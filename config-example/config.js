@@ -52,6 +52,9 @@ exports.settableCommands = {
     "banword": true,
     "autoban": true,
 };
+// bot developer commands access
+exports.developers = [];
+
 // moderation settings
 exports.modSettings = {
     "caps": true,
