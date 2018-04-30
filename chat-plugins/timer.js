@@ -24,19 +24,19 @@ class Timer {
 
         const duration = (seconds || 0) * 1000 + (minutes || 0) * 60000 + (hours || 0) * 3600000;
         if (!duration) {
-            this.room.post('Invalid duration.');
+            this.send('Invalid duration.');
             this.destroy();
             return;
         }
         this.endTime = Date.now() + duration;
 
         this.timer = setTimeout(() => {
-            this.room.post(`[${this.name}] Time's up!`);
+            this.send(`[${this.name}] Time's up!`);
             this.destroy();
         }, duration);
 
         // report duration
-        this.room.post(`A timer has been set for: ${this.toTimeString(hours)}:${this.toTimeString(minutes)}:${this.toTimeString(seconds)}`);
+        this.send(`A timer has been set for: ${this.toTimeString(hours)}:${this.toTimeString(minutes)}:${this.toTimeString(seconds)}`);
     }
 
     getTimeLeft() {
@@ -60,13 +60,13 @@ exports.commands = {
     timer: function (target, room, user) {
         if (!room || !user.hasBotRank('host')) return false;
         if (typeof target == 'string' && target.toLowerCase() === 'end') {
-            if (!room.countdown) return room.post('There is no timer running in this room.');
-            room.post(room.countdown.getTimeLeft() + '. The timer has been ended.');
+            if (!room.countdown) return this.send('There is no timer running in this room.');
+            this.send(room.countdown.getTimeLeft() + '. The timer has been ended.');
             room.countdown.destroy();
             return;
         }
-        if (room.countdown) return room.post(room.countdown.getTimeLeft());
-        if (target <= 0) return room.post('Invalid Duration.');
+        if (room.countdown) return this.send(room.countdown.getTimeLeft());
+        if (target <= 0) return this.send('Invalid Duration.');
         room.countdown = new Timer(room, user, target);
     },
 };

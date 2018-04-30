@@ -3,10 +3,6 @@ exports.commands = {
     js: "eval",
     eval: function(target, room, user) {
         if (!user.isDev() || !target) return false;
-        let battle;
-        if (room && room.battle) {
-            battle = room.battle;
-        }
         try {
             let result = eval(target.trim());
             this.send("<< " + JSON.stringify(result));
@@ -61,8 +57,6 @@ exports.commands = {
 	}
 	this.send("[Main process] RSS: " + results[0] + ", Heap: " + results[1] + " / " + results[2]);
     },
-
-    
     auth: "promote",
     promote: function(target, room, user) {
         if (!target) return this.parse("/botauth");
@@ -146,9 +140,9 @@ exports.commands = {
     updatedata: function(target, room, user) {
         if (!this.can("dev") || room) return false;
         if (Monitor.dataUpdateLock) return this.send("Please wait until a previous data update is complete.");
-        
+
         Monitor.dataUpdateLock = true;
-        
+
         require("../data-downloader")(true)
             .then(() => {
                 Monitor.dataUpdateLock = false;
@@ -174,15 +168,8 @@ exports.commands = {
     },
     modchat: function (target, room, user) {
         if (!user.hasBotRank('%') || !room) return false;
-        if (target.toLowerCase() !== 'trusted' && target !== '+' && target.toLowerCase() !== 'ac' && target.toLowerCase() !== 'off') return room.post('Usage: ``' + room.commandCharacter[0] + 'modchat trusted/ac/+/off``');
-        room.post('/modchat ' + target);
+        if (target.toLowerCase() !== 'trusted' && target !== '+' && target.toLowerCase() !== 'ac' && target.toLowerCase() !== 'off') return this.send('Usage: ``' + room.commandCharacter[0] + 'modchat trusted/ac/+/off``');
+        this.send('/modchat ' + target);
     }
 };
-/*globals toId*/
-/*globals log*/
-/*globals Monitor*/
-/*globals Rooms*/
-/*globals Config*/
-/*globals Parse*/
-/*globals Db*/
-/*globals Tools*/
+/*globals toId log Monitor Rooms Config Parse Db Tools*/

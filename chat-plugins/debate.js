@@ -173,16 +173,16 @@ exports.commands = {
 			".debate Teams, [Time / default is 5], [Topic / Default is random from database]";
 		const everything = target.split(',').map(u => toId(u));
 		const type = toId(everything[0]);
-		if (!type || !everything[1] || !everything[2]) return room.post("!code " + errMsg);
-		if (type !== "1v1" && type !== "teams") return room.post("!code " + errMsg);
-        if (room.game && room.game.gameId !== 'host' && room.game.type) return room.post("There is already a Debate going on in this room! (" + room.game.type + ")");
+		if (!type || !everything[1] || !everything[2]) return this.send("!code " + errMsg);
+		if (type !== "1v1" && type !== "teams") return this.send("!code " + errMsg);
+        if (room.game && room.game.gameId !== 'host' && room.game.type) return this.send("There is already a Debate going on in this room! (" + room.game.type + ")");
 
         if (type == "1v1") {
         	const pl = everything[1];
         	const time = everything[2];
         	const topic = everything[3];
         	const players = pl.split("vs").map(u => Users.get(u));
-        	if (players[0].userid === players[1].userid) return room.post('Both players are same.');
+        	if (players[0].userid === players[1].userid) return this.send('Both players are same.');
         	room.game = new DebateGame(room, type, players, time, topic);
         }
         if (type == "teams") {
@@ -194,9 +194,9 @@ exports.commands = {
     },
 	checkdebate: function (target, room, user){
 		if (!room || !user.hasBotRank('+')) return false;
-        if (room.game && room.game.gameId === 'host') return room.post(Users.get(room.game.hostid).name + " is hosting" + room.game.official ? " official Debate." : "." + room.game.topic ? " Topic: " + room.game.topic : "");
-		if (room.game && room.game.gameId === 'debate') return room.post('A scripted Debate is in progress. (' + room.game.type + ')');
-		room.post('No Debate is going on right now.');
+        if (room.game && room.game.gameId === 'host') return this.send(Users.get(room.game.hostid).name + " is hosting" + room.game.official ? " official Debate." : "." + room.game.topic ? " Topic: " + room.game.topic : "");
+		if (room.game && room.game.gameId === 'debate') return this.send('A scripted Debate is in progress. (' + room.game.type + ')');
+		this.send('No Debate is going on right now.');
 	},
 	addq:'addquestion',
     addquestion: function (target, room, user) {
@@ -211,7 +211,7 @@ exports.commands = {
         	this.send("Added! (__" + question + "__)"); 
         }
         else {
-        	room.post("Added! (__" + question + "__)"); 
+        	this.send("Added! (__" + question + "__)"); 
         }
     },
     delq:'deletequestion',
@@ -226,23 +226,23 @@ exports.commands = {
         	this.send("Deleted! (__" + question + "__)"); 
         }
         else {
-        	room.post("Deleted! (__" + question + "__)"); 
+        	this.send("Deleted! (__" + question + "__)"); 
         }
     },
     debateqs:'debatequestions',
     debatequestions: function (target, room, user) {
         if (!user.hasBotRank("+") || !room) return false;
-        if (DebateFile.isEmpty()) return room.post("There are no questions.");
+        if (DebateFile.isEmpty()) return this.send("There are no questions.");
         let questions = DebateFile.allQuestions();
 
         Tools.uploadToHastebin(questions.map(q => `Question: ${q.question}`).join("\n\n"), 
-            link => room.post(`Debate questions(${questions.length}): ${link}`));
+            link => this.send(`Debate questions(${questions.length}): ${link}`));
     },
 	randquestion:'topic',
 	randtopic: function (target, room, user) {
 		if (!user.hasBotRank('host') || !room) return false;
 		let question = DebateFile.getQuestion();
-		room.post(question.question.trim() + "?");
+		this.send(question.question.trim() + "?");
 	},
 	debatelogs: function (target, room, user) {
 		if (!user.hasBotRank('%')) return false;

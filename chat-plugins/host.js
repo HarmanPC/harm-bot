@@ -57,13 +57,13 @@ exports.commands = {
         target = target.split(',');
         const person = Users.get(target[0]);
 
-        if (!room.users.has(person.userid)) return room.post('The user "' + person.name + '" is not in the room.');
+        if (!room.users.has(person.userid)) return this.send('The user "' + person.name + '" is not in the room.');
         if (room.game && room.game.gameId == 'host') {
-            room.post(person.name + ' was added to hostqueue.');
+            this.send(person.name + ' was added to hostqueue.');
             queue.push(person.userid);
             return;
         }
-        if (room.game && room.game.gameId == 'debate') return room.post('There is already a debate going on in this room! (' + room.game.type + ')');
+        if (room.game && room.game.gameId == 'debate') return this.send('There is already a debate going on in this room! (' + room.game.type + ')');
         if (toId(target[1]) === 'official') {
            room.game =  new hostGame(room, person.userid);
            officiallog(person.name + " hosted official.");
@@ -81,9 +81,9 @@ exports.commands = {
     dehost: function (target, room, user) {
         if (!user.hasBotRank('+') || !room) return false;
         target = Users.get(target);
-        if (!(queue.indexOf(target.id) > -1)) return room.post(target.name + ' is not in the hostqueue.');
+        if (!(queue.indexOf(target.id) > -1)) return this.send(target.name + ' is not in the hostqueue.');
         queue.splice(target, 1);
-        room.post(target.name + ' has been removed from hostqueue.');
+        this.send(target.name + ' has been removed from hostqueue.');
     },
     subhost: function (target, room, user) {
         let debate = room.game;
@@ -91,25 +91,25 @@ exports.commands = {
         if (!room || !debate || debate.gameId !== 'host' || !target || !user.hasBotRank('+')) return false;
         this.parse(`${target.id.hasBotRank('+') ? '/kek' : '/promote ' + target + ', host'}`);
         this.parse(`${Users.get(debate.userHost).hasBotRank('+') ? '/kek' : '/promote ' + debate.userHost + ', deauth'}`);
-        room.post(target.name + ' has been subhosted.');
+        this.send(target.name + ' has been subhosted.');
         hostlog(target.name + " subhosted " + Users.get(debate.hostid).name + "'s host.");
         debate.hostid = target.id;
     },
     hostqueue: function (target, room, user) {
         if (!room || !user.hasBotRank('+')) return false;
-        if (!queue.length) return room.post('Hostqueue is empty.');
+        if (!queue.length) return this.send('Hostqueue is empty.');
         let msg = 'Hostqueue: ' + queue.map(str => '__' + Users.get(str).name + '__').join(', ');
-        room.post(msg);
+        this.send(msg);
     },
     settopic: function (target, room, user) {
         if (!user.hasBotRank('host') || !room || !room.game || !room.game.gameId === "host" || !target) return false;
         room.game.topic = target;
-        room.post('The topic has been set to: ' + target);
+        this.send('The topic has been set to: ' + target);
     },
     topic: function (target, room, user) {
         if (!user.hasBotRank('host') || !room || !room.game || !room.game.gameId === "host" ) return false;
-        if (!room.game.topic) return room.post('There is no topic.');
-        room.post('Topic is: ' + room.game.topic);
+        if (!room.game.topic) return this.send('There is no topic.');
+        this.send('Topic is: ' + room.game.topic);
     },
     parts:'participations',
     participations: function (target, room, user) {
@@ -118,19 +118,19 @@ exports.commands = {
         for (let i = 0; i <= target.length - 1; i++) {
             Leaderboard.onWin('t', this.room, target[i], 4).write();
         }
-        room.post('/wall Participation points awarded to ' + target.map(u => Users.get(u).name).join(', ') + '.');
+        this.send('/wall Participation points awarded to ' + target.map(u => Users.get(u).name).join(', ') + '.');
         officiallog('Participation points awarded to ' +  target.map(u => Users.get(u).name).join(', ') + '.');
     },
-    win: function (target, room, user) {
+    officialwin: function (target, room, user) {
         if (!user.hasBotRank('+') || !room || !room.game || !target) return false;
-        //if (!room.game.official) return room.post('This host isn\'t official.');
+        if (!room.game.official) return this.send('This host isn\'t official.');
         target = target.split(',').map(u => toId(u));
         for (let i = 0; i <= target.length - 1; i++) {
             Leaderboard.onWin('t', this.room, target[i], 10).write();
         }
         let everyone = target.map(u => Users.get(u).name).join(', ');
 
-        room.post('/wall The winner' + target.length < 2 ? ' is' : 's are ' + everyone + '! Thanks for hosting.');
+        this.send('/wall The winner' + target.length < 2 ? ' is' : 's are ' + everyone + '! Thanks for hosting.');
         officiallog('The official winner' + target.length < 2 ? ' is ' : ' were ' + everyone + '.');
         hostlog('The official winner' + target.length < 2 ? 'is ' : ' were ' + everyone + '.');
         room.game.onEnd();
@@ -139,14 +139,14 @@ exports.commands = {
     mostvaluableplayer: function (target, room, user) {
         if (!room ||  !user.hasBotRank('+')) return false;
         const winner = Users.get(target);
-        room.post(`/wall MVP points awarded to ${winner.name}!`);
+        this.send(`/wall MVP points awarded to ${winner.name}!`);
         officiallog(`MVP points awarded to ${winner.name}!`);
         Leaderboard.onWin('t', this.room, winner.id, 4).write();
     },
     hostpoints: function (target, room, user) {
         if (!user.hasBotRank('+') || !target || !room) return false;
         const host = Users.get(target);
-        room.post(`/wall Host points were awarded to ${host.name}.`);
+        this.send(`/wall Host points were awarded to ${host.name}.`);
         Leaderboard.onWin('t', this.room, host.id, 6).write();
         officiallog('The host was ' + host.name + '.');
     },
