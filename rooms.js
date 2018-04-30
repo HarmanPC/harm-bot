@@ -204,7 +204,7 @@ class Room {
                                     tarTimes++;
                             }
                             return tarTimes;
-};
+                        };
                         let spamLetterCount = (string) => {
                             let foundLetters = [];
                             for (let lindex = 0; lindex < string.length; lindex++) {
