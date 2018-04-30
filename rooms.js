@@ -283,34 +283,31 @@ class Room {
     }
 }
 class Rooms {
-constructor() {
-this.Debates = require("./debates.js").debate;
-this.DebatePlayer = require("./debates.js").player;
-this.rooms = new Map();
-
-}
-add(room) {
-    let roomid = toId(room, true);
-    if (this.rooms.has(roomid)) return this.get(room);
-    this.rooms.set(roomid, new Room(room));
-    if (roomid !== "global") Db("autojoin").set(roomid, 1);
-}
-
-get(room) {
-    let roomid = toId(room, true);
-    if (!this.rooms.has(roomid)) this.add(room);
-    return this.rooms.get(roomid);
-}
-
-destroy(room, keepAutojoin) {
-    let roomid = toId(room, true);
-    this.get(roomid).end();
-    this.rooms.delete(roomid);
-    if (!keepAutojoin) {
-        delete Db("autojoin").object()[roomid];
-        Db.save();
+    constructor() {
+        this.Debates = require("./debates.js").debate;
+        this.DebatePlayer = require("./debates.js").player;
+        this.rooms = new Map();
     }
-}
+    add(room) {
+        let roomid = toId(room, true);
+        if (this.rooms.has(roomid)) return this.get(room);
+        this.rooms.set(roomid, new Room(room));
+        if (roomid !== "global") Db("autojoin").set(roomid, 1);
+    }
+    get(room) {
+        let roomid = toId(room, true);
+        if (!this.rooms.has(roomid)) this.add(room);
+        return this.rooms.get(roomid);
+    }
+    destroy(room, keepAutojoin) {
+        let roomid = toId(room, true);
+        this.get(roomid).end();
+        this.rooms.delete(roomid);
+        if (!keepAutojoin) {
+            delete Db("autojoin").object()[roomid];
+            Db.save();
+        }
+    }
 }
 module.exports = new Rooms();
 /* globals toId Db Tools Config send Monitor Users*/
