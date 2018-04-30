@@ -14,7 +14,7 @@ You will be given admin privileges on the bot that way.
 
 - [XnadrojX](https://github.com/JordanLow) (Debates)
 
-- [Our Contributers](https://github.com/HarmanPC/harm-bot/graphs/contributors) 
+- [Contributers](https://github.com/HarmanPC/harm-bot/graphs/contributors) 
 
 
 # Config
