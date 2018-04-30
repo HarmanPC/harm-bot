@@ -9,12 +9,11 @@ You will be given admin privileges on the bot that way.
 # Owner
 1) Harman PC
 
-# Contributers
-1) A Helpful Rayquaza
-1) XnadrojX
-2) Hoeenhero
-3) ZestOfLife
-4) Sparkychild
+# Special Thanks
+[Harman PC](https://github.com/HarmanPC)
+[XnadrojX](https://github.com/JordanLow)
+[Contributers](https://github.com/HarmanPC/harm-bot/graphs/contributors)
+
 
 # Config
 Rename `config-example` to `config` and fill details.
