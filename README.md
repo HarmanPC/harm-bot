@@ -10,9 +10,9 @@ You will be given admin privileges on the bot that way.
 1) Harman PC
 
 # Special Thanks
-[Harman PC](https://github.com/HarmanPC)
+[Harman PC](https://github.com/HarmanPC) (Owner)
 
-[XnadrojX](https://github.com/JordanLow)
+[XnadrojX](https://github.com/JordanLow) (Debates)
 
 [Contributers](https://github.com/HarmanPC/harm-bot/graphs/contributors)
 
