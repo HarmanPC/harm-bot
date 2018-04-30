@@ -79,7 +79,6 @@ class ResourceMonitor {
         if (user.isDev()) return false;
         if (command in Config.whitelistCommands) return false;
         //set up the objects
-        //room
         if (room) {
             if (!this.rooms[room.id]) this.rooms[room.id] = 0;
             this.rooms[room.id]++;
@@ -181,8 +180,4 @@ class ResourceMonitor {
 }
 
 exports.Monitor = new ResourceMonitor();
-/*globals Db*/
-/*globals log*/
-/*globals Config*/
-/*globals clearQueue*/
-/*globals Monitor*/
+/*globals Db log Config clearQueue Monitor*/
