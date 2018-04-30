@@ -18,4 +18,4 @@ You will be given admin privileges on the bot that way.
 
 
 # Config
-Rename `config-example` to `config` and fill details.
+Rename `config-example` to `config` folder and fill details.
