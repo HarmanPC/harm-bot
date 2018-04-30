@@ -67,9 +67,4 @@ exports.commands = {
             });
     }
 };
-/*globals toId*/
-/*globals Config*/
-/*globals Monitor*/
-/*globals removeCommand*/
-/*globals Users*/
-/*globals Events*/
+/*globals toId Config Monitor removeCommand Users Events*/
