@@ -115,8 +115,6 @@ global.send = function(text, user, priority, bypass) {
         dequeuing = true;
     }
 };
-global.Db = require("./db.js");
-
 global.clearQueue = function(user) {
     if (!user) return false;
     user = toId(user);
