@@ -47,18 +47,31 @@ let dequeuing = false;
 let lastSent = 0;
 // globals
 global.Config = require("./config/config.js");
+
 global.Db = require("origindb")("config/database-" + Config.info.serverid);
+
 global.fs = require("fs");
+
 global.Events = require("./event-listeners.js");
+
 global.Parse = require("./parser.js").parse;
+
 global.Tools = require("./tools.js").Tools;
+
 global.Plugins = require("./plugins-parser").Plugins;
+
 global.Monitor = require("./monitor.js").Monitor;
+
 global.commandParser = require("./command-parser.js").commandParser;
+
 global.Commands = require("./commands.js").commands;
+
 global.Users = require("./users.js").Users;
+
 global.Rooms = require("./rooms.js");
+
 global.queue = [];
+
 function dequeue() {
     if (sendQueue.length > 0) {
         dequeuing = false;
@@ -102,6 +115,7 @@ global.send = function(text, user, priority, bypass) {
         dequeuing = true;
     }
 };
+global.Db = require("./db.js");
 
 global.clearQueue = function(user) {
     if (!user) return false;

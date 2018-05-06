@@ -15,7 +15,7 @@ exports.commands = {
 
         this.send(quote);
     },
-    
+
     addquote: function (target, room, user) {
         if (!room || !this.can("quotes")) return false;
 

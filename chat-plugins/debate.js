@@ -259,10 +259,4 @@ exports.commands = {
 		});
 	},
 };
-/*globals Tools*/
-/*globals Users*/
-/*globals Rooms*/
-/*globals debatelog*/
-/*globals fs*/
-/*globals toId*/
-/*globals random*/
+/*globals Tools Users Rooms debatelog fs toId random*/

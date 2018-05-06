@@ -52,7 +52,6 @@ if (!Monitor.AIsetup) {
             });
     });
 }
-
 exports.commands = {
     "8ball": function (target, room, user) {
         this.can("ai");
